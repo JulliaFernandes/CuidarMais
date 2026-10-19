@@ -1,0 +1,691 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuidar+ Mockup</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,700;6..12,800&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Layout: faixa do fluxo (cadastro → lembrete → confirmação → alerta → relatório) no topo; abaixo, o dispositivo (navegador ou celular) e as notas da tela ao lado. Cada ator tem sua cor: médico violeta, paciente verde, cuidador coral. */
+:root {
+  --bg: #F7F5FC;
+  --surface: #FFFFFF;
+  --surface-2: #F1EEF8;
+  --ink: #221B3A;
+  --muted: #6B6485;
+  --line: #E6E1F2;
+  --violet: #6A4DF4;
+  --violet-soft: #EEE9FF;
+  --coral: #EF5B33;
+  --coral-soft: #FFE9E1;
+  --green: #17914F;
+  --green-soft: #DDF4E6;
+  --green-deep: #0F6B45;
+  --sun: #B97A00;
+  --sun-fill: #F5B729;
+  --sun-soft: #FFF3D1;
+  --red: #D7263F;
+  --red-soft: #FDE3E7;
+  --chat-bg: #EFE7DC;
+  --bubble-in: #FFFFFF;
+  --bubble-out: #D9FDD3;
+  --paper: #FFFDF6;
+  --paper-ink: #1F3A8A;
+  --on-color: #FFFFFF;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --font-hand: "Caveat", "Segoe Print", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15121F; --surface: #1F1A2E; --surface-2: #282238; --ink: #F1EEF9; --muted: #A59FBD; --line: #352E4A;
+    --violet: #A28EFF; --violet-soft: #2D2552; --coral: #FF8A66; --coral-soft: #3D2419; --green: #4FD08A; --green-soft: #173324;
+    --green-deep: #134A33; --sun: #FFC94D; --sun-fill: #E0A526; --sun-soft: #3A2E10; --red: #FF6B80; --red-soft: #401B24;
+    --chat-bg: #17141F; --bubble-in: #262036; --bubble-out: #1D4A35; --paper: #2A2536; --paper-ink: #AFC3FF; --on-color: #14101F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15121F; --surface: #1F1A2E; --surface-2: #282238; --ink: #F1EEF9; --muted: #A59FBD; --line: #352E4A;
+  --violet: #A28EFF; --violet-soft: #2D2552; --coral: #FF8A66; --coral-soft: #3D2419; --green: #4FD08A; --green-soft: #173324;
+  --green-deep: #134A33; --sun: #FFC94D; --sun-fill: #E0A526; --sun-soft: #3A2E10; --red: #FF6B80; --red-soft: #401B24;
+  --chat-bg: #17141F; --bubble-in: #262036; --bubble-out: #1D4A35; --paper: #2A2536; --paper-ink: #AFC3FF; --on-color: #14101F;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+.wrap { max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+
+/* ---------- topo ---------- */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-mark { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: conic-gradient(from 200deg, var(--violet), var(--coral), var(--sun-fill), var(--green), var(--violet)); }
+.logo-mark span { width: 30px; height: 30px; border-radius: 10px; background: var(--surface); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 17px; }
+.logo h1 { font-size: 28px; font-weight: 800; }
+.logo h1 em { font-style: normal; color: var(--coral); }
+.logo p { font-size: 13px; color: var(--muted); }
+.roles { display: flex; flex-wrap: wrap; gap: 6px; }
+.roles button { border: 0; border-radius: 999px; padding: 9px 16px; font-weight: 800; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line); display: flex; align-items: center; gap: 8px; }
+.roles button .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.roles button .sub { font-weight: 400; font-size: 12px; color: var(--muted); }
+.roles button[aria-pressed="true"] { background: var(--c); color: var(--on-color); box-shadow: none; }
+.roles button[aria-pressed="true"] .dot { background: var(--on-color); }
+.roles button[aria-pressed="true"] .sub { color: inherit; opacity: .85; }
+
+/* ---------- fluxo ---------- */
+.flow { background: var(--surface); border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 var(--line); }
+.flow-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 6px; flex-wrap: wrap; }
+.flow-head .reset { border: 0; background: none; color: var(--violet); font-weight: 800; font-size: 13px; }
+.steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+.step { border: 0; text-align: left; border-radius: 16px; padding: 10px 12px; background: var(--surface-2); display: grid; grid-template-columns: 30px 1fr; gap: 2px 10px; align-items: center; }
+.step .n { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; background: var(--surface); color: var(--c); box-shadow: inset 0 0 0 2px var(--c); }
+.step b { font-size: 14px; line-height: 1.2; }
+.step span.who { font-size: 12px; color: var(--muted); }
+.step[aria-current="true"] { background: var(--c); color: var(--on-color); }
+.step[aria-current="true"] .n { background: var(--on-color); box-shadow: none; }
+.step[aria-current="true"] span.who { color: inherit; opacity: .85; }
+
+/* ---------- palco ---------- */
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+@media (max-width: 1180px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+.screens-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.screens-nav button { border: 0; background: transparent; padding: 6px 12px; border-radius: 999px; font-weight: 700; font-size: 13px; color: var(--muted); }
+.screens-nav button[aria-current="true"] { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+
+/* navegador */
+.browser { background: var(--surface); border-radius: 18px; overflow: hidden; box-shadow: 0 24px 50px -30px rgba(40, 20, 90, .35), 0 0 0 1px var(--line); container-type: inline-size; }
+.chrome { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--surface-2); }
+.chrome .lights { display: flex; gap: 6px; } .chrome .lights i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+.chrome .url { flex: 1; min-width: 0; background: var(--surface); border-radius: 999px; padding: 4px 14px; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* app web */
+.web { --accent: var(--violet); --accent-soft: var(--violet-soft); display: flex; flex-direction: column; min-height: 600px; }
+.web.care { --accent: var(--coral); --accent-soft: var(--coral-soft); }
+.web-bar { display: flex; align-items: center; gap: 14px 22px; padding: 14px 22px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.web-bar .brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.web-bar .brand i { width: 22px; height: 22px; border-radius: 7px; background: var(--accent); }
+.web-tabs { display: flex; gap: 2px; flex-wrap: wrap; flex: 1; }
+.web-tabs button { border: 0; background: none; padding: 7px 12px; border-radius: 10px; font-weight: 700; font-size: 14px; color: var(--muted); }
+.web-tabs button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); }
+.who { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.av { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: none; background: var(--accent-soft); color: var(--accent); }
+.av.lg { width: 56px; height: 56px; font-size: 18px; }
+.web-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+.hello { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.hello h2 { font-size: 26px; font-weight: 800; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.panel h3 { font-size: 16px; font-weight: 800; }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 18px; }
+.grid-2.even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+@container (max-width: 760px) { .grid-2, .grid-2.even { grid-template-columns: minmax(0, 1fr); } }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.chip.ok { background: var(--green-soft); color: var(--green); }
+.chip.sun { background: var(--sun-soft); color: var(--sun); }
+.chip.red { background: var(--red-soft); color: var(--red); }
+.chip.vio { background: var(--violet-soft); color: var(--violet); }
+.chip.cor { background: var(--coral-soft); color: var(--coral); }
+.btn { border: 0; border-radius: 14px; padding: 11px 16px; font-weight: 800; font-size: 14px; background: var(--accent, var(--violet)); color: var(--on-color); }
+.btn.ghost { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn.sm { padding: 7px 12px; font-size: 13px; border-radius: 11px; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.link { border: 0; background: none; padding: 0; color: var(--accent, var(--violet)); font-weight: 800; font-size: 13px; }
+
+/* régua do dia */
+.ruler { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 0 12px; }
+@container (max-width: 560px) { .ruler { grid-template-columns: 76px minmax(0, 1fr); } }
+.ruler .nm { font-size: 13px; font-weight: 700; padding: 9px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ruler .track { position: relative; height: 38px; border-bottom: 1px dashed var(--line); }
+.ruler .track .base { position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--surface-2); }
+.dose { position: absolute; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; border: 0; padding: 0; }
+.dose.ok { background: var(--green); }
+.dose.miss { background: var(--red); box-shadow: 0 0 0 4px var(--red-soft); }
+.dose.wait { background: var(--sun-fill); box-shadow: 0 0 0 4px var(--sun-soft); }
+.dose.next { background: var(--surface); box-shadow: inset 0 0 0 2.5px var(--muted); }
+.ruler .axis { grid-column: 2; position: relative; height: 22px; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ruler .axis span { position: absolute; top: 4px; transform: translateX(-50%); }
+.ruler .axis span:first-child { transform: none; } .ruler .axis span:last-child { transform: translateX(-100%); }
+.now { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--violet); border-radius: 2px; }
+.now::before { content: "agora 08:35"; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 800; color: var(--violet); white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 50%; }
+
+.alerts { display: flex; flex-direction: column; gap: 8px; }
+.alert { border-radius: 14px; padding: 12px 14px; display: grid; grid-template-columns: 8px minmax(0, 1fr); gap: 12px; background: var(--surface-2); }
+.alert > i { border-radius: 4px; background: var(--c); }
+.alert b { display: block; font-size: 14px; }
+.alert .small { color: var(--muted); }
+
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table-wrap { overflow-x: auto; }
+.table th { text-align: left; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 8px 8px; }
+.table td { padding: 10px 8px; border-top: 1px solid var(--line); vertical-align: middle; }
+.table tr.click { cursor: pointer; } .table tr.click:hover td { background: var(--surface-2); }
+.pname { display: flex; align-items: center; gap: 10px; min-width: 180px; }
+.week { display: flex; gap: 3px; }
+.week i { width: 12px; height: 12px; border-radius: 3px; }
+.w1 { background: var(--green); } .w5 { background: var(--sun-fill); } .w0 { background: var(--red); } .wn { background: var(--surface-2); box-shadow: inset 0 0 0 1.5px var(--line); }
+.num { font-variant-numeric: tabular-nums; font-weight: 800; }
+
+/* relatório */
+.ring-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.ring { width: 110px; height: 110px; flex: none; }
+.ring .bg { fill: none; stroke: var(--surface-2); stroke-width: 12; }
+.ring .fg { fill: none; stroke: var(--violet); stroke-width: 12; stroke-linecap: round; }
+.ring text { fill: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 26px; }
+.heat { display: grid; grid-template-columns: 74px repeat(14, minmax(0, 1fr)); gap: 4px; align-items: center; font-size: 12px; }
+.heat .lbl { color: var(--muted); font-weight: 700; }
+.heat i { aspect-ratio: 1; max-width: 100%; border-radius: 5px; display: block; }
+.heat .dd { text-align: center; color: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.heat .row-hi { outline: 2px dashed var(--sun-fill); outline-offset: 3px; border-radius: 6px; }
+.insight { border-radius: 16px; padding: 14px 16px; background: var(--sun-soft); display: flex; flex-direction: column; gap: 4px; }
+.insight b { color: var(--sun); }
+.rx { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.rx:first-of-type { border-top: 0; }
+.rx .t { flex: 1; min-width: 0; }
+.capsule { width: 34px; height: 14px; border-radius: 7px; overflow: hidden; display: flex; flex: none; transform: rotate(-25deg); }
+.capsule i { flex: 1; } .capsule i:first-child { background: var(--c1); } .capsule i:last-child { background: var(--c2); }
+
+/* formulário */
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label, .field .lab { font-size: 13px; font-weight: 800; }
+.field input, .field select { border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 12px; padding: 10px 12px; font: inherit; width: 100%; min-width: 0; }
+.fields-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.daysel { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.daysel button { border: 0; padding: 8px 0; border-radius: 10px; background: var(--surface-2); font-weight: 800; font-size: 12px; }
+.daysel button[aria-pressed="true"] { background: var(--violet); color: var(--on-color); }
+.times { display: flex; gap: 6px; flex-wrap: wrap; }
+.times .chip { font-size: 14px; padding: 6px 12px; font-variant-numeric: tabular-nums; }
+.warnbox { border-radius: 14px; padding: 12px 14px; background: var(--red-soft); color: var(--red); font-size: 14px; }
+.warnbox b { display: block; }
+.preview-phone { background: var(--chat-bg); border-radius: 20px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+
+/* receita */
+.paper { background: var(--paper); border-radius: 6px; padding: 22px 22px 26px; box-shadow: 0 10px 24px -14px rgba(40,20,90,.4), 0 0 0 1px var(--line); transform: rotate(-1.2deg); position: relative; color: var(--paper-ink); font-family: var(--font-hand); font-size: 22px; line-height: 1.35; }
+.paper .hd { font-family: var(--font-body); font-size: 12px; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 10px; }
+.paper .sig { margin-top: 14px; text-align: right; font-size: 20px; }
+.scan { position: absolute; left: 0; right: 0; height: 3px; background: var(--violet); box-shadow: 0 0 14px var(--violet); top: 10%; opacity: .8; }
+@media (prefers-reduced-motion: no-preference) { .scan { animation: scan 2.6s ease-in-out infinite alternate; } }
+@keyframes scan { to { top: 88%; } }
+.conf { font-variant-numeric: tabular-nums; }
+
+/* cuidador web */
+.fam { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; }
+@container (max-width: 760px) { .fam { grid-template-columns: minmax(0, 1fr); } }
+.sos { border-radius: 18px; padding: 16px 18px; background: var(--red); color: var(--on-color); display: flex; flex-direction: column; gap: 10px; }
+.sos .btn { background: var(--on-color); color: var(--red); }
+.sos .btn.ghost { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
+.okband { border-radius: 18px; padding: 14px 18px; background: var(--green-soft); color: var(--green); font-weight: 700; }
+.check { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.check:first-of-type { border-top: 0; }
+.check .h { font-family: var(--font-display); font-weight: 800; width: 48px; font-variant-numeric: tabular-nums; }
+.check .t { flex: 1; min-width: 0; }
+.bigweek { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; text-align: center; font-size: 11px; color: var(--muted); }
+.bigweek i { display: block; aspect-ratio: 1; max-width: 100%; border-radius: 50%; margin-bottom: 4px; }
+.contact { font-variant-numeric: tabular-nums; font-weight: 800; user-select: all; }
+
+/* celular e chat */
+.phone-stage { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start; }
+.phone { width: 100%; max-width: 360px; height: 720px; background: #18141F; border-radius: 44px; padding: 10px; box-shadow: 0 24px 50px -30px rgba(40, 20, 90, .5); flex: none; }
+.phone-in { height: 100%; border-radius: 35px; overflow: hidden; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
+.chat-head { background: var(--green-deep); color: #FFFFFF; padding: 14px 14px 12px; display: flex; align-items: center; gap: 10px; }
+.chat-head .av { background: #FFFFFF; color: var(--green-deep); }
+.chat-head .t { line-height: 1.2; } .chat-head .t small { opacity: .8; font-size: 12px; }
+.msgs { flex: 1; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; }
+.daychip { align-self: center; background: var(--bubble-in); color: var(--muted); font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 8px; margin: 4px 0; }
+.sys { align-self: center; background: var(--sun-soft); color: var(--sun); font-size: 12px; padding: 6px 10px; border-radius: 8px; text-align: center; max-width: 90%; }
+.msg { max-width: 84%; padding: 7px 10px 5px; border-radius: 12px; background: var(--bubble-in); color: var(--ink); font-size: 14px; box-shadow: 0 1px 0 rgba(0,0,0,.08); align-self: flex-start; }
+.msg.out { align-self: flex-end; background: var(--bubble-out); }
+.msg .hr { display: block; text-align: right; font-size: 10px; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.msg b { font-weight: 800; }
+.qr { align-self: flex-start; width: 84%; display: flex; flex-direction: column; gap: 4px; }
+.qr button { border: 0; background: var(--bubble-in); color: var(--green); font-weight: 800; padding: 9px; border-radius: 10px; box-shadow: 0 1px 0 rgba(0,0,0,.08); font-size: 14px; }
+.qr button:disabled { color: var(--muted); cursor: default; opacity: .7; }
+.composer { padding: 8px 10px 16px; display: flex; gap: 8px; align-items: center; }
+.composer span { flex: 1; background: var(--bubble-in); border-radius: 999px; padding: 10px 14px; font-size: 13px; color: var(--muted); }
+.composer i { width: 40px; height: 40px; border-radius: 50%; background: var(--green-deep); flex: none; }
+
+.side-card { width: 100%; max-width: 300px; background: var(--surface); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 var(--line); }
+.side-card .btn { --accent: var(--ink); width: 100%; }
+.side-card .btn.alt { background: var(--red); }
+.side-card .btn.ok { background: var(--green); }
+.tl { display: flex; flex-direction: column; gap: 0; }
+.tl div { display: grid; grid-template-columns: 46px 14px minmax(0, 1fr); gap: 8px; font-size: 13px; padding: 4px 0; }
+.tl .h { font-variant-numeric: tabular-nums; font-weight: 800; }
+.tl .d { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; background: var(--line); }
+.tl .on .d { background: var(--c, var(--green)); }
+.tl .off { color: var(--muted); }
+
+/* app opcional do paciente */
+.papp { padding: 24px 18px; display: flex; flex-direction: column; gap: 14px; background: var(--bg); height: 100%; overflow-y: auto; }
+.papp .greet { font-family: var(--font-display); font-weight: 800; font-size: 26px; line-height: 1.1; }
+.bigcard { border-radius: 26px; padding: 20px; background: var(--green); color: var(--on-color); display: flex; flex-direction: column; gap: 6px; }
+.bigcard .time { font-family: var(--font-display); font-size: 48px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.bigcard .med { font-size: 22px; font-weight: 800; }
+.bigcard button { margin-top: 10px; border: 0; border-radius: 20px; padding: 20px; font-family: var(--font-display); font-weight: 800; font-size: 26px; background: var(--on-color); color: var(--green); }
+.bigcard.done { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 2px var(--green); }
+.bigcard.late { background: var(--red); }
+.bigcard.late button { color: var(--red); }
+.plist { display: flex; flex-direction: column; gap: 8px; }
+.plist div { background: var(--surface); border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; font-size: 16px; }
+.plist .h { font-family: var(--font-display); font-weight: 800; width: 52px; font-variant-numeric: tabular-nums; }
+.plist .t { flex: 1; min-width: 0; font-weight: 700; }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 12px 18px; border-radius: 14px; font-weight: 800; font-size: 14px; z-index: 20; max-width: calc(100% - 32px); text-align: center; }
+
+/* notas */
+.notes { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.notes h2 { font-size: 24px; font-weight: 800; }
+.note { background: var(--surface); border-radius: 18px; padding: 16px 18px; box-shadow: 0 1px 0 var(--line); display: flex; flex-direction: column; gap: 6px; }
+.note q { quotes: "“" "”"; font-size: 15px; }
+.tasks { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; }
+.tasks li { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.tasks li:first-child { border-top: 0; }
+.tag { font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; align-self: start; justify-self: start; }
+.tag.Web { background: var(--violet-soft); color: var(--violet); }
+.tag.API { background: var(--coral-soft); color: var(--coral); }
+.tag.WhatsApp { background: var(--green-soft); color: var(--green); }
+.tag.Dados { background: var(--sun-soft); color: var(--sun); }
+.tag.IA { background: var(--surface-2); color: var(--ink); }
+.mvp { font-size: 12px; font-weight: 800; color: var(--violet); }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="logo">
+      <div class="logo-mark"><span>C+</span></div>
+      <div><h1>Cuidar<em>+</em></h1><p>Protótipo navegável · SuperNova · dados de exemplo</p></div>
+    </div>
+    <div class="roles" role="group" aria-label="Ator">
+      <button data-role="medico" style="--c:var(--violet)"><span class="dot"></span>Médico <span class="sub">painel web</span></button>
+      <button data-role="paciente" style="--c:var(--green)"><span class="dot"></span>Paciente <span class="sub">WhatsApp</span></button>
+      <button data-role="cuidador" style="--c:var(--coral)"><span class="dot"></span>Cuidador <span class="sub">web + WhatsApp</span></button>
+    </div>
+  </header>
+
+  <section class="flow" aria-label="Fluxo do MVP">
+    <div class="flow-head"><span class="eyebrow">Fluxo do MVP · clique para simular cada etapa</span><button class="reset" data-reset>Recomeçar simulação</button></div>
+    <div class="steps" id="steps"></div>
+  </section>
+
+  <div class="stage">
+    <main>
+      <nav class="screens-nav" id="screens" aria-label="Telas"></nav>
+      <div id="device"></div>
+    </main>
+    <aside class="notes" id="notes" aria-live="polite"></aside>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ---------- estado da simulação ---------- */
+const INITIAL = () => ({ role: 'medico', screen: 'm-visao', dose: 'enviado', snoozed: false, carerOk: false, med: 'Amoxicilina 500 mg', dosage: '1 comprimido', time: '08:00', days: new Set([1,2,3,4,5,6,0]) });
+let state = INITIAL();
+// dose da Losartana 08:00 de Dona Maria: agendado | enviado | tomado | atrasado | tomado_tarde
+
+const ROLE = {
+  medico: { label: 'Médico', color: 'var(--violet)', screens: [['m-visao','Visão geral'],['m-paciente','Relatório do paciente'],['m-cadastro','Cadastrar medicamento'],['m-receita','Receita por foto']] },
+  paciente: { label: 'Paciente', color: 'var(--green)', screens: [['p-whats','Lembretes no WhatsApp'],['p-app','App (opcional)']] },
+  cuidador: { label: 'Cuidador', color: 'var(--coral)', screens: [['c-painel','Painel da família'],['c-whats','Alertas no WhatsApp']] },
+};
+const roleOf = (id) => ({ m: 'medico', p: 'paciente', c: 'cuidador' })[id[0]];
+
+const STEPS = [
+  ['Médico cadastra', 'Médico · web', 'var(--violet)', 'm-cadastro'],
+  ['Lembrete chega', 'Paciente · WhatsApp', 'var(--green)', 'p-whats'],
+  ['Paciente confirma', 'Paciente · 1 toque', 'var(--green)', 'p-whats'],
+  ['Sem resposta: alerta', 'Cuidador e médico', 'var(--coral)', 'c-whats'],
+  ['Relatório de adesão', 'Médico · web', 'var(--violet)', 'm-paciente'],
+];
+
+const late = () => state.dose === 'atrasado';
+const taken = () => state.dose === 'tomado' || state.dose === 'tomado_tarde';
+const mariaDot = () => ({ agendado: 'next', enviado: 'wait', tomado: 'ok', tomado_tarde: 'ok', atrasado: 'miss' })[state.dose];
+
+/* ---------- dados de exemplo ---------- */
+const P = [
+  { id: 'maria', nome: 'Maria Aparecida Silva', ini: 'MA', idade: 78, cond: 'Hipertensão · diabetes tipo 2', ades: 78, week: [1,1,.5,1,0,1,'today'], doses: [[7,'ok'],[8,'MARIA'],[12.5,'next'],[20,'next']] },
+  { id: 'jose', nome: 'José Carlos Pereira', ini: 'JP', idade: 82, cond: 'Anticoagulante · varfarina', ades: 54, week: [1,0,0,1,.5,0,0], doses: [[8,'miss'],[18,'next']] },
+  { id: 'ana', nome: 'Ana Lúcia Rocha', ini: 'AR', idade: 71, cond: 'Hipotireoidismo', ades: 96, week: [1,1,1,1,1,1,1], doses: [[6.5,'ok']] },
+  { id: 'antonio', nome: 'Antônio Ferreira', ini: 'AF', idade: 85, cond: 'Insuficiência cardíaca', ades: 88, week: [1,1,1,.5,1,1,1], doses: [[8,'ok'],[14,'next'],[20,'next']] },
+  { id: 'celina', nome: 'Celina Duarte', ini: 'CD', idade: 69, cond: 'Hipertensão', ades: 91, week: [1,1,1,1,1,.5,1], doses: [[7.5,'ok'],[19,'next']] },
+];
+const MEDS = [
+  ['07:00', 'Levotiroxina 50 mcg', '1 comprimido em jejum', 'var(--sun-fill)', 'var(--sun-fill)'],
+  ['08:00', 'Losartana 50 mg', '1 comprimido', 'var(--violet)', 'var(--surface-2)'],
+  ['12:30', 'Metformina 850 mg', '1 comprimido após o almoço', 'var(--coral)', 'var(--coral)'],
+  ['20:00', 'Sinvastatina 20 mg', '1 comprimido à noite', 'var(--green)', 'var(--surface-2)'],
+];
+const capsule = (a, b) => `<span class="capsule" style="--c1:${a};--c2:${b}"><i></i><i></i></span>`;
+const chip = (cls, t) => `<span class="chip ${cls}">${t}</span>`;
+const adhChip = (p) => p >= 85 ? chip('ok', p + '%') : p >= 65 ? chip('sun', p + '%') : chip('red', p + '%');
+const wcell = (v) => v === 'today' ? `<i class="${taken() ? 'w1' : late() ? 'w0' : 'wn'}" title="Hoje"></i>` : `<i class="${v === 1 ? 'w1' : v === 0 ? 'w0' : 'w5'}"></i>`;
+
+/* ---------- moldura web ---------- */
+function web(kind, url, tabs, body, who) {
+  return `<div class="browser"><div class="chrome"><div class="lights"><i></i><i></i><i></i></div><div class="url">${url}</div></div>
+    <div class="web ${kind}"><div class="web-bar"><span class="brand"><i></i>Cuidar+</span>
+      <nav class="web-tabs">${tabs.map(([id, l]) => `<button data-go="${id}" aria-current="${id === state.screen}">${l}</button>`).join('')}</nav>
+      <div class="who">${who}</div></div>
+      <div class="web-body">${body}</div></div></div>`;
+}
+const MTABS = () => ROLE.medico.screens;
+const DOC = `<div class="av">HP</div><div><b>Dra. Helena Prado</b><div class="muted small">Geriatria · CRM 123456</div></div>`;
+
+/* ---------- telas do médico ---------- */
+const S = {};
+S['m-visao'] = () => {
+  const ticks = [6, 10, 14, 18, 22];
+  const pos = (h) => ((h - 6) / 16 * 100).toFixed(2) + '%';
+  const ruler = `<div class="ruler">
+    ${P.map(p => `<div class="nm">${p.nome.split(' ')[0]} ${p.nome.split(' ').slice(-1)}</div>
+      <div class="track"><div class="base"></div>
+        ${p.id === 'maria' ? `<div class="now" style="left:${pos(8.58)}"></div>` : ''}
+        ${p.doses.map(([h, s]) => `<button class="dose ${s === 'MARIA' ? mariaDot() : s}" style="left:${pos(h)}" title="${String(Math.floor(h)).padStart(2,'0')}:${h % 1 ? '30' : '00'}" data-go="m-paciente" aria-label="Dose ${h}h"></button>`).join('')}
+      </div>`).join('')}
+    <div class="axis">${ticks.map(t => `<span style="left:${pos(t)}">${String(t).padStart(2, '0')}h</span>`).join('')}</div>
+  </div>`;
+  const alerts = [
+    late() && ['var(--red)', 'Dona Maria não confirmou a Losartana 50 mg', '08:00 · 35 min sem resposta · Carla (filha) já foi avisada'],
+    ['var(--red)', 'Seu José não confirmou a Varfarina 5 mg', '08:00 · segundo dia seguido sem confirmar'],
+    ['var(--sun-fill)', 'Metformina de Dona Maria acaba em 4 dias', 'Baseado nas doses confirmadas'],
+    ['var(--violet)', 'Padrão detectado: Dona Maria esquece o remédio da tarde', '5 das últimas 14 doses das 12:30 sem confirmação'],
+  ].filter(Boolean);
+  return web('', 'cuidarmais / médico / visão geral', MTABS(), `
+    <div class="hello"><div><span class="eyebrow">Segunda, 19 de outubro</span><h2>Bom dia, Dra. Helena</h2></div>
+      <div class="btns"><button class="btn" data-go="m-cadastro">+ Cadastrar medicamento</button><button class="btn ghost" data-go="m-receita">Ler receita por foto</button></div></div>
+    <div class="panel">
+      <div class="panel-head"><h3>Régua de hoje</h3>
+        <div class="legend"><span><i style="background:var(--green)"></i>Tomou</span><span><i style="background:var(--sun-fill)"></i>Aguardando resposta</span><span><i style="background:var(--red)"></i>Sem resposta</span><span><i style="box-shadow:inset 0 0 0 2px var(--muted)"></i>Ainda vai tomar</span></div></div>
+      ${ruler}
+    </div>
+    <div class="grid-2">
+      <div class="panel"><div class="panel-head"><h3>Precisam de atenção</h3>${chip('red', alerts.filter(a => a[0] === 'var(--red)').length + ' sem resposta')}</div>
+        <div class="alerts">${alerts.map(([c, t, s]) => `<div class="alert" style="--c:${c}"><i></i><div><b>${t}</b><span class="small">${s}</span></div></div>`).join('')}</div></div>
+      <div class="panel"><div class="panel-head"><h3>Pacientes</h3><span class="muted small">últimos 7 dias</span></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Paciente</th><th>Semana</th><th>Adesão</th></tr></thead><tbody>
+          ${P.map(p => `<tr class="click" data-go="m-paciente"><td><div class="pname"><div class="av">${p.ini}</div><div><b>${p.nome}</b><div class="muted small">${p.idade} anos · ${p.cond}</div></div></div></td><td><div class="week">${p.week.map(wcell).join('')}</div></td><td>${adhChip(p.ades)}</td></tr>`).join('')}
+        </tbody></table></div></div>
+    </div>`, DOC);
+};
+
+S['m-paciente'] = () => {
+  const days = Array.from({ length: 14 }, (_, i) => 6 + i);
+  const manha = days.map((d, i) => i === 13 ? mariaDot() : i === 4 ? 'late' : 'ok');
+  const tarde = days.map((d, i) => i === 13 ? 'next' : [1, 4, 7, 10, 12].includes(i) ? 'miss' : 'ok');
+  const noite = days.map((d, i) => i === 13 ? 'next' : i === 8 ? 'late' : 'ok');
+  const cls = { ok: 'w1', miss: 'w0', late: 'w5', wait: 'w5', next: 'wn' };
+  const row = (lbl, arr, hi) => `<span class="lbl">${lbl}</span>${arr.map(s => `<i class="${cls[s]}${hi ? '' : ''}"></i>`).join('')}`;
+  const pct = 78, C = 2 * Math.PI * 46;
+  return web('', 'cuidarmais / médico / pacientes / maria-aparecida-silva', MTABS(), `
+    <div class="hello"><div style="display:flex;gap:14px;align-items:center"><div class="av lg">MA</div><div><span class="eyebrow">Paciente</span><h2>Maria Aparecida Silva</h2><span class="muted small">78 anos · hipertensão, diabetes tipo 2 · cuidadora: Carla (filha)</span></div></div>
+      <div class="btns">${chip('red', 'Alergia: penicilina')}${chip('red', 'Alergia: dipirona')}</div></div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="ring-row">
+          <svg class="ring" viewBox="0 0 110 110" role="img" aria-label="Adesão de 78% nos últimos 14 dias"><circle class="bg" cx="55" cy="55" r="46"/><circle class="fg" cx="55" cy="55" r="46" stroke-dasharray="${(C * pct / 100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 55 55)"/><text x="55" y="64" text-anchor="middle">${pct}%</text></svg>
+          <div style="flex:1;min-width:180px"><h3>Adesão nos últimos 14 dias</h3><p class="muted small">33 de 42 doses confirmadas pelo WhatsApp. Na quinzena anterior foram 71%.</p></div>
+        </div>
+        <div class="heat" aria-label="Mapa de doses por período nos últimos 14 dias">
+          <span></span>${days.map(d => `<span class="dd">${d}</span>`).join('')}
+          ${row('Manhã', manha)}
+          <span class="lbl" style="color:var(--sun)">Tarde</span>${tarde.map(s => `<i class="${cls[s]}"></i>`).join('')}
+          ${row('Noite', noite)}
+        </div>
+        <div class="legend"><span><i style="background:var(--green);border-radius:3px"></i>Tomou no horário</span><span><i style="background:var(--sun-fill);border-radius:3px"></i>Tomou atrasado</span><span><i style="background:var(--red);border-radius:3px"></i>Não confirmou</span></div>
+        <div class="insight"><b>Padrão: a dose da tarde é a mais esquecida</b><span class="small">Metformina das 12:30 ficou sem confirmação em 5 de 14 dias. Sugestão: mudar para 13:00, depois do almoço, ou pedir que Carla reforce por mensagem.</span></div>
+      </div>
+      <div class="panel"><div class="panel-head"><h3>Medicamentos ativos</h3><button class="link" data-go="m-cadastro">+ Adicionar</button></div>
+        <div>${MEDS.map(([h, n, d, a, b], i) => `<div class="rx">${capsule(a, b)}<div class="t"><b>${n}</b><div class="muted small">${h} · ${d}</div></div>${i === 1 ? (taken() ? chip('ok', 'Tomou hoje') : late() ? chip('red', 'Sem resposta') : chip('sun', 'Aguardando')) : i === 0 ? chip('ok', 'Tomou hoje') : chip('vio', 'Mais tarde')}</div>`).join('')}</div>
+        <div class="panel-head" style="margin-top:6px"><h3>Rede de cuidado</h3></div>
+        <div class="rx"><div class="av" style="--accent:var(--coral);--accent-soft:var(--coral-soft);background:var(--coral-soft);color:var(--coral)">CS</div><div class="t"><b>Carla Silva</b><div class="muted small">Filha · recebe alertas após 30 min</div></div></div>
+      </div>
+    </div>`, DOC);
+};
+
+const WD = [['S',1],['T',2],['Q',3],['Q',4],['S',5],['S',6],['D',0]];
+const allergyHit = () => /amoxi|penicil|ampicil/i.test(state.med);
+const bubbleText = () => `Bom dia, Dona Maria! ☀️ Está na hora do seu remédio:<br><b>${state.med || 'Nome do remédio'}</b> · ${state.dosage || 'dose'}<br>Toque em uma opção abaixo.`;
+S['m-cadastro'] = () => web('', 'cuidarmais / médico / pacientes / maria-aparecida-silva / novo-medicamento', MTABS(), `
+    <div class="hello"><div><span class="eyebrow">Novo medicamento para</span><h2>Maria Aparecida Silva</h2></div><button class="btn ghost" data-go="m-receita">Preencher a partir de foto da receita</button></div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="field"><label for="f-med">Medicamento</label><input id="f-med" value="${state.med}"></div>
+        <div id="allergy">${allergyHit() ? `<div class="warnbox"><b>Atenção: possível alergia</b>Amoxicilina é uma penicilina e Dona Maria tem alergia registrada a penicilina.</div>` : ''}</div>
+        <div class="fields-2"><div class="field"><label for="f-dose">Dose</label><input id="f-dose" value="${state.dosage}"></div><div class="field"><label for="f-qtd">Comprimidos na caixa</label><input id="f-qtd" value="21"></div></div>
+        <div class="field"><span class="lab">Horários</span><div class="times">${chip('vio', state.time)}${chip('vio', '16:00')}${chip('vio', '00:00')}<button class="chip" style="border:1.5px dashed var(--line);background:none" data-toast="Escolher novo horário">+ horário</button></div></div>
+        <div class="field"><span class="lab">Dias da semana</span><div class="daysel">${WD.map(([l, d]) => `<button data-day="${d}" aria-pressed="${state.days.has(d)}">${l}</button>`).join('')}</div></div>
+        <div class="fields-2"><div class="field"><label for="f-ini">Início</label><input id="f-ini" value="19/10/2026"></div><div class="field"><label for="f-fim">Fim</label><input id="f-fim" value="26/10/2026"></div></div>
+        <div class="field"><label for="f-min">Avisar cuidador e médico se não confirmar em</label><select id="f-min"><option>15 minutos</option><option selected>30 minutos</option><option>60 minutos</option></select></div>
+        <div class="btns"><button class="btn" data-save>Salvar e agendar lembretes</button><button class="btn ghost" data-go="m-paciente">Cancelar</button></div>
+      </div>
+      <div class="panel"><h3>Como Dona Maria vai receber</h3><p class="muted small">Prévia da mensagem enviada pelo WhatsApp em cada horário.</p>
+        <div class="preview-phone"><span class="daychip">08:00</span><div class="msg" id="bubble">${bubbleText()}<span class="hr">08:00</span></div>
+          <div class="qr"><button disabled>✅ Tomei</button><button disabled>⏰ Me lembra em 15 min</button></div></div>
+        <p class="muted small">Sem resposta em 30 min: Carla recebe um alerta no WhatsApp e o caso aparece em "Precisam de atenção".</p>
+      </div>
+    </div>`, DOC);
+
+S['m-receita'] = () => web('', 'cuidarmais / médico / receita-por-foto', MTABS(), `
+    <div class="hello"><div><span class="eyebrow">Leitura automática · beta</span><h2>Receita por foto</h2></div>${chip('vio', 'OCR + IA')}</div>
+    <div class="grid-2 even">
+      <div class="panel" style="background:var(--surface-2);border:0;padding:28px">
+        <div class="paper"><div class="scan"></div>
+          <div class="hd">Dra. Helena Prado · Geriatria · CRM 123456 · 19/10/2026<br>Paciente: Maria Aparecida Silva</div>
+          1) Losartana 50mg — 1 cp pela manhã<br>2) Metformina 850mg — 1 cp após almoço<br>3) Sinvastatina 20mg — 1 cp à noite<br>uso contínuo
+          <div class="sig">H. Prado</div>
+        </div>
+      </div>
+      <div class="panel"><div class="panel-head"><h3>O que o sistema entendeu</h3><span class="muted small">confira antes de salvar</span></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Remédio</th><th>Dose e horário</th><th>Confiança</th></tr></thead><tbody>
+          <tr><td><b>Losartana 50 mg</b></td><td>1 cp · 08:00</td><td>${chip('ok', '<span class="conf">98%</span>')}</td></tr>
+          <tr><td><b>Metformina 850 mg</b></td><td>1 cp · 12:30</td><td>${chip('ok', '<span class="conf">94%</span>')}</td></tr>
+          <tr><td><b>Sinvastatina 20 mg</b></td><td>1 cp · <span style="color:var(--sun);font-weight:800">20:00?</span></td><td>${chip('sun', '<span class="conf">71%</span> confira')}</td></tr>
+        </tbody></table></div>
+        <p class="muted small">"À noite" virou 20:00 por padrão. Ajuste o horário se for outro.</p>
+        <div class="btns"><button class="btn" data-go="m-paciente" data-toast="3 medicamentos cadastrados e lembretes agendados">Cadastrar 3 medicamentos</button><button class="btn ghost" data-toast="Enviar outra foto">Enviar outra foto</button></div>
+      </div>
+    </div>`, DOC);
+
+/* ---------- paciente: WhatsApp ---------- */
+function chatPatient() {
+  const m = [];
+  m.push(`<span class="daychip">HOJE</span>`);
+  m.push(`<div class="msg">Bom dia, Dona Maria! ☀️ Hora da <b>Levotiroxina 50 mcg</b>, 1 comprimido em jejum.<span class="hr">07:00</span></div>`);
+  m.push(`<div class="msg out">✅ Tomei<span class="hr">07:03 ✓✓</span></div>`);
+  m.push(`<div class="msg">Anotado! Próximo: Losartana às 08:00. 💙<span class="hr">07:03</span></div>`);
+  if (state.dose === 'agendado') { m.push(`<div class="sys">Próximo lembrete agendado para 08:00. Avance a simulação ao lado.</div>`); return m.join(''); }
+  m.push(`<div class="msg">Dona Maria, está na hora do seu remédio:<br><b>Losartana 50 mg</b> · 1 comprimido<br>Toque em uma opção abaixo.<span class="hr">08:00</span></div>`);
+  const open = state.dose === 'enviado' || state.dose === 'atrasado';
+  if (state.snoozed) {
+    m.push(`<div class="msg out">⏰ Me lembra em 15 min<span class="hr">08:02 ✓✓</span></div>`);
+    m.push(`<div class="msg">Combinado! Te chamo de novo às 08:17.<span class="hr">08:02</span></div>`);
+    m.push(`<div class="msg">Dona Maria, passando de novo: <b>Losartana 50 mg</b>. Já tomou?<span class="hr">08:17</span></div>`);
+  }
+  if (state.dose === 'atrasado' || state.dose === 'tomado_tarde') {
+    m.push(`<div class="msg">Ainda não recebemos sua confirmação da Losartana. Avisamos a Carla para dar uma ligadinha. 💛<span class="hr">08:30</span></div>`);
+  }
+  if (open) m.push(`<div class="qr"><button data-take>✅ Tomei</button>${state.snoozed || late() ? '' : '<button data-snooze>⏰ Me lembra em 15 min</button>'}</div>`);
+  if (state.dose === 'tomado') m.push(`<div class="msg out">✅ Tomei<span class="hr">${state.snoozed ? '08:18' : '08:04'} ✓✓</span></div><div class="msg">Perfeito, Dona Maria! Registrado. Próximo: <b>Metformina 850 mg</b> às 12:30. 🌷<span class="hr">${state.snoozed ? '08:18' : '08:04'}</span></div>`);
+  if (state.dose === 'tomado_tarde') m.push(`<div class="msg out">✅ Tomei<span class="hr">08:41 ✓✓</span></div><div class="msg">Obrigado! Registrado às 08:41 e a Carla já foi avisada que está tudo bem.<span class="hr">08:41</span></div>`);
+  return m.join('');
+}
+function phone(head, inner, composer = true) {
+  return `<div class="phone"><div class="phone-in">${head}<div class="msgs" id="msgs">${inner}</div>${composer ? '<div class="composer"><span>Mensagem</span><i></i></div>' : ''}</div></div>`;
+}
+const chatHead = (name, sub) => `<div class="chat-head"><div class="av">C+</div><div class="t"><b>${name}</b><br><small>${sub}</small></div></div>`;
+function serverTimeline() {
+  const on = (cond, c) => cond ? `class="on" style="--c:${c}"` : 'class="off"';
+  return `<div class="side-card"><span class="eyebrow">Bastidores do servidor</span>
+    <div class="tl">
+      <div ${on(state.dose !== 'agendado', 'var(--green)')}><span class="h">08:00</span><span class="d"></span><span>Lembrete enviado pelo WhatsApp</span></div>
+      <div ${on(state.snoozed, 'var(--sun-fill)')}><span class="h">08:17</span><span class="d"></span><span>Relembrete (pediu mais 15 min)</span></div>
+      <div ${on(late() || state.dose === 'tomado_tarde', 'var(--red)')}><span class="h">08:30</span><span class="d"></span><span>Sem resposta: alerta para Carla e Dra. Helena</span></div>
+      <div ${on(taken(), 'var(--green)')}><span class="h">✓</span><span class="d"></span><span>Confirmação gravada no histórico</span></div>
+    </div>
+    <span class="eyebrow" style="margin-top:6px">Simular</span>
+    ${state.dose === 'agendado' ? '<button class="btn" data-dose="enviado">Avançar para 08:00</button>' : ''}
+    ${state.dose === 'enviado' ? '<button class="btn alt" data-dose="atrasado">Passar 30 min sem responder</button>' : ''}
+    ${taken() || late() ? '<button class="btn ghost" data-reset>Recomeçar</button>' : ''}
+  </div>`;
+}
+S['p-whats'] = () => `<div class="phone-stage">${phone(chatHead('Cuidar+ Lembretes', 'conta comercial verificada · simulação'), chatPatient())}${serverTimeline()}</div>`;
+
+S['p-app'] = () => {
+  const big = taken()
+    ? `<div class="bigcard done"><span class="eyebrow">Tudo certo</span><div class="med">Losartana confirmada ✓</div><span class="muted">Próximo: Metformina às 12:30</span></div>`
+    : `<div class="bigcard ${late() ? 'late' : ''}"><span style="font-weight:800;opacity:.9">${late() ? 'Atrasado 35 min' : 'Agora'}</span><div class="time">08:00</div><div class="med">Losartana 50 mg</div><span>1 comprimido</span><button data-take>Tomei</button></div>`;
+  return `<div class="phone-stage"><div class="phone"><div class="phone-in"><div class="papp">
+    <div><span class="eyebrow">Segunda, 19 de outubro</span><div class="greet">Olá, Dona Maria</div></div>
+    ${big}
+    <div class="plist">${MEDS.map(([h, n], i) => `<div><span class="h">${h}</span><span class="t">${n}</span>${i === 0 || (i === 1 && taken()) ? chip('ok', '✓') : ''}</div>`).join('')}</div>
+    <p class="muted small" style="text-align:center">Prefere o WhatsApp? Os lembretes continuam chegando lá.</p>
+  </div></div></div>${serverTimeline()}</div>`;
+};
+
+/* ---------- cuidador ---------- */
+const CARE = `<div class="av">CS</div><div><b>Carla Silva</b><div class="muted small">Filha de Dona Maria</div></div>`;
+const CTABS = () => ROLE.cuidador.screens;
+S['c-painel'] = () => {
+  const status = (i) => i === 0 ? chip('ok', 'Tomou 07:03') : i === 1 ? (taken() ? chip('ok', state.dose === 'tomado_tarde' ? 'Tomou 08:41' : 'Tomou 08:04') : late() ? chip('red', 'Sem resposta') : chip('sun', 'Aguardando')) : chip('vio', 'Mais tarde');
+  const sos = late() && !state.carerOk
+    ? `<div class="sos"><span class="eyebrow" style="color:inherit;opacity:.85">Alerta · 08:30</span><h3 style="font-size:20px">Sua mãe não confirmou a Losartana das 08:00</h3><span>Já são 35 minutos sem resposta no WhatsApp. Que tal ligar para ela?</span>
+        <div class="btns"><button class="btn sm" data-carer-ok>Já falei com ela</button><button class="btn sm ghost" data-toast="Dona Maria: (11) 98877-6655">Ver telefone</button></div></div>`
+    : `<div class="okband">${state.carerOk ? 'Alerta resolvido por você às 08:38. A Dra. Helena vê isso no relatório.' : 'Tudo em dia. Avisamos você se alguém deixar de confirmar um remédio.'}</div>`;
+  const W = [['Ter','w1'],['Qua','w1'],['Qui','w5'],['Sex','w1'],['Sáb','w0'],['Dom','w1'],['Hoje', taken() ? 'w1' : late() ? 'w0' : 'wn']];
+  return web('care', 'cuidarmais / família', CTABS(), `
+    <div class="hello"><div><span class="eyebrow">Segunda, 19 de outubro</span><h2>Olá, Carla</h2></div><button class="btn ghost" data-toast="Digite o código que a pessoa recebeu no WhatsApp">+ Acompanhar outra pessoa</button></div>
+    ${sos}
+    <div class="fam">
+      <div class="panel"><div class="panel-head"><div style="display:flex;gap:12px;align-items:center"><div class="av lg">MA</div><div><span class="eyebrow">Mãe</span><h3 style="font-size:20px">Dona Maria</h3></div></div>${late() ? chip('red', 'Precisa de atenção') : chip('ok', 'Em dia')}</div>
+        <div>${MEDS.map(([h, n, d, a, b], i) => `<div class="check"><span class="h">${h}</span>${capsule(a, b)}<div class="t"><b>${n}</b><div class="muted small">${d}</div></div>${status(i)}</div>`).join('')}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+        <div class="panel"><div class="panel-head"><h3>Últimos 7 dias</h3>${chip('sun', '78%')}</div>
+          <div class="bigweek">${W.map(([d, c]) => `<div><i class="${c}"></i>${d}</div>`).join('')}</div>
+          <span class="muted small">Sábado ficou sem a dose da tarde.</span></div>
+        <div class="panel"><div class="panel-head"><div style="display:flex;gap:12px;align-items:center"><div class="av">AF</div><div><span class="eyebrow">Pai</span><b>Seu Antônio</b></div></div>${chip('ok', '1 de 3 hoje')}</div><span class="muted small">Próximo: Furosemida às 14:00</span></div>
+        <div class="panel"><h3>Equipe de cuidado</h3><div style="display:flex;gap:10px;align-items:center"><div class="av" style="background:var(--violet-soft);color:var(--violet)">HP</div><div><b>Dra. Helena Prado</b><div class="muted small">Geriatria · recebe os mesmos alertas</div></div></div></div>
+      </div>
+    </div>`, CARE);
+};
+
+function chatCarer() {
+  const m = [`<span class="daychip">ONTEM</span>`,
+    `<div class="msg">Resumo do dia de Dona Maria: tomou <b>4 de 4</b> remédios. ✅<span class="hr">21:00</span></div>`,
+    `<span class="daychip">HOJE</span>`];
+  if (state.dose === 'atrasado' || state.dose === 'tomado_tarde') {
+    m.push(`<div class="msg">⚠️ <b>Alerta Cuidar+</b><br>Dona Maria não confirmou a <b>Losartana 50 mg</b> das 08:00. Já se passaram 30 minutos.<span class="hr">08:30</span></div>`);
+    if (!state.carerOk && state.dose === 'atrasado') m.push(`<div class="qr"><button data-carer-ok>📞 Já falei com ela</button><button data-go="c-painel">Abrir painel</button></div>`);
+    if (state.carerOk) m.push(`<div class="msg out">📞 Já falei com ela<span class="hr">08:38 ✓✓</span></div><div class="msg">Obrigado, Carla. Registramos que você entrou em contato.<span class="hr">08:38</span></div>`);
+    if (state.dose === 'tomado_tarde') m.push(`<div class="msg">✅ Dona Maria confirmou a Losartana às 08:41.<span class="hr">08:41</span></div>`);
+  } else if (taken()) {
+    m.push(`<div class="sys">Dona Maria confirmou a dose das 08:00 a tempo. Nenhum alerta enviado.</div>`);
+  } else {
+    m.push(`<div class="sys">Nenhum alerta por enquanto. Simule 30 min sem resposta ao lado.</div>`);
+  }
+  return m.join('');
+}
+function carerSide() {
+  return `<div class="side-card"><span class="eyebrow">Regra do alerta</span>
+    <p class="small">Se Dona Maria não tocar em "Tomei" em <b>30 minutos</b>, Carla recebe esta mensagem e o caso aparece no painel da Dra. Helena.</p>
+    <span class="eyebrow" style="margin-top:6px">Simular</span>
+    ${state.dose === 'enviado' || state.dose === 'agendado' ? '<button class="btn alt" data-dose="atrasado">Passar 30 min sem resposta</button>' : ''}
+    ${late() ? '<button class="btn ok" data-take>Dona Maria toma agora</button>' : ''}
+    ${taken() || late() ? '<button class="btn ghost" data-reset>Recomeçar</button>' : ''}
+  </div>`;
+}
+S['c-whats'] = () => `<div class="phone-stage">${phone(chatHead('Cuidar+ Família', 'alertas sobre Dona Maria · simulação'), chatCarer())}${carerSide()}</div>`;
+
+/* ---------- notas por tela ---------- */
+const NOTES = {
+  'm-visao': { title: 'Visão geral do médico', mvp: true, story: 'Como médico, quero ver de relance quem tomou, quem está atrasado e quem precisa de atenção hoje.',
+    tasks: [['Web','Régua do dia com uma linha por paciente'],['Web','Lista "Precisam de atenção" ordenada por gravidade'],['API','Endpoint de doses do dia com status por paciente'],['Dados','Tabelas pacientes, medicamentos, doses e confirmações']] },
+  'm-paciente': { title: 'Relatório do paciente', mvp: true, story: 'Como médico, quero ver a adesão do paciente por período do dia para ajustar o tratamento.',
+    tasks: [['API','Calcular adesão de 14 dias (tomadas, atrasadas, perdidas)'],['Web','Anel de adesão e mapa por período'],['IA','Detectar o período mais esquecido (regra simples primeiro)'],['Web','Medicamentos ativos e rede de cuidado']] },
+  'm-cadastro': { title: 'Cadastrar medicamento', mvp: true, story: 'Como médico, quero cadastrar remédio, dose e horários e já ver como o paciente vai receber o lembrete.',
+    tasks: [['Web','Formulário com horários, dias, período e prazo do alerta'],['Web','Prévia da mensagem do WhatsApp em tempo real'],['API','Salvar e gerar a agenda de lembretes'],['API','Checar alergias por classe do princípio ativo']] },
+  'm-receita': { title: 'Receita por foto', mvp: false, story: 'Como médico ou cuidador, quero fotografar a receita e ter os remédios preenchidos automaticamente.',
+    tasks: [['IA','OCR da imagem e extração de remédio, dose e horário'],['Web','Tela de revisão com nível de confiança'],['API','Converter "à noite", "8/8h" em horários']] },
+  'p-whats': { title: 'Lembrete no WhatsApp', mvp: true, story: 'Como paciente idoso, quero receber o lembrete no WhatsApp e confirmar com um toque.',
+    tasks: [['WhatsApp','Conta na WhatsApp Business API e modelo de mensagem aprovado'],['API','Agendador que envia o lembrete no horário'],['WhatsApp','Webhook que recebe "Tomei" e "Me lembra em 15 min"'],['API','Gravar confirmação e reagendar relembrete']] },
+  'p-app': { title: 'App do paciente', mvp: false, story: 'Como paciente que prefere app, quero ver a próxima dose em letras grandes e confirmar com um botão.',
+    tasks: [['Web','Tela única com próxima dose e botão Tomei'],['Web','Lista do dia em fonte grande'],['API','Mesma confirmação usada pelo WhatsApp']] },
+  'c-painel': { title: 'Painel da família', mvp: true, story: 'Como cuidador, quero acompanhar a adesão de quem eu cuido e ser avisado quando algo dá errado.',
+    tasks: [['Web','Faixa de alerta com "Já falei com ela"'],['Web','Checklist do dia e semana de cada pessoa'],['API','Vincular cuidador a paciente por código'],['API','Registrar quem resolveu o alerta']] },
+  'c-whats': { title: 'Alerta ao cuidador', mvp: true, story: 'Como cuidador, quero receber um alerta no WhatsApp se meu familiar não confirmar o remédio em X minutos.',
+    tasks: [['API','Job que verifica doses sem confirmação após o prazo'],['WhatsApp','Mensagem de alerta com botões'],['WhatsApp','Resumo diário às 21:00'],['API','Mesmo alerta no painel do médico']] },
+};
+
+/* ---------- render ---------- */
+function render() {
+  const { role, screen } = state;
+  document.querySelectorAll('[data-role]').forEach(b => b.setAttribute('aria-pressed', b.dataset.role === role));
+  const stepIdx = screen === 'm-cadastro' ? 0 : screen === 'p-whats' ? (taken() ? 2 : 1) : screen === 'c-whats' ? 3 : screen === 'm-paciente' ? 4 : -1;
+  document.getElementById('steps').innerHTML = STEPS.map(([t, w, c], i) =>
+    `<button class="step" data-step="${i}" style="--c:${c}" aria-current="${i === stepIdx}"><span class="n">${i + 1}</span><b>${t}</b><span class="who">${w}</span></button>`).join('');
+  document.getElementById('screens').innerHTML = ROLE[role].screens.map(([id, l]) => `<button data-go="${id}" aria-current="${id === screen}">${l}</button>`).join('');
+  document.getElementById('device').innerHTML = S[screen]();
+  const n = NOTES[screen];
+  document.getElementById('notes').innerHTML = `
+    <div><span class="eyebrow">${ROLE[role].label}</span><h2>${n.title}</h2>${n.mvp ? '<span class="mvp">Faz parte do MVP</span>' : '<span class="muted small">Diferencial, depois do MVP</span>'}</div>
+    <div class="note"><span class="eyebrow">User story</span><q>${n.story}</q></div>
+    <div class="note"><span class="eyebrow">Primeiras tasks</span><ul class="tasks">${n.tasks.map(([k, t]) => `<li><span class="tag ${k}">${k}</span><span>${t}</span></li>`).join('')}</ul></div>`;
+  const msgs = document.getElementById('msgs'); if (msgs) msgs.scrollTop = msgs.scrollHeight;
+}
+
+let toastTimer;
+function toast(t) { const el = document.getElementById('toast'); el.innerHTML = `<div class="toast" role="status">${t}</div>`; clearTimeout(toastTimer); toastTimer = setTimeout(() => el.innerHTML = '', 2600); }
+function go(id) { state.screen = id; state.role = roleOf(id); render(); }
+
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('button, tr[data-go]');
+  if (!t) return;
+  const d = t.dataset;
+  if (d.role) { state.role = d.role; state.screen = ROLE[d.role].screens[0][0]; return render(); }
+  if ('reset' in d) { state = { ...INITIAL(), role: state.role, screen: state.screen }; toast('Simulação recomeçada'); return render(); }
+  if (d.step) {
+    const i = +d.step;
+    if (i === 0) state.dose = 'agendado', state.snoozed = false, state.carerOk = false;
+    if (i === 1 && state.dose === 'agendado') state.dose = 'enviado';
+    if (i === 1 || i === 2) { if (!['enviado', 'atrasado'].includes(state.dose) && i === 1) state.dose = 'enviado'; }
+    if (i === 3 && state.dose !== 'tomado_tarde') { state.dose = 'atrasado'; state.carerOk = false; }
+    return go(STEPS[i][3]);
+  }
+  if ('take' in d) { state.dose = late() ? 'tomado_tarde' : 'tomado'; toast(state.dose === 'tomado' ? 'Confirmação recebida' : 'Confirmação recebida às 08:41'); return render(); }
+  if ('snooze' in d) { state.snoozed = true; return render(); }
+  if (d.dose) { state.dose = d.dose; if (d.dose === 'atrasado') toast('08:30: alerta enviado para Carla e Dra. Helena'); return render(); }
+  if ('carerOk' in d) { state.carerOk = true; toast('Alerta marcado como resolvido'); return render(); }
+  if (d.day) { const n = +d.day; state.days.has(n) ? state.days.delete(n) : state.days.add(n); return render(); }
+  if ('save' in d) { state.dose = 'agendado'; state.snoozed = false; state.carerOk = false; toast('Lembretes agendados. Veja a etapa 2.'); return render(); }
+  if (d.go) { go(d.go); if (d.toast) toast(d.toast); return; }
+  if (d.toast) toast(d.toast);
+});
+document.addEventListener('input', (e) => {
+  const id = e.target.id;
+  if (id === 'f-med' || id === 'f-dose') {
+    if (id === 'f-med') state.med = e.target.value; else state.dosage = e.target.value;
+    const b = document.getElementById('bubble'); if (b) b.innerHTML = bubbleText() + '<span class="hr">08:00</span>';
+    const a = document.getElementById('allergy');
+    if (a) a.innerHTML = allergyHit() ? `<div class="warnbox"><b>Atenção: possível alergia</b>${state.med} é uma penicilina e Dona Maria tem alergia registrada a penicilina.</div>` : '';
+  }
+});
+
+render();
+</script>
