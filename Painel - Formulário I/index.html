@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel Cuidar+</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="top-in">
+      <div class="brand">
+        <span class="logo" aria-hidden="true"></span>
+        <div><div class="brand-name">Cuidar+</div><div class="brand-sub">Entendendo o problema</div></div>
+      </div>
+      <div class="tools">
+        <span class="chip" id="period">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+          <span id="period-txt">Período</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="head-sub" id="meta-text">Pesquisa: Acompanhamento de Pacientes Idosos</div>
+
+    <section class="sec-block">
+      <div class="sec"><span class="sec-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6M2 20.5h20"/></svg></span><div><h2>Visão geral</h2><p>Quantos médicos responderam e como a coleta andou</p></div></div>
+      <div class="grid"><div class="stack-col" id="kpis"></div><article class="card c9" id="c-time"></article></div>
+    </section>
+
+    <section class="sec-block">
+      <div class="sec"><span class="sec-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l9.5 16.5h-19z"/><path d="M12 10v4.5M12 17.5v.01"/></svg></span><div><h2>Dificuldades no cuidado</h2><p>O que os médicos apontam como difícil no atendimento a idosos</p></div></div>
+      <div class="grid">
+        <article class="card c4" id="c-dif"></article>
+        <article class="card c4" id="c-maior"></article>
+        <article class="card c4" id="c-open"></article>
+      </div>
+    </section>
+
+    <section class="sec-block">
+      <div class="sec"><span class="sec-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span><div><h2>Acompanhamento hoje e a plataforma</h2><p>Como o cuidado é feito depois da consulta e como o médico gostaria de receber as informações</p></div></div>
+      <div class="grid">
+        <article class="card c4" id="c-apos"></article>
+        <article class="card c4" id="c-sabe"></article>
+        <article class="card c4" id="c-pref"></article>
+      </div>
+    </section>
+
+    <section class="sec-block">
+      <div class="sec"><span class="sec-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9.5L4 20.5z"/><path d="M8 9.5h8M8 12.5h5"/></svg></span><div><h2>Entrevistas</h2><p>Observações anotadas nas conversas, em dois grupos</p></div></div>
+      <div class="grid" id="ent"></div>
+    </section>
+
+    <div class="foot">Os nomes e contatos dos médicos não aparecem neste painel. O campo de contato só entra na contagem de quem aceitou conversar.</div>
+  </main>
+</div>
+<div id="tip" role="status"></div>
+
+<script src="js/dados.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

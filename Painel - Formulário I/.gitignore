@@ -1,0 +1,9 @@
+# Ambiente virtual Python
+.venv/
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Arquivos de trava do LibreOffice/Excel ao abrir a planilha
+dados/.~lock.*
