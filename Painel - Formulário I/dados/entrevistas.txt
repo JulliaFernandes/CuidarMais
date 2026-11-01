@@ -1,0 +1,24 @@
+# Entrevistas com médicos — fundamentação da ideia e funcionalidades da plataforma
+#
+# Como preencher: um bloco por entrevista, separado por uma linha com apenas ---
+# Campos (nessa ordem, um por linha):
+#   Nome: nome da pessoa (ou "Não informado")
+#   Especialidade: profissão/especialidade (ou "Não informado")
+# Depois, duas listas, cada item em uma linha começando com "-":
+#   Fundamentação:
+#   - frase que mostra que o problema existe e que a solução faz sentido
+#   Funcionalidades:
+#   - frase que descreve algo que a plataforma deveria ter
+# Uma das duas listas pode ficar vazia se a entrevista não trouxe nada daquele tipo.
+# Linhas que começam com # são ignoradas.
+
+Nome: A confirmar (relato enviado por áudio, sem nome registrado)
+Especialidade: A confirmar
+Fundamentação:
+- Cuidado fragmentado: o idoso costuma ter muitas comorbidades e procura vários especialistas, e os medicamentos vão se somando sem que ninguém olhe o conjunto.
+- Sem um geriatra coordenando o tratamento, falta quem avalie se os medicamentos continuam apropriados, suspenda ou troque o que for inadequado.
+- Muitos profissionais tratam o idoso com metas de adulto, sem considerar o grau de dependência — o que pode prejudicar os idosos mais frágeis.
+- Polivitamínicos e medicamentos sem evidência de benefício se somam ao tratamento e aumentam a posologia.
+- Hoje, o acompanhamento entre consultas em casos de ajuste de medicação é manual: a médica marca retornos mais frequentes para ter segurança na transição.
+Funcionalidades:
+---

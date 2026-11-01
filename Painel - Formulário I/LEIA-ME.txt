@@ -1,0 +1,48 @@
+Painel Cuidar+ — como usar
+===========================
+
+O QUE É CADA ARQUIVO
+---------------------
+index.html            A página do painel. Abra este arquivo no navegador para ver o painel.
+css/estilo.css         Visual do painel.
+js/app.js              Lógica que desenha os gráficos.
+js/dados.js             Os dados prontos, gerados a partir da planilha e do entrevistas.txt.
+                        Não edite este arquivo à mão — ele é reescrito pelo gerar_dados.py.
+dados/Cuidar_respostas.xlsx   A planilha de respostas do formulário (Google Forms).
+dados/entrevistas.txt         Fundamentação da ideia e funcionalidades da plataforma,
+                        anotadas a partir das conversas com os médicos.
+gerar_dados.py          Script que lê os dois arquivos acima e gera js/dados.js.
+
+COMO VER O PAINEL
+-------------------
+Dê dois cliques em index.html. Ele abre no navegador com os dados que já estão
+em js/dados.js (os da planilha atual). Não precisa internet nem instalar nada
+para só visualizar.
+
+COMO ATUALIZAR COM NOVAS RESPOSTAS
+-------------------------------------
+1. Baixe a planilha atualizada do Google Forms (aba Respostas > exportar para
+   Sheets, depois Arquivo > Fazer download > Microsoft Excel) e substitua o
+   arquivo dados/Cuidar_respostas.xlsx por ele (mantenha o mesmo nome).
+2. Se tiver novas observações de entrevistas, edite dados/entrevistas.txt.
+   O formato está explicado nos comentários no começo do próprio arquivo.
+3. Abra um terminal nesta pasta e rode:
+
+       python3 gerar_dados.py
+
+   (Se der erro de "openpyxl não encontrado", rode antes:
+       pip install openpyxl
+   ou, em alguns sistemas:
+       pip install --break-system-packages openpyxl )
+
+4. Abra (ou atualize) index.html no navegador. Os gráficos já aparecem com os
+   dados novos.
+
+PRIVACIDADE
+------------
+O painel nunca mostra nome nem contato de ninguém. A planilha original fica
+na pasta dados/ só para o script ler; o painel em si (index.html) não lê a
+planilha diretamente — ele lê js/dados.js, que já sai sem essas colunas.
+
+Se for compartilhar esta pasta com mais gente da equipe, pode mandar a pasta
+inteira como está: funciona do mesmo jeito no computador de qualquer pessoa.
