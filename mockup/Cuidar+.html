@@ -1,0 +1,650 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cuidar+</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap">
+<style>
+/* Layout: hero em duas colunas (texto à esquerda, chat de lembretes interativo sobre uma base suave à direita), seguido de problema, recursos por perfil, matriz "o que acontece quando", uso em abas e documentação com índice lateral. Cores por papel: idoso verde, cuidador coral, médico violeta. */
+:root {
+  --bg: #F7F5FC;
+  --surface: #FFFFFF;
+  --surface-2: #F1EEF8;
+  --ink: #221B3A;
+  --muted: #655E80;
+  --line: #E6E1F2;
+  --line-strong: #CFC7E6;
+  --violet: #6A4DF4;
+  --violet-deep: #4F34D0;
+  --violet-soft: #EEE9FF;
+  --violet-ink: #5A3DE0;
+  --coral: #EF5B33;
+  --coral-soft: #FFE9E1;
+  --coral-ink: #B93A12;
+  --green: #17914F;
+  --green-soft: #DDF4E6;
+  --green-ink: #0F6B45;
+  --sun: #E8A81C;
+  --sun-soft: #FFF3D1;
+  --sun-ink: #8A5A00;
+  --red-soft: #FDE3E7;
+  --red-ink: #B01E34;
+  --on-accent: #FFFFFF;
+  --device: #221B3A;
+  --chat-bg: #ECE8F6;
+  --bubble-in: #FFFFFF;
+  --bubble-out: #D3F0DD;
+  --chat-head: #0F6B45;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15121F; --surface: #1F1A2E; --surface-2: #282238; --ink: #F1EEF9; --muted: #A59FBD; --line: #352E4A; --line-strong: #4A4163;
+    --violet: #A28EFF; --violet-deep: #B7A8FF; --violet-soft: #2D2552; --violet-ink: #C4B8FF;
+    --coral: #FF8A66; --coral-soft: #3D2419; --coral-ink: #FFA98C;
+    --green: #4FD08A; --green-soft: #173324; --green-ink: #7FE0A9;
+    --sun: #E0A526; --sun-soft: #3A2E10; --sun-ink: #FFC94D;
+    --red-soft: #401B24; --red-ink: #FF9AA9;
+    --on-accent: #14101F; --device: #0E0B16; --chat-bg: #17141F; --bubble-in: #262036; --bubble-out: #1D4A35; --chat-head: #134A33;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15121F; --surface: #1F1A2E; --surface-2: #282238; --ink: #F1EEF9; --muted: #A59FBD; --line: #352E4A; --line-strong: #4A4163;
+  --violet: #A28EFF; --violet-deep: #B7A8FF; --violet-soft: #2D2552; --violet-ink: #C4B8FF;
+  --coral: #FF8A66; --coral-soft: #3D2419; --coral-ink: #FFA98C;
+  --green: #4FD08A; --green-soft: #173324; --green-ink: #7FE0A9;
+  --sun: #E0A526; --sun-soft: #3A2E10; --sun-ink: #FFC94D;
+  --red-soft: #401B24; --red-ink: #FF9AA9;
+  --on-accent: #14101F; --device: #0E0B16; --chat-bg: #17141F; --bubble-in: #262036; --bubble-out: #1D4A35; --chat-head: #134A33;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6; -webkit-text-size-adjust: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 0;
+}
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.02em; line-height: 1.1; }
+h1 { font-size: clamp(2.4rem, 5vw, 3.7rem); letter-spacing: -0.03em; line-height: 1.04; }
+h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); }
+h3 { font-size: 1.12rem; line-height: 1.25; }
+p { margin: 0; }
+a { color: var(--violet-ink); }
+ul, ol { margin: 0; padding: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--violet); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1120px; margin: 0 auto; }
+.eyebrow { font-size: .75rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+.small { font-size: .875rem; }
+section { padding-block: clamp(64px, 8vw, 112px) 0; }
+.sec-head { display: flex; flex-direction: column; gap: 14px; max-width: 640px; margin-bottom: clamp(28px, 4vw, 44px); }
+.sec-head p { color: var(--muted); font-size: 1.05rem; }
+
+/* papéis */
+.role { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: .88rem; }
+.role::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.role.idoso { --c: var(--green); color: var(--green-ink); }
+.role.cuidador { --c: var(--coral); color: var(--coral-ink); }
+.role.medico { --c: var(--violet); color: var(--violet-ink); }
+
+/* cabeçalho */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 28px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.logo-mark { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; background: conic-gradient(from 200deg, var(--violet), var(--coral), var(--sun), var(--green), var(--violet)); }
+.logo-mark span { width: 27px; height: 27px; border-radius: 9px; background: var(--surface); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+.logo b { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: -0.02em; }
+.logo b em { font-style: normal; color: var(--coral-ink); }
+.nav { display: flex; flex-wrap: wrap; gap: 4px 26px; }
+.nav a { color: var(--muted); text-decoration: none; font-weight: 700; font-size: .93rem; padding-block: 4px; border-bottom: 2px solid transparent; }
+.nav a:hover { color: var(--ink); border-bottom-color: var(--violet); }
+
+/* botões */
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 13px 24px; border-radius: 10px; font-weight: 800; font-size: .96rem; text-decoration: none; border: 0; line-height: 1.2; }
+.btn.primary { background: var(--violet); color: var(--on-accent); }
+.btn.primary:hover { background: var(--violet-deep); }
+.btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line-strong); }
+.btn.ghost:hover { box-shadow: inset 0 0 0 1.5px var(--violet); }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: .78rem; font-weight: 800; white-space: nowrap; }
+.chip.ok { background: var(--green-soft); color: var(--green-ink); }
+.chip.sun { background: var(--sun-soft); color: var(--sun-ink); }
+.chip.red { background: var(--red-soft); color: var(--red-ink); }
+.chip.vio { background: var(--violet-soft); color: var(--violet-ink); }
+.chip.cor { background: var(--coral-soft); color: var(--coral-ink); }
+.chip.mut { background: var(--surface-2); color: var(--muted); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 5vw, 72px); align-items: center; padding-block: clamp(40px, 6vw, 84px) 0; }
+@media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+.hero-copy { display: flex; flex-direction: column; gap: 24px; align-items: flex-start; }
+.lede { font-size: clamp(1.06rem, 1.5vw, 1.2rem); color: var(--muted); max-width: 33em; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 28px; list-style: none; margin-top: 6px; padding-top: 22px; border-top: 1px solid var(--line); font-size: .9rem; color: var(--muted); width: 100%; }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); }
+
+/* celular + chat */
+.demo-stage { background: var(--surface-2); border-radius: 28px; padding: clamp(24px, 4vw, 40px) clamp(16px, 3vw, 32px) 20px; display: flex; flex-direction: column; gap: 16px; align-items: center; min-width: 0; }
+.phone { width: 100%; max-width: 330px; height: 600px; background: var(--device); border-radius: 38px; padding: 9px; box-shadow: 0 0 0 1px var(--line-strong), 0 30px 50px -28px rgba(34, 27, 58, .5); }
+.phone-in { height: 100%; border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; background: var(--chat-bg); }
+.chat-head { background: var(--chat-head); color: #FFFFFF; padding: 14px 14px 12px; display: flex; align-items: center; gap: 10px; }
+.chat-head .av { width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; color: #0F6B45; display: grid; place-items: center; font-weight: 800; font-size: .8rem; flex: none; }
+.chat-head small { display: block; opacity: .85; font-size: .75rem; line-height: 1.3; }
+.msgs { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; }
+.daychip { align-self: center; background: var(--bubble-in); color: var(--muted); font-size: .68rem; font-weight: 800; padding: 3px 10px; border-radius: 8px; letter-spacing: .05em; }
+.msg { max-width: 86%; padding: 7px 10px 5px; border-radius: 12px; background: var(--bubble-in); color: var(--ink); font-size: .9rem; line-height: 1.4; align-self: flex-start; box-shadow: 0 1px 0 rgba(0, 0, 0, .08); }
+.msg.out { align-self: flex-end; background: var(--bubble-out); }
+.msg .hr { display: block; text-align: right; font-size: .66rem; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.msg.sys { align-self: center; background: var(--coral-soft); color: var(--coral-ink); font-size: .78rem; font-weight: 700; text-align: center; max-width: 94%; box-shadow: none; }
+.qr { padding: 6px 10px 14px; display: flex; flex-direction: column; gap: 5px; }
+.qr[hidden] { display: none; }
+.qr button { border: 0; background: var(--bubble-in); color: var(--green-ink); font-weight: 800; padding: 10px; border-radius: 10px; font-size: .92rem; box-shadow: 0 1px 0 rgba(0, 0, 0, .08); }
+.qr button:hover:not(:disabled) { background: var(--surface-2); }
+.qr button:disabled { opacity: .55; cursor: default; }
+.alertcard { width: 100%; max-width: 330px; border-radius: 14px; padding: 14px 16px; background: var(--surface); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start; }
+.alertcard p { font-size: .88rem; color: var(--muted); }
+.alertcard b { display: block; font-size: .95rem; }
+.alertcard[data-state="alert"] { background: var(--coral-soft); }
+.alertcard[data-state="alert"] p { color: var(--coral-ink); }
+.alertcard[data-state="done"] { background: var(--green-soft); }
+.alertcard[data-state="done"] p { color: var(--green-ink); }
+.demo-foot { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: space-between; align-items: center; width: 100%; max-width: 330px; font-size: .8rem; color: var(--muted); }
+.link { border: 0; background: none; padding: 0; color: var(--violet-ink); font-weight: 800; font-size: .8rem; text-decoration: underline; text-underline-offset: 3px; }
+
+/* sobre */
+.about { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 72px); }
+@media (max-width: 860px) { .about { grid-template-columns: minmax(0, 1fr); } }
+.problems { list-style: none; display: flex; flex-direction: column; }
+.problems li { padding-block: 18px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+.problems li:first-child { border-top: 0; padding-top: 0; }
+.problems b { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; }
+.problems span { color: var(--muted); }
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: clamp(36px, 5vw, 56px); border-top: 1px solid var(--line-strong); }
+@media (max-width: 760px) { .trio { grid-template-columns: minmax(0, 1fr); } }
+.trio > div { padding: 24px 24px 8px 0; display: flex; flex-direction: column; gap: 10px; }
+.trio > div + div { padding-left: 24px; border-left: 1px solid var(--line); }
+@media (max-width: 760px) { .trio > div, .trio > div + div { padding: 20px 0 8px; border-left: 0; } .trio > div + div { border-top: 1px solid var(--line); } }
+.trio p { color: var(--muted); }
+
+/* recursos */
+.features { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 40px; }
+@media (max-width: 860px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .features { grid-template-columns: minmax(0, 1fr); } }
+.features li { padding-block: 22px; border-top: 1px solid var(--line-strong); display: flex; flex-direction: column; gap: 6px; }
+.features b { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; line-height: 1.25; }
+.features span.d { color: var(--muted); font-size: .95rem; }
+
+/* matriz */
+.tablewrap { overflow-x: auto; }
+.matrix { width: 100%; border-collapse: collapse; }
+.matrix th, .matrix td { text-align: left; vertical-align: top; padding: 16px 16px 16px 0; border-top: 1px solid var(--line); }
+.matrix thead th { border-top: 0; border-bottom: 2px solid var(--ink); padding-bottom: 12px; font-size: .95rem; }
+.matrix tbody th { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; width: 21%; padding-right: 20px; }
+.matrix td { font-size: .95rem; width: 26.3%; }
+.matrix .off { color: var(--muted); }
+.matrix td::before { display: none; }
+@media (max-width: 860px) {
+  .matrix, .matrix tbody, .matrix tr, .matrix th, .matrix td { display: block; width: auto; }
+  .matrix thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .matrix tr { padding-block: 18px; border-top: 1px solid var(--line-strong); }
+  .matrix th, .matrix td { border: 0; padding: 4px 0; }
+  .matrix tbody th { width: auto; font-size: 1.1rem; padding-bottom: 8px; }
+  .matrix td { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 10px; }
+  .matrix td::before { display: block; content: attr(data-label); font-weight: 800; font-size: .82rem; padding-top: 2px; color: var(--c); }
+  .matrix td[data-who="idoso"] { --c: var(--green-ink); } .matrix td[data-who="cuidador"] { --c: var(--coral-ink); } .matrix td[data-who="medico"] { --c: var(--violet-ink); }
+}
+
+/* como usar */
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.tabs button { border: 0; border-radius: 999px; padding: 9px 18px; font-weight: 800; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line-strong); display: inline-flex; align-items: center; gap: 8px; }
+.tabs button .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.tabs button[aria-selected="true"] { background: var(--c); color: var(--on-accent); box-shadow: none; }
+.tabs button[aria-selected="true"] .dot { background: var(--on-accent); }
+.tabs button[data-tab="idoso"] { --c: var(--green); } .tabs button[data-tab="cuidador"] { --c: var(--coral); } .tabs button[data-tab="medico"] { --c: var(--violet); }
+.use { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+.use[hidden] { display: none; }
+@media (max-width: 860px) { .use { grid-template-columns: minmax(0, 1fr); } }
+.steps { list-style: none; counter-reset: s; display: flex; flex-direction: column; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 10px; padding-block: 16px; border-top: 1px solid var(--line); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps li::before { content: counter(s); font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; line-height: 1; color: var(--c); }
+.steps b { display: block; font-family: var(--font-display); font-weight: 700; font-size: 1.06rem; margin-bottom: 2px; }
+.steps span { color: var(--muted); }
+.use.idoso { --c: var(--green-ink); } .use.cuidador { --c: var(--coral-ink); } .use.medico { --c: var(--violet-ink); }
+.sample { background: var(--surface); border-radius: 18px; padding: 20px; box-shadow: 0 0 0 1px var(--line); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.sample-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.daylist { list-style: none; display: flex; flex-direction: column; }
+.daylist li { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding-block: 12px; border-top: 1px solid var(--line); }
+.daylist li:first-child { border-top: 0; }
+.daylist time { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.daylist .nm { font-weight: 700; }
+.daylist.big .nm { font-size: 1.15rem; }
+.daylist li.now { background: var(--green-soft); margin-inline: -12px; padding-inline: 12px; border-radius: 12px; border-top-color: transparent; }
+.alertline { border-radius: 12px; padding: 12px 14px; background: var(--coral-soft); color: var(--coral-ink); font-weight: 700; font-size: .92rem; }
+
+/* caixa semanal de comprimidos */
+.pillbox { display: grid; grid-template-columns: 54px repeat(7, minmax(0, 1fr)); gap: 5px; align-items: center; }
+.pillbox .dh { text-align: center; font-size: .72rem; font-weight: 800; color: var(--muted); }
+.pillbox .rl { font-size: .78rem; font-weight: 700; color: var(--muted); }
+.pillbox i { display: grid; place-items: center; min-height: 40px; border-radius: 10px; font-style: normal; font-weight: 800; font-size: .95rem; }
+.pillbox i.ok { background: var(--green-soft); color: var(--green-ink); }
+.pillbox i.late { background: var(--sun-soft); color: var(--sun-ink); }
+.pillbox i.miss { background: var(--red-soft); color: var(--red-ink); }
+.pillbox i.next { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1.5px var(--line-strong); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .78rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend b { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 6px; font-size: .72rem; }
+
+/* documentação */
+.docs { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+@media (max-width: 860px) { .docs { grid-template-columns: minmax(0, 1fr); } }
+.index { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 2px; }
+.index a { color: var(--muted); text-decoration: none; font-weight: 700; font-size: .92rem; padding: 6px 0 6px 12px; border-left: 2px solid var(--line); }
+.index a:hover { color: var(--ink); border-left-color: var(--violet); }
+@media (max-width: 860px) { .index { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; } .index a { border: 0; padding: 6px 12px; border-radius: 999px; background: var(--surface-2); } }
+.doc { display: flex; flex-direction: column; gap: 56px; min-width: 0; }
+.doc article { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.doc h3 { font-size: 1.45rem; }
+.doc ul.list { padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
+.doc .lead { color: var(--muted); }
+.dtable { width: 100%; min-width: 560px; border-collapse: collapse; font-size: .93rem; }
+.dtable th { text-align: left; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 800; padding: 0 14px 10px 0; border-bottom: 2px solid var(--ink); }
+.dtable td { padding: 11px 14px 11px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.dtable tr:first-child td { border-top: 0; }
+.dtable td:first-child { font-weight: 700; }
+@media (max-width: 640px) {
+  .dtable { min-width: 0; }
+  .dtable thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .dtable, .dtable tbody, .dtable tr, .dtable td { display: block; }
+  .dtable tr { padding-block: 12px; border-top: 1px solid var(--line-strong); }
+  .dtable tbody tr:first-child { border-top: 0; padding-top: 0; }
+  .dtable td { border: 0; padding: 3px 0; }
+  .dtable td:not(:first-child) { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; }
+  .dtable td:not(:first-child)::before { content: attr(data-label); font-size: .8rem; font-weight: 800; color: var(--muted); padding-top: 2px; }
+}
+
+/* faq */
+.faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(28px, 5vw, 64px); }
+@media (max-width: 760px) { .faq { grid-template-columns: minmax(0, 1fr); } }
+.faq div { padding-block: 20px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 6px; }
+.faq p { color: var(--muted); }
+
+/* rodapé */
+footer { margin-top: clamp(72px, 9vw, 120px); padding-block: 40px 36px; border-top: 1px solid var(--line-strong); display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, .6fr)); gap: 32px 48px; }
+@media (max-width: 760px) { footer { grid-template-columns: minmax(0, 1fr); } }
+.foot-brand p { margin-top: 12px; color: var(--muted); font-size: .9rem; max-width: 32em; }
+.foot-col { display: flex; flex-direction: column; gap: 8px; font-size: .92rem; }
+.foot-col b { font-size: .75rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.foot-col a { color: var(--ink); text-decoration: none; }
+.foot-col a:hover { text-decoration: underline; }
+.legal { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <a class="logo" href="#topo" aria-label="Cuidar+, início"><span class="logo-mark"><span>C+</span></span><b>Cuidar<em>+</em></b></a>
+    <nav class="nav" aria-label="Seções">
+      <a href="#sobre">Sobre</a><a href="#funciona">Como funciona</a><a href="#usar">Como usar</a><a href="#docs">Documentação</a><a href="#duvidas">Dúvidas</a>
+    </nav>
+  </header>
+
+  <main id="topo">
+    <div class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Gestão de medicação para idosos</span>
+        <h1>Cada dose no horário certo. Toda a rede de cuidado informada.</h1>
+        <p class="lede">O Cuidar+ lembra o idoso de cada medicamento, avisa o cuidador quando uma dose fica sem confirmação e dá ao médico uma visão real de como o tratamento está sendo seguido.</p>
+        <div class="cta">
+          <a class="btn primary" href="#funciona">Ver como funciona</a>
+          <a class="btn ghost" href="#usar">Como usar</a>
+        </div>
+        <ul class="facts">
+          <li>App para idoso e cuidador</li>
+          <li>Painel web para o médico</li>
+          <li>Lembretes por notificação no app</li>
+        </ul>
+      </div>
+
+      <div class="demo-stage">
+        <div class="phone">
+          <div class="phone-in">
+            <div class="chat-head"><span class="av">C+</span><div><b>Cuidar+</b><small>lembretes de hoje · exemplo</small></div></div>
+            <div class="msgs" id="msgs" aria-live="polite">
+              <span class="daychip">HOJE</span>
+              <div class="msg">Bom dia, Dona Maria! Hora da <b>Levotiroxina 50 mcg</b>, 1 comprimido em jejum.<span class="hr">07:00</span></div>
+              <div class="msg out">Tomei<span class="hr">07:03</span></div>
+              <div class="msg">Anotado! Próximo: Losartana às 08:00.<span class="hr">07:03</span></div>
+              <div class="msg">Dona Maria, está na hora do seu remédio:<br><b>Losartana 50 mg</b> · 1 comprimido<br>Toque em uma opção abaixo.<span class="hr">08:00</span></div>
+            </div>
+            <div class="qr" id="qr"><button type="button" data-act="take">Tomei</button><button type="button" data-act="snooze">Me lembra em 15 min</button></div>
+          </div>
+        </div>
+        <div class="alertcard" id="alertcard" data-state="idle" aria-live="polite">
+          <span class="chip cor">Cuidador</span>
+          <div><b id="alert-title">Alerta ao cuidador</b><p id="alert-text">Chega depois do 2º adiamento ou se o idoso não responde.</p></div>
+        </div>
+        <div class="demo-foot"><span>Toque nos botões para testar. Dados de exemplo.</span><button type="button" class="link" id="reset">Recomeçar</button></div>
+      </div>
+    </div>
+
+    <section id="sobre">
+      <div class="about">
+        <div class="sec-head" style="margin-bottom:0">
+          <span class="eyebrow">Por que o Cuidar+</span>
+          <h2>Tomar vários remédios por dia é fácil de errar e difícil de acompanhar</h2>
+          <p>A polifarmácia, o uso de vários medicamentos ao mesmo tempo, é comum entre idosos. Cada dose esquecida passa despercebida até a próxima consulta.</p>
+        </div>
+        <ul class="problems">
+          <li><b>O lembrete avisa só quem toma</b><span>Aplicativos comuns tocam o alarme, mas a família e o médico não sabem se a dose foi tomada.</span></li>
+          <li><b>A família descobre tarde</b><span>Quem mora longe ou trabalha fora só fica sabendo do esquecimento quando já passou.</span></li>
+          <li><b>O médico acompanha às cegas</b><span>Com dezenas de pacientes, ele não tem como saber quem está seguindo a prescrição entre as consultas.</span></li>
+        </ul>
+      </div>
+
+      <div class="trio">
+        <div><span class="role idoso">Idoso</span><h3>Recebe o lembrete e responde com um toque</h3><p>Um chat no app mostra o remédio e a dose. Duas opções: Tomei ou Me lembra em 15 min.</p></div>
+        <div><span class="role cuidador">Cuidador</span><h3>Acompanha e é avisado quando algo atrasa</h3><p>Vê o status do dia, recebe o alerta com o nome do remédio e cadastra medicamentos. Cobre o idoso que não usa o app.</p></div>
+        <div><span class="role medico">Médico</span><h3>Vê quem precisa de atenção, sem notificações</h3><p>Um painel web lista os pacientes por prioridade e mostra a adesão real ao tratamento.</p></div>
+      </div>
+    </section>
+
+    <section id="recursos">
+      <div class="sec-head">
+        <span class="eyebrow">Recursos</span>
+        <h2>O que cada perfil recebe</h2>
+      </div>
+      <ul class="features">
+        <li><span class="role idoso">Idoso</span><b>Lembretes no horário certo</b><span class="d">Notificação no app e agendamento no próprio aparelho, para o lembrete tocar mesmo sem internet.</span></li>
+        <li><span class="role idoso">Idoso</span><b>Confirmação com um toque</b><span class="d">Tomei ou Me lembra em 15 min, em botões grandes e com letras legíveis.</span></li>
+        <li><span class="role cuidador">Cuidador</span><b>Alerta com o nome do remédio</b><span class="d">O aviso chega depois do 2º adiamento ou quando o idoso não responde.</span></li>
+        <li><span class="role cuidador">Cuidador</span><b>Cobertura para quem não usa o app</b><span class="d">O lembrete aparece na aba do paciente e o cuidador confirma a dose por ele.</span></li>
+        <li><span class="role medico">Médico</span><b>Painel por prioridade</b><span class="d">Os pacientes aparecem em vermelho, amarelo e verde, com quem precisa de atenção primeiro.</span></li>
+        <li><span class="role medico">Médico</span><b>Relatório de adesão</b><span class="d">Mapa de doses por período do dia, para ajustar o tratamento com dados reais.</span></li>
+      </ul>
+    </section>
+
+    <section id="funciona">
+      <div class="sec-head">
+        <span class="eyebrow">Como funciona</span>
+        <h2>O que acontece em cada situação</h2>
+        <p>O alerta vai primeiro a quem pode agir na hora, o cuidador. O médico vê tudo no painel e nunca é notificado.</p>
+      </div>
+      <div class="tablewrap">
+        <table class="matrix">
+          <thead><tr><th scope="col">Quando</th><th scope="col"><span class="role idoso">Idoso</span></th><th scope="col"><span class="role cuidador">Cuidador</span></th><th scope="col"><span class="role medico">Médico</span></th></tr></thead>
+          <tbody>
+            <tr><th scope="row">O idoso toca em Tomei</th><td data-who="idoso" data-label="Idoso">A dose é registrada com o horário real.</td><td data-who="cuidador" data-label="Cuidador" class="off">Nada a fazer. Vê a dose como tomada.</td><td data-who="medico" data-label="Médico">A dose entra no relatório de adesão.</td></tr>
+            <tr><th scope="row">O idoso pede Me lembra em 15 min</th><td data-who="idoso" data-label="Idoso">O lembrete volta em 15 minutos. Pode pedir até 2 vezes.</td><td data-who="cuidador" data-label="Cuidador">Depois do 2º pedido, recebe um alerta com o nome do remédio.</td><td data-who="medico" data-label="Médico">Vê o atraso no painel.</td></tr>
+            <tr><th scope="row">O idoso não responde</th><td data-who="idoso" data-label="Idoso" class="off">A dose fica sem confirmação.</td><td data-who="cuidador" data-label="Cuidador">Também recebe o aviso.</td><td data-who="medico" data-label="Médico">O caso aparece em destaque no painel.</td></tr>
+            <tr><th scope="row">O idoso não usa o app</th><td data-who="idoso" data-label="Idoso" class="off">Quem cuida da medicação é o cuidador.</td><td data-who="cuidador" data-label="Cuidador">Recebe o lembrete na aba do paciente, confirma a dose por ele e é avisado a cada 15 minutos até a confirmação.</td><td data-who="medico" data-label="Médico">Vê a dose identificada como confirmada pelo cuidador.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="usar">
+      <div class="sec-head">
+        <span class="eyebrow">Como usar</span>
+        <h2>Passo a passo para cada perfil</h2>
+        <p>Escolha o seu perfil. Os nomes e horários mostrados são exemplos.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Perfil de uso">
+        <button type="button" role="tab" id="t-idoso" data-tab="idoso" aria-selected="true" aria-controls="p-idoso"><span class="dot"></span>Idoso</button>
+        <button type="button" role="tab" id="t-cuidador" data-tab="cuidador" aria-selected="false" aria-controls="p-cuidador" tabindex="-1"><span class="dot"></span>Cuidador</button>
+        <button type="button" role="tab" id="t-medico" data-tab="medico" aria-selected="false" aria-controls="p-medico" tabindex="-1"><span class="dot"></span>Médico</button>
+      </div>
+
+      <div class="use idoso" id="p-idoso" role="tabpanel" aria-labelledby="t-idoso">
+        <ol class="steps">
+          <li><div><b>Entre no app e vincule-se ao cuidador</b><span>O cuidador gera um código no cadastro. Os dois informam o código e o vínculo é feito.</span></div></li>
+          <li><div><b>Veja os remédios do dia</b><span>A lista usa letras grandes e mostra o horário de cada medicamento.</span></div></li>
+          <li><div><b>Abra o chat no horário da dose</b><span>Cada mensagem traz o nome do remédio e a quantidade.</span></div></li>
+          <li><div><b>Responda com um toque</b><span>Tomei registra a dose. Me lembra em 15 min adia o lembrete, até 2 vezes.</span></div></li>
+          <li><div><b>Cadastre um remédio quando precisar</b><span>O formulário é o mesmo usado pelo cuidador e pelo médico.</span></div></li>
+        </ol>
+        <div class="sample">
+          <div class="sample-head"><b>Hoje, Dona Maria</b><span class="chip mut">Exemplo</span></div>
+          <ul class="daylist big">
+            <li><time>07:00</time><span class="nm">Levotiroxina 50 mcg</span><span class="chip ok">Tomou</span></li>
+            <li class="now"><time>08:00</time><span class="nm">Losartana 50 mg</span><span class="chip sun">Agora</span></li>
+            <li><time>12:30</time><span class="nm">Metformina 850 mg</span><span class="chip vio">Mais tarde</span></li>
+            <li><time>20:00</time><span class="nm">Sinvastatina 20 mg</span><span class="chip vio">Mais tarde</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="use cuidador" id="p-cuidador" role="tabpanel" aria-labelledby="t-cuidador" hidden>
+        <ol class="steps">
+          <li><div><b>Crie sua conta e cadastre o idoso</b><span>No cadastro, marque se ele usa o app.</span></div></li>
+          <li><div><b>Se ele usa o app, vincule pelo código</b><span>Os dois informam o código gerado. Se não usa, o lembrete aparece na aba dele, no seu app.</span></div></li>
+          <li><div><b>Cadastre os medicamentos</b><span>Nome, dose, horários, dias da semana, início e fim do tratamento.</span></div></li>
+          <li><div><b>Acompanhe o dia de cada idoso</b><span>Veja o que foi tomado, o que atrasou e qual remédio é.</span></div></li>
+          <li><div><b>Atenda os alertas</b><span>O alerta chega depois do 2º adiamento ou sem resposta. Para o idoso sem app, confirme a dose na aba dele.</span></div></li>
+        </ol>
+        <div class="sample">
+          <div class="sample-head"><b>Dona Maria, hoje</b><span class="chip mut">Exemplo</span></div>
+          <div class="alertline">Alerta: Dona Maria adiou a Losartana 50 mg duas vezes.</div>
+          <ul class="daylist">
+            <li><time>07:00</time><span class="nm">Levotiroxina 50 mcg</span><span class="chip ok">Tomou 07:03</span></li>
+            <li><time>08:00</time><span class="nm">Losartana 50 mg</span><span class="chip red">Sem confirmação</span></li>
+            <li><time>12:30</time><span class="nm">Metformina 850 mg</span><span class="chip vio">Mais tarde</span></li>
+            <li><time>20:00</time><span class="nm">Sinvastatina 20 mg</span><span class="chip vio">Mais tarde</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="use medico" id="p-medico" role="tabpanel" aria-labelledby="t-medico" hidden>
+        <ol class="steps">
+          <li><div><b>Entre no painel web</b><span>Cadastre seus pacientes e os medicamentos de cada um. O seu cadastro vale como a prescrição de referência.</span></div></li>
+          <li><div><b>Veja primeiro quem precisa de atenção</b><span>A tela inicial ordena os pacientes por prioridade, em vermelho, amarelo e verde.</span></div></li>
+          <li><div><b>Abra um paciente</b><span>O relatório mostra a adesão por período do dia: manhã, tarde e noite.</span></div></li>
+          <li><div><b>Ajuste o tratamento</b><span>Edite horários e medicamentos. A versão do médico prevalece quando há divergência.</span></div></li>
+          <li><div><b>Volte quando quiser</b><span>Não há notificações. O painel está sempre atualizado.</span></div></li>
+        </ol>
+        <div class="sample">
+          <div class="sample-head"><b>Adesão da semana, Dona Maria</b><span class="chip mut">Exemplo</span></div>
+          <div class="pillbox" role="img" aria-label="Caixa semanal de comprimidos: na quarta e na sexta, a dose da tarde ficou sem confirmação; na quinta a dose da manhã foi tomada com atraso; no sábado a dose da noite foi tomada com atraso; o domingo ainda está em andamento.">
+            <span></span><span class="dh">Seg</span><span class="dh">Ter</span><span class="dh">Qua</span><span class="dh">Qui</span><span class="dh">Sex</span><span class="dh">Sáb</span><span class="dh">Dom</span>
+            <span class="rl">Manhã</span><i class="ok">✓</i><i class="ok">✓</i><i class="ok">✓</i><i class="late">!</i><i class="ok">✓</i><i class="ok">✓</i><i class="ok">✓</i>
+            <span class="rl">Tarde</span><i class="ok">✓</i><i class="ok">✓</i><i class="miss">×</i><i class="ok">✓</i><i class="miss">×</i><i class="ok">✓</i><i class="next"></i>
+            <span class="rl">Noite</span><i class="ok">✓</i><i class="ok">✓</i><i class="ok">✓</i><i class="ok">✓</i><i class="ok">✓</i><i class="late">!</i><i class="next"></i>
+          </div>
+          <div class="legend"><span><b style="background:var(--green-soft);color:var(--green-ink)">✓</b>Tomou no horário</span><span><b style="background:var(--sun-soft);color:var(--sun-ink)">!</b>Tomou atrasado</span><span><b style="background:var(--red-soft);color:var(--red-ink)">×</b>Sem confirmação</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="docs">
+      <div class="sec-head">
+        <span class="eyebrow">Documentação</span>
+        <h2>Regras e referência</h2>
+        <p>O que cada perfil pode fazer, como os alertas funcionam, como os medicamentos são cadastrados e como os dados são protegidos.</p>
+      </div>
+      <div class="docs">
+        <nav class="index" aria-label="Índice da documentação">
+          <a href="#d-perfis">Perfis e permissões</a><a href="#d-alertas">Regras de alerta</a><a href="#d-cadastro">Cadastro de medicamentos</a><a href="#d-privacidade">Privacidade e segurança</a>
+        </nav>
+        <div class="doc">
+          <article id="d-perfis">
+            <h3>Perfis e permissões</h3>
+            <p class="lead">Idoso e cuidador usam o mesmo app, cada um com o seu perfil. O médico usa o painel web. Os três compartilham o mesmo histórico.</p>
+            <div class="tablewrap"><table class="dtable">
+              <thead><tr><th>Ação</th><th>Idoso</th><th>Cuidador</th><th>Médico</th></tr></thead>
+              <tbody>
+                <tr><td>Receber lembrete e confirmar a dose</td><td>Sim</td><td>Só do idoso sem app, confirmando por ele</td><td>Não</td></tr>
+                <tr><td>Ver medicamentos e histórico</td><td>Os próprios</td><td>Dos idosos vinculados</td><td>Dos seus pacientes</td></tr>
+                <tr><td>Ver atrasos e qual medicamento</td><td>Os próprios</td><td>Sim, com alerta</td><td>Sim, no painel</td></tr>
+                <tr><td>Cadastrar e editar medicamentos</td><td>Sim</td><td>Sim</td><td>Sim</td></tr>
+                <tr><td>Relatório de adesão</td><td>Não</td><td>Histórico de 7 dias</td><td>Completo</td></tr>
+              </tbody>
+            </table></div>
+          </article>
+
+          <article id="d-alertas">
+            <h3>Regras de alerta</h3>
+            <ul class="list">
+              <li>No horário da dose, o app envia o lembrete por notificação e também o agenda no próprio aparelho, para tocar mesmo sem internet.</li>
+              <li>O idoso pode usar Me lembra em 15 min até 2 vezes. Depois do 2º pedido, o cuidador recebe o alerta com o nome do remédio.</li>
+              <li>Se o idoso não responde, o cuidador também recebe o aviso.</li>
+              <li>Para o idoso sem app, o cuidador recebe o lembrete e é avisado a cada 15 minutos até confirmar a dose.</li>
+              <li>O médico não recebe notificações. Ele acompanha tudo pelo painel.</li>
+              <li>O app registra o horário real da confirmação, bloqueia uma segunda confirmação da mesma dose e identifica quando a confirmação veio do cuidador.</li>
+            </ul>
+          </article>
+
+          <article id="d-cadastro">
+            <h3>Cadastro de medicamentos</h3>
+            <p class="lead">Idoso, cuidador e médico podem cadastrar. Cada medicamento guarda nome, dose, horários, dias da semana, início, fim e a origem do cadastro: quem criou e quando. Toda alteração fica no histórico.</p>
+            <div class="tablewrap"><table class="dtable">
+              <thead><tr><th>Quem cadastra</th><th>Como aparece</th><th>O que acontece</th></tr></thead>
+              <tbody>
+                <tr><td>Médico</td><td>Prescrição validada</td><td>Gera os lembretes e vale como versão de referência.</td></tr>
+                <tr><td>Cuidador</td><td>Cadastrado pela família</td><td>Gera os lembretes e aparece como não validado.</td></tr>
+                <tr><td>Idoso</td><td>Cadastrado pelo paciente</td><td>Gera os lembretes e aparece como não validado.</td></tr>
+              </tbody>
+            </table></div>
+            <p class="small muted">Quando há divergência entre cadastros, a versão do médico prevalece.</p>
+          </article>
+
+          <article id="d-privacidade">
+            <h3>Privacidade e segurança</h3>
+            <p class="lead">Dados de saúde são dados pessoais sensíveis pela LGPD. No Cuidar+:</p>
+            <ul class="list">
+              <li>O consentimento é específico e destacado, dado no cadastro.</li>
+              <li>O vínculo entre cuidador e idoso é feito por código e aprovado pelo idoso.</li>
+              <li>Só quem está vinculado ao paciente tem acesso, e os dados são criptografados.</li>
+              <li>Os dados de saúde não são compartilhados para vantagem econômica.</li>
+            </ul>
+            <p>O Cuidar+ lembra, registra e mostra dados. Ele não indica doses nem condutas clínicas e não substitui a orientação do médico.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="duvidas">
+      <div class="sec-head">
+        <span class="eyebrow">Perguntas frequentes</span>
+        <h2>Dúvidas comuns</h2>
+      </div>
+      <div class="faq">
+        <div><h3>O idoso precisa ter o app?</h3><p>Não. O cuidador marca no cadastro se o idoso usa o app. Sem app, o cuidador recebe os lembretes na aba do paciente e confirma as doses por ele.</p></div>
+        <div><h3>O médico recebe notificações?</h3><p>Não. Ele consulta o painel, que mostra primeiro quem precisa de atenção.</p></div>
+        <div><h3>Quantas vezes o idoso pode adiar o lembrete?</h3><p>Até 2 vezes, de 15 em 15 minutos. Depois do segundo adiamento, o cuidador é avisado.</p></div>
+        <div><h3>O que acontece se a notificação não chegar?</h3><p>O app também agenda os lembretes no próprio aparelho, para que toquem mesmo sem internet.</p></div>
+        <div><h3>Um cuidador pode acompanhar mais de um idoso?</h3><p>Sim. A lista mostra todos os idosos vinculados, cada um com o status do dia.</p></div>
+        <div><h3>Onde o médico acessa o painel?</h3><p>Pelo navegador, sem instalar nada.</p></div>
+        <div><h3>Serve para qualquer remédio?</h3><p>Atende idosos com qualquer tratamento. O app lembra e registra. Ele não indica doses nem substitui a orientação médica.</p></div>
+        <div><h3>Quem vê os dados de saúde?</h3><p>Só quem está vinculado ao paciente. Cada perfil vê o que é do seu papel, como mostra a tabela de permissões.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot-brand">
+      <a class="logo" href="#topo" aria-label="Voltar ao topo"><span class="logo-mark"><span>C+</span></span><b>Cuidar<em>+</em></b></a>
+      <p>Lembretes de medicação que conectam idosos, cuidadores e médicos.</p>
+    </div>
+    <div class="foot-col"><b>Produto</b><a href="#sobre">Sobre</a><a href="#recursos">Recursos</a><a href="#funciona">Como funciona</a><a href="#usar">Como usar</a></div>
+    <div class="foot-col"><b>Ajuda</b><a href="#docs">Documentação</a><a href="#duvidas">Dúvidas</a></div>
+    <p class="legal">O Cuidar+ não substitui a orientação médica. Nomes e dados de exemplo nesta página são fictícios.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  /* tabelas da documentação: rótulos das células para o celular */
+  document.querySelectorAll('.dtable').forEach(function (t) {
+    var h = Array.prototype.map.call(t.querySelectorAll('thead th'), function (x) { return x.textContent; });
+    t.querySelectorAll('tbody tr').forEach(function (r) {
+      Array.prototype.forEach.call(r.children, function (c, i) { if (i > 0) c.setAttribute('data-label', h[i]); });
+    });
+  });
+
+  /* abas de uso */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabs [role="tab"]'));
+  function select(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { select(t); });
+    t.addEventListener('keydown', function (e) {
+      var j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : -1;
+      if (j < 0) return;
+      var n = tabs[(j + tabs.length) % tabs.length];
+      select(n); n.focus(); e.preventDefault();
+    });
+  });
+
+  /* demo do chat */
+  var msgs = document.getElementById('msgs'), qr = document.getElementById('qr'), card = document.getElementById('alertcard');
+  var cTitle = document.getElementById('alert-title'), cText = document.getElementById('alert-text');
+  var initMsgs = msgs.innerHTML, initQr = qr.innerHTML, initTitle = cTitle.textContent, initText = cText.textContent;
+  var snoozes = 0, busy = false, timer = null;
+  var takeAt = ['08:03', '08:17', '08:33'];
+  function bottom() { msgs.scrollTop = msgs.scrollHeight; }
+  bottom();
+  window.addEventListener('load', bottom);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(bottom);
+
+  function add(cls, html, time) {
+    var d = document.createElement('div');
+    d.className = 'msg' + (cls ? ' ' + cls : '');
+    d.innerHTML = html + (time ? '<span class="hr">' + time + '</span>' : '');
+    msgs.appendChild(d);
+    bottom();
+  }
+  function setCard(state, title, text) { card.dataset.state = state; cTitle.textContent = title; cText.textContent = text; }
+  function reset() {
+    clearTimeout(timer); busy = false; snoozes = 0;
+    msgs.innerHTML = initMsgs; qr.innerHTML = initQr; qr.hidden = false; bottom();
+    setCard('idle', initTitle, initText);
+  }
+  qr.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || busy) return;
+    if (b.dataset.act === 'take') {
+      var t = takeAt[snoozes];
+      add('out', 'Tomei', t + ' ✓✓');
+      add('', 'Perfeito, Dona Maria! Registrado. Próximo: <b>Metformina 850 mg</b> às 12:30.', t);
+      qr.hidden = true;
+      if (snoozes === 2) setCard('done', 'Dose registrada às ' + t, 'A dose foi confirmada depois do alerta. O relatório do médico mostra o atraso.');
+      else setCard('done', 'Dose registrada às ' + t, 'A dose foi confirmada sem precisar de alerta ao cuidador.');
+    } else if (b.dataset.act === 'snooze') {
+      busy = true; snoozes += 1;
+      qr.querySelectorAll('button').forEach(function (x) { x.disabled = true; });
+      if (snoozes === 1) {
+        add('out', 'Me lembra em 15 min', '08:01 ✓✓');
+        add('', 'Combinado! Te chamo de novo às 08:16.', '08:01');
+        timer = setTimeout(function () {
+          add('', 'Dona Maria, passando de novo: <b>Losartana 50 mg</b>. Já tomou?', '08:16');
+          qr.querySelectorAll('button').forEach(function (x) { x.disabled = false; });
+          busy = false;
+        }, 700);
+      } else {
+        add('out', 'Me lembra em 15 min', '08:17 ✓✓');
+        add('', 'Combinado! Te chamo de novo às 08:32.', '08:17');
+        add('sys', 'O cuidador recebeu um alerta sobre a Losartana 50 mg.', '');
+        setCard('alert', 'Alerta enviado ao cuidador', 'Dona Maria adiou a Losartana 50 mg duas vezes. O alerta traz o nome do remédio.');
+        timer = setTimeout(function () {
+          add('', 'Dona Maria, passando de novo: <b>Losartana 50 mg</b>. Já tomou?', '08:32');
+          qr.innerHTML = '<button type="button" data-act="take">Tomei</button>';
+          busy = false;
+        }, 700);
+      }
+    }
+  });
+  document.getElementById('reset').addEventListener('click', reset);
+})();
+</script>
+
+</body></html>
