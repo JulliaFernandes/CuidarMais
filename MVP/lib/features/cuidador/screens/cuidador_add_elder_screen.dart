@@ -145,7 +145,7 @@ class _CuidadorAddElderScreenState extends State<CuidadorAddElderScreen> {
         const SizedBox(height: 16),
         const NoticeBox(
           title: 'E agora?',
-          text: 'Ela abre o app Cuidar+, vai em "Família" e digita o código. Só depois que ela aceitar você passa '
+          text: 'Ela abre o app CuidarMais, vai em "Família" e digita o código. Só depois que ela aceitar você passa '
               'a ver os remédios dela. O código vale por 24 horas.',
         ),
       ],

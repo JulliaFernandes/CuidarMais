@@ -1,4 +1,4 @@
-# Como rodar cada parte do Cuidar+
+# Como rodar cada parte do CuidarMais
 
 O repositório tem uma pasta para cada etapa do projeto. Este arquivo explica o que cada uma é e como
 abrir ou rodar cada uma. O que já foi feito e o que falta está em [`docs/ETAPAS.md`](docs/ETAPAS.md).
@@ -9,6 +9,7 @@ abrir ou rodar cada uma. O que já foi feito e o que falta está em [`docs/ETAPA
 | [`prototipo/`](#protótipo) | Desenho navegável das telas | Dois cliques no `index.html` | Nada |
 | [`MVP/`](#mvp) | O app de verdade, em Flutter | `flutter run` | Flutter |
 | [`landing-page/`](#landing-page) | Página de apresentação | Dois cliques no `index.html` | Nada |
+| [`identidade-visual/`](identidade-visual/LEIA-ME.md) | Logo, símbolo, ícone do app e cores | Abrir as imagens | Nada |
 | [`docs/`](#docs) | Guia das etapas, backlog e documento | Abrir os arquivos | Nada |
 
 Os comandos abaixo são para o terminal do VS Code (PowerShell, no Windows), sempre a partir da raiz do
@@ -59,7 +60,7 @@ funcionando.
 
 ## MVP
 
-**O que é:** o app do Cuidar+ em Flutter. Tem todas as telas dos três perfis (idoso, cuidador e
+**O que é:** o app do CuidarMais em Flutter. Tem todas as telas dos três perfis (idoso, cuidador e
 médico) e as regras de lembrete e alerta funcionando. Por enquanto os dados ficam só na memória e
 as contas são de demonstração. Banco, login real e notificações no celular entram nas próximas
 semanas.
@@ -150,7 +151,7 @@ Mais detalhes do app (telas, estrutura de pastas e acessibilidade) em [`MVP/READ
 
 ## Landing page
 
-**O que é:** a página de apresentação do Cuidar+: o problema, a solução, os perfis e como funciona.
+**O que é:** a página de apresentação do CuidarMais: o problema, a solução, os perfis e como funciona.
 Pode servir para o pitch e para divulgar o projeto.
 
 **Como abrir:** dê dois cliques em `landing-page/index.html`. Como o protótipo, usa as fontes do

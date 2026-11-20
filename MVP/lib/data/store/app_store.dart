@@ -458,7 +458,7 @@ class AppStore extends ChangeNotifier {
         .where((u) => u.role == UserRole.idoso && u.email.toLowerCase() == email.trim().toLowerCase())
         .firstOrNull;
     if (user == null || user.elderId == null) {
-      return 'Não encontramos um paciente com esse email. Ele precisa ter conta no app Cuidar+.';
+      return 'Não encontramos um paciente com esse email. Ele precisa ter conta no app CuidarMais.';
     }
     final elder = elderById(user.elderId!);
     if (elder.doctorIds.contains(me.id)) return 'Esse paciente já está na sua lista.';

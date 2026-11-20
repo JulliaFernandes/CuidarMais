@@ -1,6 +1,6 @@
-# Cuidar+ — MVP (app em Flutter)
+# CuidarMais — MVP (app em Flutter)
 
-O app do Cuidar+ em **Flutter**. Todas as telas e regras já funcionam, com dados de demonstração.
+O app do CuidarMais em **Flutter**. Todas as telas e regras já funcionam, com dados de demonstração.
 Para o MVP ficar completo, falta trocar esses dados pela API, com banco, login real e notificações
 (veja [`../docs/ETAPAS.md`](../docs/ETAPAS.md)).
 

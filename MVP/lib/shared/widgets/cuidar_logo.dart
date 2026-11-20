@@ -1,42 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
 
-/// Marca do Cuidar+: as cores dos três perfis girando em volta do "C+".
-/// É decorativa — o nome do app sempre aparece em texto ao lado.
+/// Símbolo do CuidarMais (a cruz com o coração). É decorativo: o nome do
+/// app sempre aparece em texto ao lado, então o leitor de tela pula a imagem.
+///
+/// A logo completa e os originais ficam em `identidade-visual/`, na raiz do
+/// repositório.
 class CuidarLogo extends StatelessWidget {
   final double size;
   const CuidarLogo({super.key, this.size = 40});
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return ExcludeSemantics(
-      child: Container(
+      child: Image.asset(
+        'assets/marca/simbolo.png',
         width: size,
         height: size,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(size * 0.3),
-          gradient: const SweepGradient(
-            colors: [AppColors.brand, AppColors.logoCoral, AppColors.attention, AppColors.doctor, AppColors.brand],
-          ),
-        ),
-        child: Container(
-          width: size * 0.68,
-          height: size * 0.68,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(color: scheme.surface, borderRadius: BorderRadius.circular(size * 0.22)),
-          child: Text(
-            'C+',
-            textScaler: TextScaler.noScaling,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontSize: size * 0.3,
-                  fontWeight: FontWeight.w800,
-                  color: scheme.onSurface,
-                  height: 1,
-                ),
-          ),
-        ),
+        filterQuality: FilterQuality.medium,
       ),
     );
   }

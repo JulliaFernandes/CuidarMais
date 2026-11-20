@@ -1,6 +1,6 @@
-# Cuidar+
+# CuidarMais
 
-O Cuidar+ é um aplicativo que conecta **idosos, cuidadores e médicos** para garantir que cada medicamento seja tomado no horário certo e que alguém aja quando não for.
+O CuidarMais é um aplicativo que conecta **idosos, cuidadores e médicos** para garantir que cada medicamento seja tomado no horário certo e que alguém aja quando não for.
 
 - **Idoso:** recebe os lembretes em um chat dentro do app e confirma com um toque.
 - **Cuidador:** é avisado na hora quando o idoso não confirma.
@@ -120,7 +120,7 @@ O MVP precisa provar o ciclo completo: **cadastro, lembrete, confirmação, aler
 
 - **Protótipo:** [`prototipo/index.html`](prototipo/index.html). Desenho navegável das telas dos três perfis, em HTML, com a simulação do lembrete e do alerta. Baixe e abra no navegador.
 - **MVP:** [`MVP/`](MVP/). O app de verdade, em Flutter. Já tem todas as telas e regras funcionando com dados de demonstração; o banco, o login real e as notificações entram nas próximas semanas. Como rodar: [`MVP/README.md`](MVP/README.md).
-- **Landing page:** [`landing-page/index.html`](landing-page/index.html). Página de apresentação do Cuidar+.
+- **Landing page:** [`landing-page/index.html`](landing-page/index.html). Página de apresentação do CuidarMais.
 
 O backlog completo está em [`docs/BACKLOG.md`](docs/BACKLOG.md).
 
@@ -168,7 +168,8 @@ O app combina push e lembretes agendados no próprio aparelho, para que o lembre
 .
 ├── prototipo/     # desenho navegável das telas (HTML)
 ├── MVP/           # app em Flutter: idoso, cuidador e, por enquanto, o médico
-├── landing-page/  # página de apresentação do Cuidar+
+├── landing-page/  # página de apresentação do CuidarMais
+├── identidade-visual/ # logo, símbolo, ícone do app e cores da marca
 ├── pesquisa/      # painel com as respostas do formulário e das entrevistas
 ├── docs/          # etapas, backlog e documento do projeto
 │   └── antigo/    # versão anterior do documento (v1, com WhatsApp)

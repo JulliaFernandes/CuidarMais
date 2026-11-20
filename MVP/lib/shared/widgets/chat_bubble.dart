@@ -14,7 +14,7 @@ class ChatBubble extends StatelessWidget {
     final fg = fromMe ? scheme.onPrimary : scheme.onSurface;
     final maxWidth = MediaQuery.sizeOf(context).width * 0.8;
     return Semantics(
-      label: '${fromMe ? 'Você' : 'Cuidar+'}, às $time: $text',
+      label: '${fromMe ? 'Você' : 'CuidarMais'}, às $time: $text',
       child: ExcludeSemantics(
         child: Align(
           alignment: fromMe ? Alignment.centerRight : Alignment.centerLeft,

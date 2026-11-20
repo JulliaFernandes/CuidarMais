@@ -45,7 +45,7 @@ class _MedicoAddPatientScreenState extends State<MedicoAddPatientScreen> {
           children: [
             const SectionHeading(
               title: 'Email do paciente',
-              subtitle: 'O paciente precisa ter conta no app Cuidar+. Use o email que ele usa para entrar.',
+              subtitle: 'O paciente precisa ter conta no app CuidarMais. Use o email que ele usa para entrar.',
             ),
             const SizedBox(height: 16),
             if (_error != null) ...[

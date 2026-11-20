@@ -1,11 +1,11 @@
 {
-    "name": "cuidarmais",
-    "short_name": "cuidarmais",
+    "name": "CuidarMais",
+    "short_name": "CuidarMais",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFF8EF",
+    "theme_color": "#0E6B66",
+    "description": "Lembretes de remédio para idosos, com aviso ao cuidador e acompanhamento do médico.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

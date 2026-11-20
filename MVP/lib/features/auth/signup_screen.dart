@@ -255,7 +255,7 @@ class _SignupScreenState extends State<SignupScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'O Cuidar+ guarda informações de saúde, que a LGPD trata como dados sensíveis. Por isso pedimos o seu consentimento.',
+          'O CuidarMais guarda informações de saúde, que a LGPD trata como dados sensíveis. Por isso pedimos o seu consentimento.',
           style: textTheme.bodyLarge,
         ),
         const SizedBox(height: 16),

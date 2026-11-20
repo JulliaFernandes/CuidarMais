@@ -24,7 +24,7 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             CuidarLogo(size: 32),
             SizedBox(width: 10),
-            Flexible(child: Text('Cuidar+', overflow: TextOverflow.ellipsis)),
+            Flexible(child: Text('CuidarMais', overflow: TextOverflow.ellipsis)),
           ],
         ),
       ),

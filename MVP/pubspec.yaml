@@ -1,5 +1,5 @@
 name: cuidarmais
-description: "Cuidar+ — frontend MVP (Flutter) para validar a stack e as regras de acessibilidade do WAI Older Users."
+description: "CuidarMais — frontend MVP (Flutter) para validar a stack e as regras de acessibilidade do WAI Older Users."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -22,3 +22,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/marca/

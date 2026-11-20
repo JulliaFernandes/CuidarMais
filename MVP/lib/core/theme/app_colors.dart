@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Todas as cores do app, alinhadas à identidade visual do Cuidar Mais.
+/// Todas as cores do app, alinhadas à identidade visual do CuidarMais.
 /// Nenhuma tela usa código de cor direto: tudo passa por aqui ou pelo
 /// tema (`app_theme.dart`).
 ///

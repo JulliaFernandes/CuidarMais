@@ -49,7 +49,7 @@ class _CuidarMaisAppState extends State<CuidarMaisApp> {
           animation: Listenable.merge([_textScaleController, _store]),
           builder: (context, _) {
             return MaterialApp(
-              title: 'Cuidar+',
+              title: 'CuidarMais',
               debugShowCheckedModeBanner: false,
               theme: AppTheme.light(_accent),
               darkTheme: AppTheme.dark(_accent),

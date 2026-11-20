@@ -1,4 +1,4 @@
-// Painel Cuidar+ — lê window.CUIDAR_DADOS (gerado por gerar_dados.py) e desenha a tela.
+// Painel CuidarMais — lê window.CUIDAR_DADOS (gerado por gerar_dados.py) e desenha a tela.
 // Não tem dados de exemplo: se dados.js não tiver respostas, os cartões mostram "sem respostas".
 (function () {
   "use strict";

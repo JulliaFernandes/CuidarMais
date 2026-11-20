@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   Semantics(
                     header: true,
-                    child: Text('Cuidar+', textAlign: TextAlign.center, style: textTheme.displaySmall),
+                    child: Text('CuidarMais', textAlign: TextAlign.center, style: textTheme.displaySmall),
                   ),
                   const SizedBox(height: 8),
                   Text(

@@ -1,4 +1,4 @@
-# Backlog do Cuidar+
+# Backlog do CuidarMais
 
 Cada tarefa abaixo vira **uma issue** no GitHub. Para cada uma:
 
@@ -104,9 +104,9 @@ Base do app usado por idosos e cuidadores.
 - [x] Criar o projeto Flutter em `MVP/` (foco em Android)
 - [ ] Definir o tema com as cores do mockup (verde para idoso, coral para cuidador)
 - [ ] Fontes grandes por padrão, pensando em idosos
-- [ ] Tela inicial com o logo do Cuidar+
+- [ ] Tela inicial com o logo do CuidarMais
 
-**Pronto quando:** o app abre no emulador e em um celular Android com o tema do Cuidar+.
+**Pronto quando:** o app abre no emulador e em um celular Android com o tema do CuidarMais.
 ```
 
 ### Título: `[SET-3] Criar a API em Python com PostgreSQL`
@@ -136,9 +136,9 @@ Base do painel do médico.
 **O que fazer**
 - [ ] Criar o projeto Next.js com TypeScript em `web/`
 - [ ] Definir as cores do mockup (violeta para o médico) e as fontes
-- [ ] Página inicial com o logo do Cuidar+
+- [ ] Página inicial com o logo do CuidarMais
 
-**Pronto quando:** `npm run dev` abre a página inicial com o tema do Cuidar+.
+**Pronto quando:** `npm run dev` abre a página inicial com o tema do CuidarMais.
 ```
 
 ### Título: `[SET-5] Configurar o Firebase Cloud Messaging`
