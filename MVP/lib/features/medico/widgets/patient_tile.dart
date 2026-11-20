@@ -36,6 +36,13 @@ class PatientTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final color = _levelColor(scheme);
+    // Com o texto bem aumentado, a porcentagem desce para baixo do nome e o
+    // avatar sai, para nada estourar a tela (WCAG 1.4.10).
+    final bigText = MediaQuery.textScalerOf(context).scale(10) > 13;
+    final percent = Text(
+      '${patient.adherencePercent.round()}%',
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+    );
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -56,8 +63,10 @@ class PatientTile extends StatelessWidget {
                   decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3)),
                 ),
                 const SizedBox(width: 14),
-                CircleAvatar(radius: 24, child: Text(patient.initials)),
-                const SizedBox(width: 14),
+                if (!bigText) ...[
+                  CircleAvatar(radius: 24, child: Text(patient.initials)),
+                  const SizedBox(width: 14),
+                ],
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,23 +82,29 @@ class PatientTile extends StatelessWidget {
                         children: [
                           Icon(Icons.circle, size: 10, color: color),
                           const SizedBox(width: 6),
-                          Text(_levelLabel(), style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+                          Flexible(
+                            child: Text(_levelLabel(), style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+                          ),
                         ],
                       ),
+                      if (bigText) ...[
+                        const SizedBox(height: 6),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          spacing: 6,
+                          children: [percent, Text('de adesão', style: Theme.of(context).textTheme.bodySmall)],
+                        ),
+                      ],
                     ],
                   ),
                 ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '${patient.adherencePercent.round()}%',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-                    ),
-                    Text('adesão', style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                ),
+                if (!bigText) ...[
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [percent, Text('adesão', style: Theme.of(context).textTheme.bodySmall)],
+                  ),
+                ],
                 const Icon(Icons.chevron_right_rounded),
               ],
             ),

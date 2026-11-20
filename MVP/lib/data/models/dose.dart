@@ -19,14 +19,26 @@ extension DoseStatusLabel on DoseStatus {
   }
 }
 
+/// Uma dose concreta na agenda do dia (ex.: Losartana às 08:00 de hoje).
 class Dose {
   final String id;
+  final String elderId;
+  final String medicationId;
   final String medicationName;
   final String dosageText;
   final DateTime scheduledAt;
   DoseStatus status;
+
+  /// Quantas vezes o idoso tocou em "Me lembra em 15 min" (máximo 2).
   int snoozeCount;
+
+  /// Quantas vezes o lembrete já tocou. No idoso sem app, o cuidador
+  /// recebe um aviso novo a cada 15 minutos até confirmar.
+  int reminderCount;
+
   DateTime? confirmedAt;
+
+  /// 'idoso' ou 'cuidador' — o médico precisa distinguir no relatório.
   String? confirmedBy;
 
   Dose({
@@ -34,9 +46,17 @@ class Dose {
     required this.medicationName,
     required this.dosageText,
     required this.scheduledAt,
+    this.elderId = '',
+    this.medicationId = '',
     this.status = DoseStatus.pendente,
     this.snoozeCount = 0,
+    this.reminderCount = 0,
     this.confirmedAt,
     this.confirmedBy,
   });
+
+  bool get isTaken => status == DoseStatus.tomada;
+
+  /// Ainda espera confirmação (não foi tomada nem dada como perdida).
+  bool get isOpen => status != DoseStatus.tomada && status != DoseStatus.perdida;
 }

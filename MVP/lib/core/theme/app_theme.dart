@@ -5,15 +5,18 @@ import 'app_colors.dart';
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get light => _build(Brightness.light);
-  static ThemeData get dark => _build(Brightness.dark);
+  /// Cada perfil tem sua cor de destaque (idoso verde, cuidador laranja,
+  /// médico violeta), aplicada no app inteiro — inclusive nas telas que
+  /// abrem por cima — para a pessoa saber de relance em qual visão está.
+  static ThemeData light([Color accent = AppColors.violet]) => _build(Brightness.light, accent);
+  static ThemeData dark([Color accent = AppColors.violet]) => _build(Brightness.dark, accent);
 
-  static ThemeData _build(Brightness brightness) {
+  static ThemeData _build(Brightness brightness, Color accent) {
     final isDark = brightness == Brightness.dark;
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.violet,
+      seedColor: accent,
       brightness: brightness,
-      primary: AppColors.violet,
+      primary: accent,
       secondary: AppColors.amber,
       tertiary: AppColors.green,
       error: AppColors.coral,
