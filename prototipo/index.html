@@ -1,0 +1,679 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuidar+ Mockup</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,700;6..12,800&display=swap">
+<style>
+/* Layout: faixa do fluxo no topo (cadastro → lembrete → tomei/adiar → alerta → painel); abaixo, o dispositivo (celular para idoso e cuidador, navegador para o médico) e as notas da tela ao lado. Cores por perfil: idoso verde, cuidador coral, médico violeta. */
+:root {
+  --bg: #F7F5FC;
+  --surface: #FFFFFF;
+  --surface-2: #F1EEF8;
+  --ink: #221B3A;
+  --muted: #6B6485;
+  --line: #E6E1F2;
+  --violet: #6A4DF4;
+  --violet-soft: #EEE9FF;
+  --coral: #E4532B;
+  --coral-soft: #FFE9E1;
+  --green: #17914F;
+  --green-soft: #DDF4E6;
+  --sun: #A86E00;
+  --sun-fill: #F5B729;
+  --sun-soft: #FFF3D1;
+  --red: #D7263F;
+  --red-soft: #FDE3E7;
+  --on-color: #FFFFFF;
+  --frame: #18141F;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15121F; --surface: #1F1A2E; --surface-2: #282238; --ink: #F1EEF9; --muted: #A59FBD; --line: #352E4A;
+    --violet: #A28EFF; --violet-soft: #2D2552; --coral: #FF8A66; --coral-soft: #3D2419; --green: #4FD08A; --green-soft: #173324;
+    --sun: #FFC94D; --sun-fill: #E0A526; --sun-soft: #3A2E10; --red: #FF6B80; --red-soft: #401B24; --on-color: #14101F; --frame: #05040A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15121F; --surface: #1F1A2E; --surface-2: #282238; --ink: #F1EEF9; --muted: #A59FBD; --line: #352E4A;
+  --violet: #A28EFF; --violet-soft: #2D2552; --coral: #FF8A66; --coral-soft: #3D2419; --green: #4FD08A; --green-soft: #173324;
+  --sun: #FFC94D; --sun-fill: #E0A526; --sun-soft: #3A2E10; --red: #FF6B80; --red-soft: #401B24; --on-color: #14101F; --frame: #05040A;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; }
+.wrap { max-width: 1320px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.eyebrow { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+
+/* ---------- topo ---------- */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; justify-content: space-between; }
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-mark { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: conic-gradient(from 200deg, var(--violet), var(--coral), var(--sun-fill), var(--green), var(--violet)); }
+.logo-mark span { width: 30px; height: 30px; border-radius: 10px; background: var(--surface); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 17px; }
+.logo h1 { font-size: 28px; font-weight: 800; }
+.logo h1 em { font-style: normal; color: var(--coral); }
+.logo p { font-size: 13px; color: var(--muted); }
+.roles { display: flex; flex-wrap: wrap; gap: 6px; }
+.roles button { border: 0; border-radius: 999px; padding: 9px 16px; font-weight: 800; background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line); display: flex; align-items: center; gap: 8px; }
+.roles button .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.roles button .sub { font-weight: 400; font-size: 12px; color: var(--muted); }
+.roles button[aria-pressed="true"] { background: var(--c); color: var(--on-color); box-shadow: none; }
+.roles button[aria-pressed="true"] .dot { background: var(--on-color); }
+.roles button[aria-pressed="true"] .sub { color: inherit; opacity: .85; }
+
+/* ---------- fluxo ---------- */
+.flow { background: var(--surface); border-radius: 22px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 var(--line); }
+.flow-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 6px; flex-wrap: wrap; }
+.flow-head .reset { border: 0; background: none; color: var(--violet); font-weight: 800; font-size: 13px; }
+.steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+@media (max-width: 760px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+.step { border: 0; text-align: left; border-radius: 16px; padding: 10px 12px; background: var(--surface-2); display: grid; grid-template-columns: 30px 1fr; gap: 2px 10px; align-items: center; }
+.step .n { grid-row: span 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; background: var(--surface); color: var(--c); box-shadow: inset 0 0 0 2px var(--c); }
+.step b { font-size: 14px; line-height: 1.2; }
+.step span.who { font-size: 12px; color: var(--muted); }
+.step[aria-current="true"] { background: var(--c); color: var(--on-color); }
+.step[aria-current="true"] .n { background: var(--on-color); box-shadow: none; }
+.step[aria-current="true"] span.who { color: inherit; opacity: .85; }
+.alt-path { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 4px 6px 0; font-size: 13px; color: var(--muted); }
+.alt-path button { border: 0; border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: 13px; background: var(--coral-soft); color: var(--coral); }
+.alt-path button[aria-current="true"] { background: var(--coral); color: var(--on-color); }
+
+/* ---------- palco ---------- */
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+@media (max-width: 1180px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+.screens-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.screens-nav button { border: 0; background: transparent; padding: 6px 12px; border-radius: 999px; font-weight: 700; font-size: 13px; color: var(--muted); }
+.screens-nav button[aria-current="true"] { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+.chip.ok { background: var(--green-soft); color: var(--green); }
+.chip.sun { background: var(--sun-soft); color: var(--sun); }
+.chip.red { background: var(--red-soft); color: var(--red); }
+.chip.vio { background: var(--violet-soft); color: var(--violet); }
+.chip.cor { background: var(--coral-soft); color: var(--coral); }
+.chip.gray { background: var(--surface-2); color: var(--muted); }
+.btn { border: 0; border-radius: 14px; padding: 11px 16px; font-weight: 800; font-size: 14px; background: var(--accent, var(--violet)); color: var(--on-color); }
+.btn.ghost { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); }
+.btn.sm { padding: 7px 12px; font-size: 13px; border-radius: 11px; }
+.btn.full { width: 100%; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.link { border: 0; background: none; padding: 0; color: var(--accent, var(--violet)); font-weight: 800; font-size: 13px; }
+.capsule { width: 34px; height: 14px; border-radius: 7px; overflow: hidden; display: flex; flex: none; transform: rotate(-25deg); }
+.capsule i { flex: 1; } .capsule i:first-child { background: var(--c1); } .capsule i:last-child { background: var(--c2); }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label, .field .lab { font-size: 13px; font-weight: 800; }
+.field input, .field select { border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 12px; padding: 10px 12px; font: inherit; width: 100%; min-width: 0; }
+.fields-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.daysel { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.daysel button { border: 0; padding: 8px 0; border-radius: 10px; background: var(--surface-2); font-weight: 800; font-size: 12px; }
+.daysel button[aria-pressed="true"] { background: var(--accent, var(--violet)); color: var(--on-color); }
+.origin { font-size: 13px; border-radius: 12px; padding: 10px 12px; background: var(--surface-2); }
+.origin b { color: var(--accent, var(--violet)); }
+
+/* ---------- celular (app Flutter) ---------- */
+.phone-stage { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start; }
+.phone { width: 100%; max-width: 360px; height: 740px; background: var(--frame); border-radius: 44px; padding: 10px; box-shadow: 0 24px 50px -30px rgba(40, 20, 90, .5); flex: none; }
+.phone-in { --accent: var(--green); --accent-soft: var(--green-soft); height: 100%; border-radius: 35px; overflow: hidden; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+.phone-in.care { --accent: var(--coral); --accent-soft: var(--coral-soft); }
+.status { display: flex; justify-content: space-between; padding: 12px 22px 4px; font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.appbar { display: flex; align-items: center; gap: 10px; padding: 6px 16px 10px; }
+.appbar h2 { font-size: 22px; font-weight: 800; line-height: 1.15; }
+.appbar .sub { font-size: 13px; color: var(--muted); }
+.appbar .grow { flex: 1; min-width: 0; }
+.back { border: 0; background: var(--surface); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 1px var(--line); flex: none; font-size: 18px; }
+.av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: none; background: var(--accent-soft, var(--violet-soft)); color: var(--accent, var(--violet)); }
+.av.lg { width: 52px; height: 52px; font-size: 17px; }
+.scroll { flex: 1; overflow-y: auto; padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.tabbar { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--surface); border-top: 1px solid var(--line); padding: 6px 6px 14px; }
+.tabbar button { border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 11px; color: var(--muted); padding: 6px 0; font-weight: 800; position: relative; }
+.tabbar button svg { width: 22px; height: 22px; }
+.tabbar button[aria-current="true"] { color: var(--accent); }
+.tabbar .badge { position: absolute; top: 2px; left: calc(50% + 6px); min-width: 16px; height: 16px; border-radius: 8px; background: var(--red); color: var(--on-color); font-size: 10px; display: grid; place-items: center; padding: 0 4px; }
+.card { background: var(--surface); border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 var(--line); }
+.card.btnlike { border: 0; text-align: left; width: 100%; }
+.row { display: flex; align-items: center; gap: 12px; }
+.row .grow { flex: 1; min-width: 0; }
+.title { font-weight: 800; font-size: 16px; }
+.push { position: absolute; left: 10px; right: 10px; top: 34px; z-index: 5; background: var(--surface); border-radius: 18px; padding: 10px 12px; box-shadow: 0 12px 30px -10px rgba(20,10,50,.45), 0 0 0 1px var(--line); display: grid; grid-template-columns: 32px 1fr; gap: 2px 10px; font-size: 13px; }
+.push i { grid-row: span 2; width: 32px; height: 32px; border-radius: 9px; background: conic-gradient(from 200deg, var(--violet), var(--coral), var(--sun-fill), var(--green), var(--violet)); }
+.push b { font-size: 13px; }
+@media (prefers-reduced-motion: no-preference) { .push { animation: drop .5s ease-out; } }
+@keyframes drop { from { transform: translateY(-30px); opacity: 0; } }
+
+/* chat de lembretes */
+.chat { flex: 1; overflow-y: auto; padding: 8px 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.daychip { align-self: center; background: var(--surface); color: var(--muted); font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 8px; }
+.sys { align-self: center; text-align: center; font-size: 12px; padding: 6px 10px; border-radius: 10px; background: var(--sun-soft); color: var(--sun); max-width: 92%; }
+.sys.red { background: var(--red-soft); color: var(--red); }
+.bubble { max-width: 86%; padding: 8px 12px 6px; border-radius: 16px 16px 16px 4px; background: var(--surface); box-shadow: 0 1px 0 var(--line); align-self: flex-start; font-size: 15px; }
+.bubble.me { align-self: flex-end; border-radius: 16px 16px 4px 16px; background: var(--accent); color: var(--on-color); font-weight: 800; }
+.bubble .hr { display: block; text-align: right; font-size: 10px; opacity: .7; font-variant-numeric: tabular-nums; }
+.remind { align-self: stretch; background: var(--surface); border-radius: 20px; padding: 14px; box-shadow: 0 0 0 2px var(--accent); display: flex; flex-direction: column; gap: 8px; }
+.remind .when { font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1; font-variant-numeric: tabular-nums; }
+.remind .med { font-size: 18px; font-weight: 800; }
+.remind .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+.remind .acts button { border: 0; border-radius: 16px; padding: 16px 8px; font-weight: 800; font-size: 16px; }
+.remind .acts .yes { background: var(--accent); color: var(--on-color); }
+.remind .acts .later { background: var(--surface-2); color: var(--ink); }
+.remind .acts button:disabled { opacity: .45; cursor: default; }
+.remind.done { box-shadow: 0 0 0 1.5px var(--line); }
+.remind .note { font-size: 12px; color: var(--muted); }
+
+/* lista grande do idoso */
+.big-list { display: flex; flex-direction: column; gap: 10px; }
+.big-item { background: var(--surface); border-radius: 18px; padding: 14px 16px; display: grid; grid-template-columns: 64px 1fr auto; gap: 12px; align-items: center; box-shadow: 0 1px 0 var(--line); }
+.big-item .h { font-family: var(--font-display); font-weight: 800; font-size: 22px; font-variant-numeric: tabular-nums; }
+.big-item .t { font-size: 18px; font-weight: 800; line-height: 1.2; }
+.big-item .d { font-size: 14px; color: var(--muted); }
+.big-item.done .t { color: var(--muted); }
+.mark { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; }
+.mark.ok { background: var(--green); color: var(--on-color); }
+.mark.wait { background: var(--sun-soft); color: var(--sun); }
+.mark.next { box-shadow: inset 0 0 0 2px var(--line); }
+
+/* cuidador */
+.alertband { border-radius: 18px; padding: 14px; background: var(--red); color: var(--on-color); display: flex; flex-direction: column; gap: 8px; }
+.alertband .btn { --accent: var(--on-color); color: var(--red); }
+.alertband .btn.ghost { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
+.okband { border-radius: 16px; padding: 12px 14px; background: var(--green-soft); color: var(--green); font-weight: 700; font-size: 14px; }
+.check { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); }
+.check:first-child { border-top: 0; }
+.check .h { font-family: var(--font-display); font-weight: 800; width: 46px; font-variant-numeric: tabular-nums; }
+.check .t { flex: 1; min-width: 0; }
+.week7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; text-align: center; font-size: 11px; color: var(--muted); }
+.week7 i { display: block; aspect-ratio: 1; max-width: 100%; border-radius: 50%; margin-bottom: 4px; }
+.w1 { background: var(--green); } .w5 { background: var(--sun-fill); } .w0 { background: var(--red); } .wn { background: var(--surface-2); box-shadow: inset 0 0 0 1.5px var(--line); }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--surface-2); padding: 4px; border-radius: 14px; }
+.seg button { border: 0; background: transparent; padding: 10px 0; border-radius: 10px; font-weight: 800; font-size: 14px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--accent); box-shadow: 0 1px 0 var(--line); }
+.code { font-family: var(--font-display); font-size: 32px; font-weight: 800; letter-spacing: .12em; text-align: center; padding: 14px; background: var(--accent-soft); color: var(--accent); border-radius: 16px; font-variant-numeric: tabular-nums; }
+
+/* ---------- navegador (painel do médico) ---------- */
+.browser { background: var(--surface); border-radius: 18px; overflow: hidden; box-shadow: 0 24px 50px -30px rgba(40, 20, 90, .35), 0 0 0 1px var(--line); container-type: inline-size; }
+.chrome { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--surface-2); }
+.chrome .lights { display: flex; gap: 6px; } .chrome .lights i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); }
+.chrome .url { flex: 1; min-width: 0; background: var(--surface); border-radius: 999px; padding: 4px 14px; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.web { --accent: var(--violet); --accent-soft: var(--violet-soft); display: flex; flex-direction: column; min-height: 600px; }
+.web-bar { display: flex; align-items: center; gap: 14px 22px; padding: 14px 22px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.web-bar .brand { font-family: var(--font-display); font-weight: 800; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.web-bar .brand i { width: 22px; height: 22px; border-radius: 7px; background: var(--accent); }
+.web-tabs { display: flex; gap: 2px; flex-wrap: wrap; flex: 1; }
+.web-tabs button { border: 0; background: none; padding: 7px 12px; border-radius: 10px; font-weight: 700; font-size: 14px; color: var(--muted); }
+.web-tabs button[aria-current="true"] { background: var(--accent-soft); color: var(--accent); }
+.who { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.web-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+.hello { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.hello h2 { font-size: 26px; font-weight: 800; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.panel h3 { font-size: 16px; font-weight: 800; }
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 18px; }
+@container (max-width: 760px) { .grid-2 { grid-template-columns: minmax(0, 1fr); } }
+.lanes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@container (max-width: 760px) { .lanes { grid-template-columns: minmax(0, 1fr); } }
+.lane { border-radius: 18px; padding: 14px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.lane-head { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+.lane-head i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
+.lane-head .n { margin-left: auto; font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+.pcard { border: 0; text-align: left; background: var(--surface); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 6px; box-shadow: inset 4px 0 0 var(--c); width: 100%; }
+.pcard .nm { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.pcard .why { font-size: 13px; color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; font-weight: 800; }
+.ring-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.ring { width: 110px; height: 110px; flex: none; }
+.ring .bg { fill: none; stroke: var(--surface-2); stroke-width: 12; }
+.ring .fg { fill: none; stroke: var(--violet); stroke-width: 12; stroke-linecap: round; }
+.ring text { fill: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 26px; }
+.heat { display: grid; grid-template-columns: 64px repeat(14, minmax(0, 1fr)); gap: 4px; align-items: center; font-size: 12px; }
+.heat .lbl { color: var(--muted); font-weight: 700; }
+.heat i { aspect-ratio: 1; max-width: 100%; border-radius: 5px; display: block; }
+.heat .dd { text-align: center; color: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; }
+.rx { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.rx:first-child { border-top: 0; }
+.rx .t { flex: 1; min-width: 0; }
+.events { display: flex; flex-direction: column; }
+.events div { display: grid; grid-template-columns: 46px 12px minmax(0, 1fr); gap: 8px; font-size: 13px; padding: 4px 0; }
+.events .h { font-weight: 800; font-variant-numeric: tabular-nums; }
+.events .d { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; background: var(--c); }
+.noalert { font-size: 12px; color: var(--muted); }
+
+/* lateral de simulação */
+.side-card { width: 100%; max-width: 300px; background: var(--surface); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 0 var(--line); }
+.side-card .btn { --accent: var(--ink); width: 100%; }
+.side-card .btn.red { background: var(--red); }
+.tl { display: flex; flex-direction: column; }
+.tl div { display: grid; grid-template-columns: 46px 14px minmax(0, 1fr); gap: 8px; font-size: 13px; padding: 4px 0; }
+.tl .h { font-variant-numeric: tabular-nums; font-weight: 800; }
+.tl .d { width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; background: var(--line); }
+.tl .on .d { background: var(--c, var(--green)); }
+.tl .off { color: var(--muted); }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 12px 18px; border-radius: 14px; font-weight: 800; font-size: 14px; z-index: 20; max-width: calc(100% - 32px); text-align: center; }
+
+/* notas */
+.notes { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.notes h2 { font-size: 24px; font-weight: 800; }
+.note { background: var(--surface); border-radius: 18px; padding: 16px 18px; box-shadow: 0 1px 0 var(--line); display: flex; flex-direction: column; gap: 6px; }
+.note q { quotes: "“" "”"; font-size: 15px; }
+.tasks { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; }
+.tasks li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.tasks li:first-child { border-top: 0; }
+.tag { font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; align-self: start; justify-self: start; }
+.tag.App { background: var(--green-soft); color: var(--green); }
+.tag.Web { background: var(--violet-soft); color: var(--violet); }
+.tag.API { background: var(--coral-soft); color: var(--coral); }
+.tag.Banco { background: var(--sun-soft); color: var(--sun); }
+.tag.Push { background: var(--surface-2); color: var(--ink); }
+.phase { font-size: 12px; font-weight: 800; color: var(--violet); }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="logo">
+      <div class="logo-mark"><span>C+</span></div>
+      <div><h1>Cuidar<em>+</em></h1><p>Protótipo navegável · SuperNova · dados de exemplo</p></div>
+    </div>
+    <div class="roles" role="group" aria-label="Perfil">
+      <button data-role="idoso" style="--c:var(--green)"><span class="dot"></span>Idoso <span class="sub">app</span></button>
+      <button data-role="cuidador" style="--c:var(--coral)"><span class="dot"></span>Cuidador <span class="sub">app</span></button>
+      <button data-role="medico" style="--c:var(--violet)"><span class="dot"></span>Médico <span class="sub">painel web</span></button>
+    </div>
+  </header>
+
+  <section class="flow" aria-label="Fluxo do MVP">
+    <div class="flow-head"><span class="eyebrow">Fluxo do MVP · clique para simular cada etapa</span><button class="reset" data-reset>Recomeçar simulação</button></div>
+    <div class="steps" id="steps"></div>
+    <div class="alt-path" id="alt"></div>
+  </section>
+
+  <div class="stage">
+    <main>
+      <nav class="screens-nav" id="screens" aria-label="Telas"></nav>
+      <div id="device"></div>
+    </main>
+    <aside class="notes" id="notes" aria-live="polite"></aside>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ---------- estado ---------- */
+const INITIAL = () => ({
+  role: 'idoso', screen: 'i-chat',
+  maria: { status: 'pendente', snoozes: 0, silent: false },   // Losartana 08:00 de Dona Maria (usa o app)
+  ant: { status: 'pendente', avisos: 1 },                      // Furosemida 08:00 de Seu Antônio (sem app)
+  invite: 'pendente', hasApp: true, push: '',
+  med: 'Losartana 50 mg', dosage: '1 comprimido', days: new Set([0,1,2,3,4,5,6]),
+});
+let state = INITIAL();
+const M = () => state.maria;
+const alerted = () => M().snoozes >= 2 || M().silent;              // o cuidador já foi avisado
+const alertOpen = () => alerted() && M().status === 'pendente';    // alerta ainda sem confirmação
+const tookAt = () => M().silent ? '08:41' : ['08:02', '08:17', '08:33'][M().snoozes];
+
+const ROLE = {
+  idoso: { label: 'Idoso', screens: [['i-chat','Lembretes'],['i-hoje','Hoje'],['i-remedios','Remédios'],['i-cadastro','Cadastrar remédio'],['i-perfil','Quem me acompanha']] },
+  cuidador: { label: 'Cuidador', screens: [['c-inicio','Meus idosos'],['c-maria','Dona Maria (com app)'],['c-antonio','Seu Antônio (sem app)'],['c-cadastro','Cadastrar remédio'],['c-adicionar','Adicionar idoso']] },
+  medico: { label: 'Médico', screens: [['m-pacientes','Pacientes'],['m-relatorio','Relatório de adesão'],['m-cadastro','Cadastrar medicamento']] },
+};
+const roleOf = (id) => ({ i: 'idoso', c: 'cuidador', m: 'medico' })[id[0]];
+
+const STEPS = [
+  ['Remédio cadastrado', 'Médico, cuidador ou idoso', 'var(--violet)', 'm-cadastro'],
+  ['Lembrete no app', 'Idoso · notificação + chat', 'var(--green)', 'i-chat'],
+  ['Tomei ou adiar', 'Idoso · até 2 adiamentos', 'var(--green)', 'i-chat'],
+  ['Alerta ao cuidador', 'Cuidador · com o remédio', 'var(--coral)', 'c-inicio'],
+  ['Caso no painel', 'Médico · sem notificação', 'var(--violet)', 'm-pacientes'],
+];
+
+const MEDS = [
+  ['07:00', 'Levotiroxina 50 mcg', '1 comprimido em jejum', 'var(--sun-fill)', 'var(--sun-fill)', 'medico'],
+  ['08:00', 'Losartana 50 mg', '1 comprimido', 'var(--violet)', 'var(--surface-2)', 'medico'],
+  ['12:30', 'Metformina 850 mg', '1 comprimido após o almoço', 'var(--coral)', 'var(--coral)', 'familia'],
+  ['20:00', 'Vitamina D 2.000 UI', '1 cápsula à noite', 'var(--green)', 'var(--surface-2)', 'idoso'],
+];
+const ORIGIN = { medico: ['vio', 'Prescrito pela Dra. Helena'], familia: ['cor', 'Cadastrado por Carla'], idoso: ['ok', 'Cadastrado por você'] };
+const ORIGIN_DOC = { medico: ['vio', 'Prescrição validada'], familia: ['cor', 'Cadastrado pela família'], idoso: ['ok', 'Cadastrado pelo paciente'] };
+const capsule = (a, b) => `<span class="capsule" style="--c1:${a};--c2:${b}"><i></i><i></i></span>`;
+const chip = (c, t) => `<span class="chip ${c}">${t}</span>`;
+const mariaChip = () => M().status === 'tomado' ? chip('ok', 'Tomou ' + tookAt()) : alertOpen() ? chip('red', M().silent ? 'Sem resposta' : 'Adiou 2 vezes') : M().snoozes ? chip('sun', 'Adiou 1 vez') : chip('sun', 'Aguardando');
+
+const ICON = {
+  chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>',
+  pill: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="8" width="18" height="8" rx="4" transform="rotate(-35 12 12)"/><path d="M9.5 8.5l5 7"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5 6.5-5s5.5 1.5 6.5 5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2 .6 3 2.2 3.5 5"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>',
+};
+
+/* ---------- molduras ---------- */
+function phone(kind, body, tabs) {
+  const push = state.push ? `<div class="push" role="status"><i></i><b>Cuidar+</b><span>${state.push}</span></div>` : '';
+  return `<div class="phone"><div class="phone-in ${kind}">
+    <div class="status"><span>08:35</span><span>4G ▮▮▮ 76%</span></div>${push}${body}
+    ${tabs ? `<nav class="tabbar">${tabs.map(([id, l, ic, badge]) => `<button data-go="${id}" aria-current="${id === state.screen}">${badge ? `<span class="badge">${badge}</span>` : ''}${ICON[ic]}${l}</button>`).join('')}</nav>` : ''}
+  </div></div>`;
+}
+const appbar = (title, sub, back, right = '') => `<div class="appbar">${back ? `<button class="back" data-go="${back}" aria-label="Voltar">‹</button>` : ''}<div class="grow"><h2>${title}</h2>${sub ? `<div class="sub">${sub}</div>` : ''}</div>${right}</div>`;
+const I_TABS = () => [['i-chat','Lembretes','chat', M().status === 'pendente' ? 1 : 0],['i-hoje','Hoje','sun'],['i-remedios','Remédios','pill'],['i-perfil','Família','users', state.invite === 'pendente' ? 1 : 0]];
+const C_TABS = () => [['c-inicio','Início','home', alertOpen() ? 1 : 0],['c-maria','Maria','user'],['c-antonio','Antônio','user', state.ant.status === 'pendente' ? 1 : 0],['c-adicionar','Adicionar','plus']];
+
+/* ---------- cartão de lembrete (mesmo para idoso e cuidador) ---------- */
+function reminderCard(med, dose, when, s, opts) {
+  const done = s.status === 'tomado';
+  const left = opts.maxSnooze - (s.snoozes || 0);
+  const note = opts.maxSnooze ? (left > 0 ? `Pode adiar mais ${left} ${left === 1 ? 'vez' : 'vezes'}.` : 'Não dá para adiar de novo.') : 'Você recebe um aviso a cada 15 min até confirmar.';
+  return `<div class="remind ${done ? 'done' : ''}">
+    <div class="row"><div class="grow"><div class="when">${when}</div><div class="med">${med}</div><div class="muted">${dose}</div></div>${capsule('var(--violet)', 'var(--surface-2)')}</div>
+    <div class="acts">
+      <button class="yes" data-${opts.onTake} ${done ? 'disabled' : ''}>${done ? 'Confirmado ✓' : 'Tomei'}</button>
+      <button class="later" data-${opts.onSnooze} ${done || (opts.maxSnooze && left <= 0) ? 'disabled' : ''}>Me lembra em 15 min</button>
+    </div>
+    ${done ? '' : `<span class="note">${note}</span>`}
+  </div>`;
+}
+
+/* ---------- idoso ---------- */
+const S = {};
+S['i-chat'] = () => {
+  const m = M(), parts = [];
+  parts.push(`<span class="daychip">HOJE</span>`);
+  parts.push(`<div class="bubble">Bom dia, Dona Maria! Hora da <b>Levotiroxina 50 mcg</b>, 1 comprimido em jejum.<span class="hr">07:00</span></div>`);
+  parts.push(`<div class="bubble me">Tomei<span class="hr">07:03</span></div>`);
+  parts.push(`<div class="bubble">Anotado! O próximo é às 08:00.<span class="hr">07:03</span></div>`);
+  parts.push(`<div class="bubble">Está na hora do seu remédio.<span class="hr">08:00</span></div>`);
+  if (m.snoozes >= 1) parts.push(`<div class="bubble me">Me lembra em 15 min<span class="hr">08:01</span></div><div class="bubble">Combinado! Te lembro às 08:16.<span class="hr">08:01</span></div>`);
+  if (m.snoozes >= 2) parts.push(`<div class="bubble me">Me lembra em 15 min<span class="hr">08:17</span></div><div class="bubble">Te lembro às 08:32. Como foi o segundo adiamento, avisamos a Carla.<span class="hr">08:17</span></div>`);
+  if (m.silent) parts.push(`<div class="sys red">Sem resposta até 08:30. A Carla foi avisada.</div>`);
+  parts.push(reminderCard('Losartana 50 mg', '1 comprimido', ['08:00', '08:16', '08:32'][m.snoozes], m, { onTake: 'take', onSnooze: 'snooze', maxSnooze: 2 }));
+  if (m.status === 'tomado') parts.push(`<div class="bubble me">Tomei<span class="hr">${tookAt()}</span></div><div class="bubble">Registrado às ${tookAt()}. ${alerted() ? 'A Carla já sabe que está tudo bem. ' : ''}O próximo é a <b>Metformina</b> às 12:30.<span class="hr">${tookAt()}</span></div>`);
+  return phone('', appbar('Lembretes', 'Segunda, 19 de outubro', null, '<div class="av">MA</div>') + `<div class="chat" id="chat">${parts.join('')}</div>`, I_TABS());
+};
+S['i-hoje'] = () => {
+  const st = (i) => i === 0 ? 'ok' : i === 1 ? (M().status === 'tomado' ? 'ok' : 'wait') : 'next';
+  return phone('', appbar('Hoje', 'Seus remédios do dia') + `<div class="scroll"><div class="big-list">
+    ${MEDS.map(([h, n, d], i) => `<div class="big-item ${st(i) === 'ok' ? 'done' : ''}"><span class="h">${h}</span><div><div class="t">${n}</div><div class="d">${d}</div></div><span class="mark ${st(i)}">${st(i) === 'ok' ? '✓' : st(i) === 'wait' ? '!' : ''}</span></div>`).join('')}
+  </div><p class="muted small" style="text-align:center">Letras grandes de propósito, pensando em quem enxerga pouco.</p></div>`, I_TABS());
+};
+S['i-remedios'] = () => phone('', appbar('Meus remédios', '4 em uso') + `<div class="scroll">
+  ${MEDS.map(([h, n, d, a, b, o]) => `<div class="card"><div class="row">${capsule(a, b)}<div class="grow"><div class="title">${n}</div><div class="muted small">${h} · ${d}</div></div></div><div>${chip(...ORIGIN[o])}</div></div>`).join('')}
+  <button class="btn full" data-go="i-cadastro">+ Cadastrar remédio</button>
+</div>`, I_TABS());
+
+const WD = [['S',1],['T',2],['Q',3],['Q',4],['S',5],['S',6],['D',0]];
+function medForm(originText) {
+  return `<div class="field"><label for="f-med">Remédio</label><input id="f-med" value="${state.med}"></div>
+    <div class="fields-2"><div class="field"><label for="f-dose">Dose</label><input id="f-dose" value="${state.dosage}"></div><div class="field"><label for="f-hora">Horário</label><input id="f-hora" value="08:00"></div></div>
+    <div class="field"><span class="lab">Dias</span><div class="daysel">${WD.map(([l, d]) => `<button data-day="${d}" aria-pressed="${state.days.has(d)}">${l}</button>`).join('')}</div></div>
+    <div class="fields-2"><div class="field"><label for="f-ini">Início</label><input id="f-ini" value="19/10/2026"></div><div class="field"><label for="f-fim">Fim</label><input id="f-fim" value="sem data"></div></div>
+    <div class="origin">${originText}</div>`;
+}
+S['i-cadastro'] = () => phone('', appbar('Cadastrar remédio', null, 'i-remedios') + `<div class="scroll">
+  ${medForm('Vai aparecer como <b>cadastrado por você</b>. A Carla e a Dra. Helena ficam sabendo.')}
+  <button class="btn full" data-go="i-remedios" data-toast="Remédio salvo. Os lembretes já estão agendados.">Salvar</button>
+</div>`, I_TABS());
+S['i-perfil'] = () => phone('', appbar('Quem me acompanha', null) + `<div class="scroll">
+  ${state.invite === 'pendente' ? `<div class="card" style="box-shadow:0 0 0 2px var(--coral)">
+    <span class="eyebrow">Pedido para acompanhar você</span>
+    <div class="row"><div class="av" style="background:var(--coral-soft);color:var(--coral)">RS</div><div class="grow"><div class="title">Rui Silva</div><div class="muted small">Neto · digitou o seu código</div></div></div>
+    <p class="small">Se aceitar, o Rui vê seus remédios e se você tomou, e recebe um aviso quando você não confirma. Você pode tirar o acesso quando quiser.</p>
+    <div class="btns"><button class="btn sm" data-invite="aceito">Aceitar</button><button class="btn sm ghost" data-invite="recusado">Recusar</button></div>
+  </div>` : `<div class="okband">${state.invite === 'aceito' ? 'Você aceitou o Rui. Ele já vê seus remédios.' : 'Você recusou o pedido do Rui.'}</div>`}
+  <div class="card"><span class="eyebrow">Cuidadores</span>
+    <div class="row"><div class="av" style="background:var(--coral-soft);color:var(--coral)">CS</div><div class="grow"><b>Carla Silva</b><div class="muted small">Filha · recebe seus alertas</div></div></div>
+    ${state.invite === 'aceito' ? `<div class="row"><div class="av" style="background:var(--coral-soft);color:var(--coral)">RS</div><div class="grow"><b>Rui Silva</b><div class="muted small">Neto · recebe seus alertas</div></div></div>` : ''}
+  </div>
+  <div class="card"><span class="eyebrow">Médica</span><div class="row"><div class="av" style="background:var(--violet-soft);color:var(--violet)">HP</div><div class="grow"><b>Dra. Helena Prado</b><div class="muted small">Geriatria · vê seu histórico</div></div></div></div>
+</div>`, I_TABS());
+
+/* ---------- cuidador ---------- */
+S['c-inicio'] = () => {
+  const band = alertOpen()
+    ? `<div class="alertband"><span class="eyebrow" style="color:inherit;opacity:.85">Alerta · ${M().silent ? '08:30' : '08:17'}</span><b style="font-size:17px">Dona Maria ${M().silent ? 'não respondeu ao lembrete' : 'adiou 2 vezes o lembrete'} da Losartana 50 mg</b><span class="small">Era para as 08:00. Que tal ligar para ela?</span>
+        <div class="btns"><button class="btn sm" data-toast="Telefone de Dona Maria: (11) 98877-6655">Ver telefone</button><button class="btn sm ghost" data-go="c-maria">Ver remédios</button></div></div>`
+    : `<div class="okband">${alerted() ? 'Dona Maria tomou a Losartana às ' + tookAt() + '. Alerta encerrado.' : 'Nenhum alerta agora. Avisamos se alguém adiar 2 vezes ou não responder.'}</div>`;
+  return phone('care', appbar('Olá, Carla', 'Você acompanha 2 pessoas', null, '<div class="av">CS</div>') + `<div class="scroll">
+    ${band}
+    <button class="card btnlike" data-go="c-maria"><div class="row"><div class="av lg">MA</div><div class="grow"><span class="eyebrow">Mãe · usa o app</span><div class="title">Dona Maria</div><div class="muted small">${M().status === 'tomado' ? 2 : 1} de 4 remédios hoje</div></div>${alertOpen() ? chip('red', 'Atenção') : chip('ok', 'Em dia')}</div></button>
+    <button class="card btnlike" data-go="c-antonio"><div class="row"><div class="av lg">AF</div><div class="grow"><span class="eyebrow">Pai · sem app</span><div class="title">Seu Antônio</div><div class="muted small">${state.ant.status === 'tomado' ? 'Furosemida confirmada por você' : 'Furosemida 08:00 aguarda você'}</div></div>${state.ant.status === 'tomado' ? chip('ok', 'Em dia') : chip('sun', 'Confirmar')}</div></button>
+    <button class="btn ghost full" data-go="c-adicionar">+ Adicionar idoso</button>
+  </div>`, C_TABS());
+};
+S['c-maria'] = () => {
+  const W = [['Ter','w1'],['Qua','w1'],['Qui','w5'],['Sex','w1'],['Sáb','w0'],['Dom','w1'],['Hoje', M().status === 'tomado' ? (alerted() ? 'w5' : 'w1') : alertOpen() ? 'w0' : 'wn']];
+  const status = (i) => i === 0 ? chip('ok', 'Tomou 07:03') : i === 1 ? mariaChip() : chip('gray', 'Mais tarde');
+  return phone('care', appbar('Dona Maria', '78 anos · usa o app', 'c-inicio') + `<div class="scroll">
+    <div class="card"><span class="eyebrow">Hoje</span><div>${MEDS.map(([h, n, d], i) => `<div class="check"><span class="h">${h}</span><div class="t"><b>${n}</b><div class="muted small">${d}</div></div>${status(i)}</div>`).join('')}</div></div>
+    <div class="card"><div class="row"><span class="eyebrow grow">Últimos 7 dias</span>${chip('sun', '82%')}</div><div class="week7">${W.map(([d, c]) => `<div><i class="${c}"></i>${d}</div>`).join('')}</div></div>
+    <div class="card"><div class="row"><span class="eyebrow grow">Remédios</span><button class="link" data-go="c-cadastro">+ Cadastrar</button></div>
+      <div>${MEDS.map(([h, n, d, a, b, o]) => `<div class="check"><span class="h">${h}</span><div class="t"><b>${n}</b><div>${chip(...ORIGIN_DOC[o])}</div></div><button class="link" data-toast="Abrir edição de ${n}">Editar</button></div>`).join('')}</div>
+    </div>
+  </div>`, C_TABS());
+};
+S['c-antonio'] = () => {
+  const a = state.ant, parts = [`<div class="sys">Seu Antônio não usa o app. Você recebe os lembretes dele e confirma por ele.</div>`];
+  parts.push(`<div class="bubble">Hora do remédio do <b>Seu Antônio</b>.<span class="hr">08:00</span></div>`);
+  for (let k = 1; k < a.avisos; k++) parts.push(`<div class="bubble">Aviso de novo: o remédio do Seu Antônio ainda não foi confirmado.<span class="hr">${['08:15', '08:30', '08:45', '09:00'][k - 1] || '09:15'}</span></div>`);
+  parts.push(reminderCard('Furosemida 40 mg', '1 comprimido em jejum', '08:00', a, { onTake: 'ant-take', onSnooze: 'ant-snooze', maxSnooze: 0 }));
+  if (a.status === 'tomado') parts.push(`<div class="bubble me">Tomei<span class="hr">08:36</span></div><div class="bubble">Registrado como <b>confirmado por você</b>. A médica vê essa diferença no relatório.<span class="hr">08:36</span></div>`);
+  return phone('care', appbar('Seu Antônio', '85 anos · sem app', 'c-inicio') + `<div class="chat" id="chat">${parts.join('')}</div>`, C_TABS());
+};
+S['c-cadastro'] = () => phone('care', appbar('Cadastrar remédio', 'Para Dona Maria', 'c-maria') + `<div class="scroll">
+  ${medForm('Vai aparecer para a Dra. Helena como <b>cadastrado pela família</b>. Os lembretes começam na hora.')}
+  <button class="btn full" data-go="c-maria" data-toast="Remédio salvo para Dona Maria">Salvar</button>
+</div>`, C_TABS());
+S['c-adicionar'] = () => phone('care', appbar('Adicionar idoso', null, 'c-inicio') + `<div class="scroll">
+  <div class="field"><span class="lab">A pessoa vai usar o app Cuidar+ no celular dela?</span>
+    <div class="seg"><button data-hasapp="1" aria-pressed="${state.hasApp}">Sim</button><button data-hasapp="0" aria-pressed="${!state.hasApp}">Não</button></div></div>
+  ${state.hasApp ? `
+    <div class="card"><span class="eyebrow">Passe este código para ela</span><div class="code">7KQ-42M</div>
+      <p class="small muted">Ela digita o código no app dela e aceita que você acompanhe. Sem o aceite dela, você não vê nada. O código vale por 24 horas.</p></div>
+    <div class="origin"><b>Ela recebe</b> os lembretes no celular dela.<br><b>Você recebe</b> o status do dia e um alerta quando ela adiar 2 vezes ou não responder.</div>
+    <button class="btn ghost full" data-toast="Código copiado">Copiar código</button>`
+  : `
+    <div class="field"><label for="f-nome">Nome</label><input id="f-nome" value="Antônio Ferreira"></div>
+    <div class="fields-2"><div class="field"><label for="f-nasc">Nascimento</label><input id="f-nasc" value="02/03/1941"></div><div class="field"><label for="f-rel">Relação</label><input id="f-rel" value="Pai"></div></div>
+    <div class="origin"><b>Você recebe</b> os lembretes dele, confirma por ele e é avisada a cada 15 min até confirmar.</div>
+    <button class="btn full" data-go="c-antonio" data-toast="Seu Antônio adicionado">Adicionar</button>`}
+</div>`, C_TABS());
+
+/* ---------- médico ---------- */
+const DOC = `<div class="av">HP</div><div><b>Dra. Helena Prado</b><div class="muted small">Geriatria · CRM 123456</div></div>`;
+function web(url, body) {
+  return `<div class="browser"><div class="chrome"><div class="lights"><i></i><i></i><i></i></div><div class="url">${url}</div></div>
+    <div class="web"><div class="web-bar"><span class="brand"><i></i>Cuidar+</span>
+      <nav class="web-tabs">${ROLE.medico.screens.map(([id, l]) => `<button data-go="${id}" aria-current="${id === state.screen}">${l}</button>`).join('')}</nav>
+      <div class="who">${DOC}</div></div>
+      <div class="web-body">${body}</div></div></div>`;
+}
+S['m-pacientes'] = () => {
+  const maria = M().status === 'tomado'
+    ? (alerted() ? ['amarelo', 'Tomou a Losartana às ' + tookAt() + ', depois do alerta à cuidadora'] : ['verde', 'Tomou tudo no horário hoje'])
+    : alertOpen() ? ['vermelho', (M().silent ? 'Não respondeu ao lembrete' : 'Adiou 2 vezes') + ' da Losartana 50 mg · Carla foi avisada'] : ['amarelo', 'Losartana 08:00 ainda sem confirmação'];
+  const P = [
+    ['Maria Aparecida Silva', 78, 82, ...maria],
+    ['José Carlos Pereira', 82, 54, 'vermelho', 'Perdeu a Varfarina 5 mg ontem e hoje'],
+    ['Antônio Ferreira', 85, 76, 'amarelo', 'Sem app · doses confirmadas pela filha'],
+    ['Ana Lúcia Rocha', 71, 96, 'verde', 'Em dia'],
+    ['Celina Duarte', 69, 91, 'verde', 'Em dia'],
+    ['Joaquim Nunes', 80, 89, 'verde', '1 remédio cadastrado pela família'],
+  ];
+  const L = [['vermelho', 'Precisam de atenção', 'var(--red)'], ['amarelo', 'Acompanhar', 'var(--sun-fill)'], ['verde', 'Em dia', 'var(--green)']];
+  return web('cuidarmais / médico / pacientes', `
+    <div class="hello"><div><span class="eyebrow">Segunda, 19 de outubro · 08:35</span><h2>Seus pacientes</h2></div><span class="noalert">Você não recebe notificações. Os casos aparecem aqui.</span></div>
+    <div class="lanes">${L.map(([k, t, c]) => { const ps = P.filter(p => p[3] === k); return `<div class="lane"><div class="lane-head" style="--c:${c}"><i></i>${t}<span class="n">${ps.length}</span></div>
+      ${ps.map(([n, idade, ad, , why]) => `<button class="pcard" style="--c:${c}" data-go="m-relatorio"><div class="nm"><b>${n}</b><span class="num">${ad}%</span></div><span class="why">${idade} anos · ${why}</span></button>`).join('')}</div>`; }).join('')}</div>
+    <span class="muted small">% = doses confirmadas nos últimos 14 dias.</span>`);
+};
+S['m-relatorio'] = () => {
+  const days = Array.from({ length: 14 }, (_, i) => 6 + i);
+  const today = M().status === 'tomado' ? (alerted() ? 'w5' : 'w1') : alertOpen() ? 'w0' : 'wn';
+  const manha = days.map((d, i) => i === 13 ? today : i === 4 ? 'w5' : 'w1');
+  const tarde = days.map((d, i) => i === 13 ? 'wn' : [1, 7, 12].includes(i) ? 'w0' : 'w1');
+  const noite = days.map((d, i) => i === 13 ? 'wn' : i === 8 ? 'w5' : 'w1');
+  const pct = 82, C = 2 * Math.PI * 46;
+  const ev = [['08:00', 'var(--green)', 'Lembrete no app']];
+  if (M().snoozes >= 1) ev.push(['08:01', 'var(--sun-fill)', 'Adiou 15 min (1ª vez)']);
+  if (M().snoozes >= 2) ev.push(['08:17', 'var(--sun-fill)', 'Adiou 15 min (2ª vez)'], ['08:17', 'var(--coral)', 'Alerta enviado para Carla']);
+  if (M().silent) ev.push(['08:30', 'var(--coral)', 'Sem resposta: alerta enviado para Carla']);
+  if (M().status === 'tomado') ev.push([tookAt(), 'var(--green)', 'Confirmou "Tomei"']);
+  return web('cuidarmais / médico / pacientes / maria-aparecida-silva', `
+    <div class="hello"><div style="display:flex;gap:14px;align-items:center"><div class="av lg">MA</div><div><span class="eyebrow">Relatório de adesão</span><h2>Maria Aparecida Silva</h2><span class="muted small">78 anos · usa o app · cuidadora: Carla (filha)</span></div></div><button class="btn" data-go="m-cadastro">+ Cadastrar medicamento</button></div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="ring-row">
+          <svg class="ring" viewBox="0 0 110 110" role="img" aria-label="Adesão de ${pct}% em 14 dias"><circle class="bg" cx="55" cy="55" r="46"/><circle class="fg" cx="55" cy="55" r="46" stroke-dasharray="${(C * pct / 100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 55 55)"/><text x="55" y="64" text-anchor="middle">${pct}%</text></svg>
+          <div style="flex:1;min-width:180px"><h3>Adesão nos últimos 14 dias</h3><p class="muted small">46 de 56 doses confirmadas. 4 depois de adiar, 6 sem confirmação.</p></div>
+        </div>
+        <div class="heat" aria-label="Mapa de doses por período do dia">
+          <span></span>${days.map(d => `<span class="dd">${d}</span>`).join('')}
+          <span class="lbl">Manhã</span>${manha.map(c => `<i class="${c}"></i>`).join('')}
+          <span class="lbl">Tarde</span>${tarde.map(c => `<i class="${c}"></i>`).join('')}
+          <span class="lbl">Noite</span>${noite.map(c => `<i class="${c}"></i>`).join('')}
+        </div>
+        <div class="legend"><span><i class="w1"></i>Tomou no horário</span><span><i class="w5"></i>Tomou após adiar ou alerta</span><span><i class="w0"></i>Não confirmou</span><span><i class="wn"></i>Ainda vai tomar</span></div>
+      </div>
+      <div class="panel">
+        <h3>Hoje, Losartana 08:00</h3>
+        <div class="events">${ev.map(([h, c, t]) => `<div style="--c:${c}"><span class="h">${h}</span><span class="d"></span><span>${t}</span></div>`).join('')}</div>
+        <h3 style="margin-top:6px">Medicamentos</h3>
+        <div>${MEDS.map(([h, n, d, a, b, o]) => `<div class="rx">${capsule(a, b)}<div class="t"><b>${n}</b><div class="muted small">${h} · ${d}</div></div>${chip(...ORIGIN_DOC[o])}</div>`).join('')}</div>
+        <span class="muted small">Cadastros da família e do paciente geram lembretes, mas a sua prescrição prevalece se houver divergência.</span>
+      </div>
+    </div>`);
+};
+S['m-cadastro'] = () => web('cuidarmais / médico / pacientes / maria-aparecida-silva / novo-medicamento', `
+  <div class="hello"><div><span class="eyebrow">Novo medicamento para</span><h2>Maria Aparecida Silva</h2></div></div>
+  <div class="grid-2">
+    <div class="panel">
+      ${medForm('Fica registrado como <b>prescrição validada</b> e vale como versão de referência.')}
+      <div class="field"><label for="f-prazo">Avisar o cuidador se não houver resposta em</label><select id="f-prazo"><option>15 minutos</option><option selected>30 minutos</option><option>60 minutos</option></select><span class="muted small">Prazo ainda em definição pela equipe.</span></div>
+      <div class="btns"><button class="btn" data-save>Salvar e gerar lembretes</button><button class="btn ghost" data-go="m-relatorio">Cancelar</button></div>
+    </div>
+    <div class="panel"><h3>Como Dona Maria vai receber</h3><p class="muted small">Notificação no celular e mensagem no chat do app, no horário de cada dose.</p>
+      <div style="background:var(--surface-2);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;--accent:var(--green)">
+        <div class="push" style="position:static;animation:none"><i></i><b>Cuidar+</b><span id="pv-push">Hora do remédio: ${state.med}, ${state.dosage}</span></div>
+        <div class="remind"><div class="when">08:00</div><div class="med" id="pv-med">${state.med}</div><div class="muted" id="pv-dose">${state.dosage}</div>
+          <div class="acts"><button class="yes" disabled style="opacity:1;cursor:default">Tomei</button><button class="later" disabled style="opacity:1;cursor:default">Me lembra em 15 min</button></div></div>
+      </div>
+      <span class="muted small">Se ela adiar 2 vezes ou não responder, Carla recebe o alerta. Você vê o caso no painel.</span>
+    </div>
+  </div>`);
+
+/* ---------- simulação lateral ---------- */
+function sim() {
+  const m = M(), on = (c, col) => c ? `class="on" style="--c:${col}"` : 'class="off"';
+  if (state.screen === 'c-antonio') return `<div class="side-card"><span class="eyebrow">Idoso sem app</span>
+    <p class="small">O lembrete de Seu Antônio vai para a Carla. Enquanto ela não confirmar, chega um aviso novo a cada 15 minutos.</p>
+    ${state.ant.status === 'pendente' ? '<button class="btn" data-ant-snooze>Passar 15 min</button>' : '<button class="btn ghost" data-reset>Recomeçar</button>'}</div>`;
+  return `<div class="side-card"><span class="eyebrow">O que o sistema faz</span>
+    <div class="tl">
+      <div ${on(true, 'var(--green)')}><span class="h">08:00</span><span class="d"></span><span>Notificação + mensagem no chat</span></div>
+      <div ${on(m.snoozes >= 1, 'var(--sun-fill)')}><span class="h">08:16</span><span class="d"></span><span>Lembrete volta (1º adiamento)</span></div>
+      <div ${on(m.snoozes >= 2, 'var(--sun-fill)')}><span class="h">08:17</span><span class="d"></span><span>2º adiamento: alerta para Carla</span></div>
+      <div ${on(m.silent, 'var(--red)')}><span class="h">08:30</span><span class="d"></span><span>Sem resposta: alerta para Carla</span></div>
+      <div ${on(m.status === 'tomado', 'var(--green)')}><span class="h">✓</span><span class="d"></span><span>Confirmação no histórico e no relatório</span></div>
+    </div>
+    <span class="eyebrow">Simular</span>
+    ${m.status === 'pendente' && !alerted() ? '<button class="btn red" data-silent>Idoso não responde</button>' : ''}
+    ${m.status === 'pendente' && alerted() ? '<button class="btn" data-go="c-inicio">Ver alerta da Carla</button>' : ''}
+    ${m.status === 'tomado' || alerted() ? '<button class="btn ghost" data-reset>Recomeçar</button>' : ''}
+  </div>`;
+}
+
+/* ---------- notas por tela ---------- */
+const NOTES = {
+  'i-chat': { t: 'Chat de lembretes', story: 'Como idoso, quero receber o lembrete no app e confirmar com um toque, ou pedir para lembrar de novo daqui a 15 minutos.', tasks: [['App','Tela de chat com o cartão de lembrete e os botões'],['App','Notificação local agendada no aparelho (funciona sem internet)'],['API','Registrar Tomei com o horário real e bloquear segunda confirmação'],['API','Contar adiamentos e alertar o cuidador no segundo']] },
+  'i-hoje': { t: 'Remédios do dia', story: 'Como idoso, quero ver a lista dos remédios de hoje em letras grandes.', tasks: [['App','Lista do dia com o estado de cada dose'],['API','Endpoint das doses do dia do usuário']] },
+  'i-remedios': { t: 'Meus remédios', story: 'Como idoso, quero ver todos os meus remédios e quem cadastrou cada um.', tasks: [['App','Lista com a origem de cada cadastro'],['Banco','Campo de origem: médico, família ou paciente']] },
+  'i-cadastro': { t: 'Cadastro pelo idoso', story: 'Como idoso, quero cadastrar um remédio sozinho, e meu cuidador e meu médico ficam sabendo.', tasks: [['App','Formulário simples, o mesmo do cuidador'],['API','Salvar com origem "paciente" e gerar lembretes'],['Push','Avisar o cuidador do novo cadastro']] },
+  'i-perfil': { t: 'Vínculo com consentimento', story: 'Como idoso, quero aprovar quem pode acompanhar meus remédios.', tasks: [['App','Tela de pedidos com Aceitar e Recusar'],['API','O vínculo só vale depois do aceite'],['Banco','Registrar o consentimento com data (LGPD)']] },
+  'c-inicio': { t: 'Meus idosos', story: 'Como cuidador, quero ver o status do dia de cada idoso e ser alertado quando algo der errado.', tasks: [['App','Lista de idosos com o status do dia'],['App','Faixa de alerta com o nome do remédio'],['Push','Notificação de alerta para o cuidador (Firebase Cloud Messaging)']] },
+  'c-maria': { t: 'Idoso com app', story: 'Como cuidador, quero ver os remédios de cada idoso, o histórico de 7 dias e cadastrar ou editar remédios.', tasks: [['App','Checklist do dia e últimos 7 dias'],['App','Lista de remédios com origem e Editar'],['API','Histórico de 7 dias por idoso']] },
+  'c-antonio': { t: 'Idoso sem app', story: 'Como cuidador de um idoso sem o app, quero receber os lembretes dele e confirmar por ele.', tasks: [['App','Mesmo chat do idoso, na aba do paciente'],['API','Aviso a cada 15 min até confirmar'],['Banco','Registrar que a confirmação veio do cuidador']] },
+  'c-cadastro': { t: 'Cadastro pelo cuidador', story: 'Como cuidador, quero cadastrar e editar os remédios de cada idoso.', tasks: [['App','Reusar o formulário do idoso'],['API','Salvar com origem "família" e histórico de alterações']] },
+  'c-adicionar': { t: 'Adicionar idoso', story: 'Como cuidador, quero adicionar um idoso dizendo se ele usa o app ou não.', tasks: [['App','Pergunta "usa o app?" com os dois caminhos'],['API','Gerar código de convite com validade de 24 h'],['API','Cadastro direto de idoso sem app']] },
+  'm-pacientes': { t: 'Painel por exceção', story: 'Como médico, quero ver primeiro quem precisa de atenção, sem receber notificações.', tasks: [['Web','Três colunas: vermelho, amarelo, verde'],['API','Regra de classificação de cada paciente'],['Web','Atualizar ao abrir e a cada minuto']] },
+  'm-relatorio': { t: 'Relatório de adesão', story: 'Como médico, quero ver a adesão por período do dia e o que aconteceu em cada dose.', tasks: [['API','Cálculo de adesão de 14 dias por período'],['Web','Anel e mapa por período'],['Web','Linha do tempo da dose e origem de cada remédio']] },
+  'm-cadastro': { t: 'Cadastro pelo médico', story: 'Como médico, quero cadastrar e editar a prescrição, que vale como referência.', tasks: [['Web','Formulário com prévia do lembrete'],['API','Salvar como prescrição validada'],['API','Gerar e reagendar os lembretes']] },
+};
+
+/* ---------- render ---------- */
+function render() {
+  const { role, screen } = state;
+  document.querySelectorAll('[data-role]').forEach(b => b.setAttribute('aria-pressed', b.dataset.role === role));
+  const stepIdx = screen === 'm-cadastro' ? 0 : screen === 'i-chat' ? (M().snoozes || M().status === 'tomado' ? 2 : 1) : screen === 'c-inicio' ? 3 : (screen === 'm-pacientes' || screen === 'm-relatorio') ? 4 : -1;
+  document.getElementById('steps').innerHTML = STEPS.map(([t, w, c], i) => `<button class="step" data-step="${i}" style="--c:${c}" aria-current="${i === stepIdx}"><span class="n">${i + 1}</span><b>${t}</b><span class="who">${w}</span></button>`).join('');
+  document.getElementById('alt').innerHTML = `Caminho alternativo: <button data-go="c-antonio" aria-current="${screen === 'c-antonio'}">Idoso sem app: o cuidador recebe e confirma por ele</button>`;
+  document.getElementById('screens').innerHTML = ROLE[role].screens.map(([id, l]) => `<button data-go="${id}" aria-current="${id === screen}">${l}</button>`).join('');
+  const dev = S[screen]();
+  const withSim = ['i-chat', 'i-hoje', 'c-inicio', 'c-maria', 'c-antonio'].includes(screen);
+  document.getElementById('device').innerHTML = role === 'medico' ? dev : `<div class="phone-stage">${dev}${withSim ? sim() : ''}</div>`;
+  const n = NOTES[screen];
+  document.getElementById('notes').innerHTML = `
+    <div><span class="eyebrow">${ROLE[role].label}${role === 'medico' ? ' · painel web' : ' · app'}</span><h2>${n.t}</h2><span class="phase">Faz parte do MVP</span></div>
+    <div class="note"><span class="eyebrow">User story</span><q>${n.story}</q></div>
+    <div class="note"><span class="eyebrow">Primeiras tasks</span><ul class="tasks">${n.tasks.map(([k, t]) => `<li><span class="tag ${k}">${k}</span><span>${t}</span></li>`).join('')}</ul></div>`;
+  const chat = document.getElementById('chat'); if (chat) chat.scrollTop = chat.scrollHeight;
+}
+let toastTimer, pushTimer;
+function toast(t) { const el = document.getElementById('toast'); el.innerHTML = `<div class="toast" role="status">${t}</div>`; clearTimeout(toastTimer); toastTimer = setTimeout(() => el.innerHTML = '', 2600); }
+function push(t) { state.push = t; clearTimeout(pushTimer); pushTimer = setTimeout(() => { state.push = ''; render(); }, 3200); }
+function go(id) { state.screen = id; state.role = roleOf(id); render(); }
+
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('button');
+  if (!t || t.disabled) return;
+  const d = t.dataset;
+  if (d.role) { state.role = d.role; state.screen = ROLE[d.role].screens[0][0]; state.push = ''; return render(); }
+  if ('reset' in d) { const keep = { role: state.role, screen: state.screen }; state = { ...INITIAL(), ...keep }; toast('Simulação recomeçada'); return render(); }
+  if (d.step) {
+    const i = +d.step;
+    if (i === 1) { state.maria = { status: 'pendente', snoozes: 0, silent: false }; push('Hora do remédio: Losartana 50 mg, 1 comprimido'); }
+    if (i === 3 && !alerted()) { state.maria = { status: 'pendente', snoozes: 2, silent: false }; push('Dona Maria adiou 2 vezes a Losartana 50 mg'); }
+    return go(STEPS[i][3]);
+  }
+  if ('take' in d) { M().status = 'tomado'; toast('Dose registrada às ' + tookAt()); return render(); }
+  if ('snooze' in d) {
+    if (M().snoozes < 2) M().snoozes++;
+    toast(M().snoozes === 2 ? 'Segundo adiamento: Carla recebeu um alerta' : 'Te lembramos de novo às 08:16');
+    return render();
+  }
+  if ('silent' in d) { M().silent = true; toast('Sem resposta: Carla recebeu um alerta'); return render(); }
+  if ('antTake' in d) { state.ant.status = 'tomado'; toast('Confirmado por você'); return render(); }
+  if ('antSnooze' in d) { state.ant.avisos++; push('Seu Antônio: remédio das 08:00 ainda sem confirmação'); return render(); }
+  if (d.invite) { state.invite = d.invite; toast(d.invite === 'aceito' ? 'Rui agora acompanha você' : 'Pedido recusado'); return render(); }
+  if (d.hasapp) { state.hasApp = d.hasapp === '1'; return render(); }
+  if (d.day) { const n = +d.day; state.days.has(n) ? state.days.delete(n) : state.days.add(n); return render(); }
+  if ('save' in d) { state.maria = { status: 'pendente', snoozes: 0, silent: false }; toast('Lembretes gerados. Veja a etapa 2.'); return render(); }
+  if (d.go) { go(d.go); if (d.toast) toast(d.toast); return; }
+  if (d.toast) toast(d.toast);
+});
+document.addEventListener('input', (e) => {
+  const id = e.target.id;
+  if (id !== 'f-med' && id !== 'f-dose') return;
+  if (id === 'f-med') state.med = e.target.value; else state.dosage = e.target.value;
+  const set = (k, v) => { const el = document.getElementById(k); if (el) el.textContent = v; };
+  set('pv-med', state.med); set('pv-dose', state.dosage); set('pv-push', `Hora do remédio: ${state.med}, ${state.dosage}`);
+});
+
+render();
+</script>
