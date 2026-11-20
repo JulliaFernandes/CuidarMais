@@ -9,6 +9,7 @@ class AppColors {
 
   static const violet = Color(0xFF3730A3); // médico — ~8.6:1 sobre branco
   static const green = Color(0xFF15803D); // idoso / confirmação — ~5.3:1
+  static const caregiver = Color(0xFFC2410C); // cuidador — ~5.2:1, laranja distinto do vermelho de alerta
   static const coral = Color(0xFFB91C1C); // alerta — ~6.4:1
   static const amber = Color(0xFFB45309); // atenção intermediária — ~5.4:1
 

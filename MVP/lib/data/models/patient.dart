@@ -1,4 +1,5 @@
 import 'dose.dart';
+import 'medication.dart';
 
 /// Painel por exceção do médico (PDF do projeto): vermelho, amarelo, verde.
 enum AttentionLevel { critico, atencao, estavel }
@@ -40,6 +41,10 @@ class PatientSummary {
   final List<Dose> todayDoses;
   final String? openAlert;
 
+  /// Idoso sem app: as doses são confirmadas pelo cuidador.
+  final bool usesApp;
+  final List<Medication> medications;
+
   /// 14 dias (mais antigo → hoje), cada um com o status de manhã/tarde/noite,
   /// na mesma ordem de [DosePeriod.values]. Alimenta o anel de adesão e o
   /// heatmap do relatório do médico.
@@ -54,6 +59,8 @@ class PatientSummary {
     required this.todayDoses,
     required this.last14DaysByPeriod,
     this.openAlert,
+    this.usesApp = true,
+    this.medications = const [],
   });
 
   String get initials {
