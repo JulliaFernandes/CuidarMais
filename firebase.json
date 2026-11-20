@@ -1,0 +1,21 @@
+{
+  "hosting": [
+    {
+      "target": "landing",
+      "public": "landing-page",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "trailingSlash": false
+    },
+    {
+      "target": "mvp",
+      "public": "MVP/build/web",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "rewrites": [
+        { "source": "**", "destination": "/index.html" }
+      ]
+    }
+  ]
+}

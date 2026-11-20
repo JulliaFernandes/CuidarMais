@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "cuidarmais-eee0c"
+  },
+  "targets": {
+    "cuidarmais-eee0c": {
+      "hosting": {
+        "landing": [
+          "cuidarmais-eee0c"
+        ],
+        "mvp": [
+          "cuidarmais-app"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

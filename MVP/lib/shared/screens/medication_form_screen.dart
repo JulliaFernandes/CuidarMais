@@ -303,7 +303,7 @@ class _MedicationFormScreenState extends State<MedicationFormScreen> {
             if (widget.showAlertDelay) ...[
               const SizedBox(height: 24),
               DropdownButtonFormField<int>(
-                initialValue: _alertMinutes,
+                value: _alertMinutes,
                 isExpanded: true, // ocupa a largura toda e quebra o texto com a letra grande
                 decoration: const InputDecoration(
                   labelText: 'Avisar o cuidador se não houver resposta em',
