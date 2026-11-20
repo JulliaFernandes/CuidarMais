@@ -19,7 +19,7 @@ class OriginChip extends StatelessWidget {
       MedicationOrigin.medico => (
           personal ? 'Prescrito por ${m.createdByName}' : 'Prescrição validada',
           Icons.verified_rounded,
-          AppColors.violet,
+          AppColors.doctor,
         ),
       MedicationOrigin.familia => (
           personal ? 'Cadastrado por ${m.createdByName}' : 'Cadastrado pela família · ${m.createdByName}',
@@ -29,11 +29,11 @@ class OriginChip extends StatelessWidget {
       MedicationOrigin.paciente => (
           personal ? 'Cadastrado por você' : 'Cadastrado pelo paciente',
           Icons.person_rounded,
-          AppColors.green,
+          AppColors.elder,
         ),
     };
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final fg = dark ? Colors.white : base;
+    final fg = dark ? AppColors.onColor : base;
     return Semantics(
       label: 'Origem: $label',
       child: ExcludeSemantics(

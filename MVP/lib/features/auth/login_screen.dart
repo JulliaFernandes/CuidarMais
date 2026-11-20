@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 8),
                       _DemoButton(
                         icon: Icons.favorite_rounded,
-                        color: AppColors.green,
+                        color: AppColors.elder,
                         title: 'Dona Maria',
                         subtitle: 'Idosa · usa o app',
                         onTap: () => _useDemo('maria@cuidar.app'),
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       _DemoButton(
                         icon: Icons.medical_services_rounded,
-                        color: AppColors.violet,
+                        color: AppColors.doctor,
                         title: 'Dra. Helena',
                         subtitle: 'Médica · painel de pacientes',
                         onTap: () => _useDemo('helena@cuidar.app'),
@@ -183,7 +183,7 @@ class _DemoButton extends StatelessWidget {
         onTap: onTap,
         leading: CircleAvatar(
           backgroundColor: color.withValues(alpha: dark ? 0.35 : 0.12),
-          child: Icon(icon, color: dark ? Colors.white : color),
+          child: Icon(icon, color: dark ? AppColors.onColor : color),
         ),
         title: Text('Entrar como $title', style: const TextStyle(fontWeight: FontWeight.w700)),
         subtitle: Text(subtitle),

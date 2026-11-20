@@ -58,7 +58,7 @@ class WelcomeScreen extends StatelessWidget {
                   const SizedBox(height: 32),
                   const _ProfileLine(
                     icon: Icons.favorite_rounded,
-                    color: AppColors.green,
+                    color: AppColors.elder,
                     title: 'Idoso',
                     text: 'Recebe o lembrete no celular e confirma com um toque.',
                   ),
@@ -70,7 +70,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   const _ProfileLine(
                     icon: Icons.medical_services_rounded,
-                    color: AppColors.violet,
+                    color: AppColors.doctor,
                     title: 'Médico',
                     text: 'Vê a adesão dos pacientes no painel, sem receber notificações.',
                   ),
@@ -102,7 +102,7 @@ class _ProfileLine extends StatelessWidget {
           CircleAvatar(
             radius: 22,
             backgroundColor: color.withValues(alpha: dark ? 0.35 : 0.12),
-            child: Icon(icon, color: dark ? Colors.white : color),
+            child: Icon(icon, color: dark ? AppColors.onColor : color),
           ),
           const SizedBox(width: 14),
           Expanded(

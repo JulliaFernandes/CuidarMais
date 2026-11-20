@@ -163,7 +163,7 @@ class _SignupScreenState extends State<SignupScreen> {
       children: [
         _RoleOption(
           icon: Icons.favorite_rounded,
-          color: AppColors.green,
+          color: AppColors.elder,
           title: 'Sou idoso',
           text: 'Quero receber os lembretes dos meus remédios.',
           selected: _role == UserRole.idoso,
@@ -179,7 +179,7 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         _RoleOption(
           icon: Icons.medical_services_rounded,
-          color: AppColors.violet,
+          color: AppColors.doctor,
           title: 'Sou médico',
           text: 'Quero acompanhar a adesão dos meus pacientes. No produto final, é um painel web.',
           selected: _role == UserRole.medico,
@@ -328,7 +328,7 @@ class _RoleOption extends StatelessWidget {
                     CircleAvatar(
                       radius: 26,
                       backgroundColor: color.withValues(alpha: dark ? 0.4 : 0.14),
-                      child: Icon(icon, color: dark ? Colors.white : color, size: 28),
+                      child: Icon(icon, color: dark ? AppColors.onColor : color, size: 28),
                     ),
                     const SizedBox(width: 14),
                     Expanded(

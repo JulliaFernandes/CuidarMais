@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/dose.dart';
 import '../../../data/models/patient.dart';
+import '../../../core/theme/app_colors.dart';
+import 'adherence_heatmap.dart' show statusMark;
 
 const _startHour = 6;
 const _endHour = 22;
@@ -16,10 +18,10 @@ Color _dotColor(BuildContext context, DoseStatus s) {
   final scheme = Theme.of(context).colorScheme;
   switch (s) {
     case DoseStatus.tomada:
-      return const Color(0xFF15803D);
+      return AppColors.confirm;
     case DoseStatus.atrasada:
     case DoseStatus.adiada:
-      return const Color(0xFFB45309);
+      return AppColors.attention;
     case DoseStatus.perdida:
       return scheme.error;
     case DoseStatus.pendente:
@@ -114,8 +116,9 @@ class _PatientRow extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: _dotColor(context, dose.status),
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white, width: 2),
+                                    border: Border.all(color: AppColors.surface, width: 2),
                                   ),
+                                  child: statusMark(dose.status, padding: 0.5),
                                 ),
                               ),
                             ),

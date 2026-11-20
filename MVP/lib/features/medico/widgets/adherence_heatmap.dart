@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/dose.dart';
 import '../../../data/models/patient.dart';
+import '../../../core/theme/app_colors.dart';
 
 /// Heatmap de 14 dias × manhã/tarde/noite — mostra se o paciente esquece
 /// sempre no mesmo período, o mesmo diferencial descrito no documento do
@@ -13,10 +14,10 @@ class AdherenceHeatmap extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     switch (s) {
       case DoseStatus.tomada:
-        return const Color(0xFF15803D);
+        return AppColors.confirm;
       case DoseStatus.atrasada:
       case DoseStatus.adiada:
-        return const Color(0xFFB45309);
+        return AppColors.attention;
       case DoseStatus.perdida:
         return scheme.error;
       case DoseStatus.pendente:
@@ -77,6 +78,7 @@ class AdherenceHeatmap extends StatelessWidget {
                                     color: _color(context, status),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
+                                  child: statusMark(status),
                                 ),
                               ),
                             ),
@@ -136,7 +138,12 @@ class _Legend extends StatelessWidget {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(width: 12, height: 12, decoration: BoxDecoration(color: colorOf(s), borderRadius: BorderRadius.circular(3))),
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(color: colorOf(s), borderRadius: BorderRadius.circular(3)),
+              child: statusMark(s),
+            ),
             const SizedBox(width: 6),
             Text(s.label, style: Theme.of(context).textTheme.bodySmall),
           ],
@@ -144,4 +151,20 @@ class _Legend extends StatelessWidget {
       }).toList(),
     );
   }
+}
+
+/// Ícone dentro do quadradinho, para o estado não depender só da cor
+/// (WCAG 1.4.1). Pendente fica sem ícone, porque é neutro.
+Widget? statusMark(DoseStatus s, {double padding = 1.5}) {
+  final icon = switch (s) {
+    DoseStatus.tomada => Icons.check_rounded,
+    DoseStatus.atrasada || DoseStatus.adiada => Icons.schedule_rounded,
+    DoseStatus.perdida => Icons.close_rounded,
+    DoseStatus.pendente => null,
+  };
+  if (icon == null) return null;
+  return Padding(
+    padding: EdgeInsets.all(padding),
+    child: FittedBox(child: Icon(icon, color: AppColors.onColor)),
+  );
 }

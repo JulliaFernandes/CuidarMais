@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../../data/models/dose.dart';
+import '../../../core/theme/app_colors.dart';
 
 /// Anel de adesão (donut) com a proporção real de tomada/atrasada ou
 /// adiada/perdida nos últimos 14 dias — não só um número solto. O
@@ -24,9 +25,9 @@ class AdherenceRing extends StatelessWidget {
           ]
         : [
             if (tomada > 0)
-              PieChartSectionData(value: tomada.toDouble(), color: const Color(0xFF15803D), showTitle: false, radius: 14),
+              PieChartSectionData(value: tomada.toDouble(), color: AppColors.confirm, showTitle: false, radius: 14),
             if (atrasoOuAdiada > 0)
-              PieChartSectionData(value: atrasoOuAdiada.toDouble(), color: const Color(0xFFB45309), showTitle: false, radius: 14),
+              PieChartSectionData(value: atrasoOuAdiada.toDouble(), color: AppColors.attention, showTitle: false, radius: 14),
             if (perdida > 0)
               PieChartSectionData(value: perdida.toDouble(), color: scheme.error, showTitle: false, radius: 14),
           ];

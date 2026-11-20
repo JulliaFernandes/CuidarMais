@@ -18,7 +18,7 @@ class CuidarLogo extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(size * 0.3),
           gradient: const SweepGradient(
-            colors: [AppColors.violet, AppColors.caregiver, AppColors.amber, AppColors.green, AppColors.violet],
+            colors: [AppColors.brand, AppColors.logoCoral, AppColors.attention, AppColors.doctor, AppColors.brand],
           ),
         ),
         child: Container(

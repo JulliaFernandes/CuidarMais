@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../data/models/patient.dart';
+import '../../../core/theme/app_colors.dart';
 
 /// Linha da lista de pacientes do médico. O nível de atenção some com
 /// uma faixa colorida, mas também com um rótulo em texto e um ícone
@@ -15,9 +16,9 @@ class PatientTile extends StatelessWidget {
       case AttentionLevel.critico:
         return scheme.error;
       case AttentionLevel.atencao:
-        return const Color(0xFFB45309);
+        return AppColors.attention;
       case AttentionLevel.estavel:
-        return const Color(0xFF15803D);
+        return AppColors.confirm;
     }
   }
 
@@ -29,6 +30,17 @@ class PatientTile extends StatelessWidget {
         return 'Atraso recente';
       case AttentionLevel.estavel:
         return 'Em dia';
+    }
+  }
+
+  IconData _levelIcon() {
+    switch (patient.attentionLevel) {
+      case AttentionLevel.critico:
+        return Icons.warning_amber_rounded;
+      case AttentionLevel.atencao:
+        return Icons.schedule_rounded;
+      case AttentionLevel.estavel:
+        return Icons.check_circle_rounded;
     }
   }
 
@@ -80,7 +92,7 @@ class PatientTile extends StatelessWidget {
                       const SizedBox(height: 6),
                       Row(
                         children: [
-                          Icon(Icons.circle, size: 10, color: color),
+                          Icon(_levelIcon(), size: 16, color: color),
                           const SizedBox(width: 6),
                           Flexible(
                             child: Text(_levelLabel(), style: TextStyle(color: color, fontWeight: FontWeight.w600)),

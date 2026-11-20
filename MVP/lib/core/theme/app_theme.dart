@@ -5,11 +5,11 @@ import 'app_colors.dart';
 class AppTheme {
   AppTheme._();
 
-  /// Cada perfil tem sua cor de destaque (idoso verde, cuidador laranja,
-  /// médico violeta), aplicada no app inteiro — inclusive nas telas que
+  /// Cada perfil tem sua cor de destaque (idoso na cor da marca, cuidador
+  /// vermelho-tijolo, médico violeta), aplicada no app inteiro — inclusive nas telas que
   /// abrem por cima — para a pessoa saber de relance em qual visão está.
-  static ThemeData light([Color accent = AppColors.violet]) => _build(Brightness.light, accent);
-  static ThemeData dark([Color accent = AppColors.violet]) => _build(Brightness.dark, accent);
+  static ThemeData light([Color accent = AppColors.brand]) => _build(Brightness.light, accent);
+  static ThemeData dark([Color accent = AppColors.brand]) => _build(Brightness.dark, accent);
 
   static ThemeData _build(Brightness brightness, Color accent) {
     final isDark = brightness == Brightness.dark;
@@ -17,13 +17,27 @@ class AppTheme {
       seedColor: accent,
       brightness: brightness,
       primary: accent,
-      secondary: AppColors.amber,
-      tertiary: AppColors.green,
-      error: AppColors.coral,
+      onPrimary: AppColors.onColor,
+      secondary: AppColors.attention,
+      onSecondary: AppColors.onColor,
+      tertiary: AppColors.confirm,
+      onTertiary: AppColors.onColor,
+      error: AppColors.alert,
+      onError: AppColors.onColor,
       surface: isDark ? AppColors.surfaceDark : AppColors.surface,
+      // No modo claro: texto principal, e "já tomou" no fundo suave da marca.
+      onSurface: isDark ? null : AppColors.ink,
+      tertiaryContainer: isDark ? null : AppColors.brandSoft,
+      onTertiaryContainer: isDark ? null : AppColors.brandDark,
     );
+    // Títulos na marca escura (no modo escuro ficam claros, para dar contraste).
+    final titleColor = isDark ? null : AppColors.brandDark;
+    final bodyColor = isDark ? null : AppColors.ink;
+    final selectedColor = isDark ? null : AppColors.brandSoft;
 
-    final baseTextTheme = (isDark ? ThemeData.dark() : ThemeData.light()).textTheme;
+    final baseTextTheme = (isDark ? ThemeData.dark() : ThemeData.light())
+        .textTheme
+        .apply(bodyColor: bodyColor, displayColor: bodyColor);
 
     // WCAG 1.4.8: nunca justificar texto, espaçamento de linha generoso
     // (height >= 1.3) e fontes de tamanho grande por padrão, mesmo antes
@@ -35,13 +49,13 @@ class AppTheme {
     // longa.
     final textTheme = baseTextTheme.copyWith(
       displaySmall: GoogleFonts.bricolageGrotesque(
-        textStyle: baseTextTheme.displaySmall?.copyWith(height: 1.2, fontWeight: FontWeight.w800),
+        textStyle: baseTextTheme.displaySmall?.copyWith(height: 1.2, fontWeight: FontWeight.w800, color: titleColor),
       ),
       headlineSmall: GoogleFonts.bricolageGrotesque(
-        textStyle: baseTextTheme.headlineSmall?.copyWith(height: 1.3, fontWeight: FontWeight.w700),
+        textStyle: baseTextTheme.headlineSmall?.copyWith(height: 1.3, fontWeight: FontWeight.w700, color: titleColor),
       ),
       titleLarge: GoogleFonts.bricolageGrotesque(
-        textStyle: baseTextTheme.titleLarge?.copyWith(height: 1.3, fontWeight: FontWeight.w700),
+        textStyle: baseTextTheme.titleLarge?.copyWith(height: 1.3, fontWeight: FontWeight.w700, color: titleColor),
       ),
       titleMedium: baseTextTheme.titleMedium?.copyWith(height: 1.35),
       bodyLarge: baseTextTheme.bodyLarge?.copyWith(height: 1.5, fontSize: 18),
@@ -77,9 +91,20 @@ class AppTheme {
         fillColor: isDark ? AppColors.surfaceDark : AppColors.surface,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      navigationBarTheme: const NavigationBarThemeData(height: 72),
+      // Barra do topo com título e ícones na marca escura.
+      appBarTheme: AppBarTheme(foregroundColor: titleColor),
+      // Itens selecionados no fundo suave da marca.
+      navigationBarTheme: NavigationBarThemeData(height: 72, indicatorColor: selectedColor),
+      chipTheme: ChipThemeData(selectedColor: selectedColor),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.selected) ? selectedColor : null,
+          ),
+        ),
+      ),
       tooltipTheme: const TooltipThemeData(
-        textStyle: TextStyle(fontSize: 14, color: Colors.white),
+        textStyle: TextStyle(fontSize: 14, color: AppColors.onColor),
       ),
     );
   }

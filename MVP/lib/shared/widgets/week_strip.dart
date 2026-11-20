@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/dose.dart';
 import '../utils/format.dart';
+import '../../core/theme/app_colors.dart';
 
 /// Últimos 7 dias em círculos. Cada dia tem cor, símbolo e texto para o
 /// leitor de tela — a informação nunca depende só da cor (WCAG 1.4.1).
@@ -12,10 +13,10 @@ class WeekStrip extends StatelessWidget {
   (Color, Color, IconData, String) _visuals(ColorScheme scheme, DoseStatus s) {
     switch (s) {
       case DoseStatus.tomada:
-        return (const Color(0xFF15803D), Colors.white, Icons.check_rounded, 'tomou tudo');
+        return (AppColors.confirm, AppColors.onColor, Icons.check_rounded, 'tomou tudo');
       case DoseStatus.atrasada:
       case DoseStatus.adiada:
-        return (const Color(0xFFB45309), Colors.white, Icons.schedule_rounded, 'tomou com atraso');
+        return (AppColors.attention, AppColors.onColor, Icons.schedule_rounded, 'tomou com atraso');
       case DoseStatus.perdida:
         return (scheme.error, scheme.onError, Icons.close_rounded, 'esqueceu alguma dose');
       case DoseStatus.pendente:

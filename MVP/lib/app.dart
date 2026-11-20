@@ -29,12 +29,13 @@ class _CuidarMaisAppState extends State<CuidarMaisApp> {
   Color get _accent {
     switch (_store.currentUser?.role) {
       case UserRole.idoso:
-        return AppColors.green;
+        return AppColors.elder;
       case UserRole.cuidador:
         return AppColors.caregiver;
       case UserRole.medico:
+        return AppColors.doctor;
       case null:
-        return AppColors.violet;
+        return AppColors.brand; // telas de entrada na cor da marca
     }
   }
 
