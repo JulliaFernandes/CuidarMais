@@ -1,8 +1,18 @@
 # Cuidar+
 
-O Cuidar+ conecta **médicos, pacientes idosos e cuidadores** para garantir que o tratamento seja seguido. O paciente recebe o lembrete do remédio pelo **WhatsApp** e confirma com um toque. Se não confirmar a tempo, o cuidador e o médico são avisados.
+O Cuidar+ é um aplicativo que conecta **idosos, cuidadores e médicos** para garantir que cada medicamento seja tomado no horário certo e que alguém aja quando não for.
 
-Projeto desenvolvido na jornada **SuperNova** (6 semanas).
+- **Idoso:** recebe os lembretes em um chat dentro do app e confirma com um toque.
+- **Cuidador:** é avisado na hora quando o idoso não confirma.
+- **Médico:** acompanha a adesão real dos pacientes em um painel web, sem receber notificações.
+
+Os lembretes saem do próprio app (notificações push), sem custo por mensagem. Idosos que não usam o aplicativo são acompanhados pelo cuidador, que recebe o lembrete no lugar deles.
+
+Projeto desenvolvido na jornada **SuperNova** (6 semanas). Documento completo: [`docs/Cuidar_Documento_do_Projeto_v2.pdf`](docs/Cuidar_Documento_do_Projeto_v2.pdf).
+
+> **Onde estamos:** o [protótipo](prototipo/) (desenho das telas) está pronto, e o app do [MVP](MVP/) já tem todas as telas e regras funcionando com dados de demonstração. Agora falta ligar o MVP a um banco, ao login de verdade, às notificações e ao site do médico. O que cada pasta guarda, o que já foi feito e o que falta está em [`docs/ETAPAS.md`](docs/ETAPAS.md).
+>
+> **Como abrir ou rodar cada pasta:** [`COMO-RODAR.md`](COMO-RODAR.md).
 
 ---
 
@@ -10,122 +20,158 @@ Projeto desenvolvido na jornada **SuperNova** (6 semanas).
 
 - [O problema](#o-problema)
 - [A solução](#a-solução)
-- [Fluxo do MVP](#fluxo-do-mvp)
-- [Mockup](#mockup)
-- [Stack](#stack)
-- [Arquitetura](#arquitetura)
+- [Fluxo e regras de escalada](#fluxo-e-regras-de-escalada)
+- [Cadastro de medicamentos](#cadastro-de-medicamentos)
+- [Escopo do MVP](#escopo-do-mvp)
+- [Protótipo, MVP e landing page](#protótipo-mvp-e-landing-page)
+- [Stack e arquitetura](#stack-e-arquitetura)
 - [Estrutura do repositório](#estrutura-do-repositório)
 - [Como trabalhamos](#como-trabalhamos)
 - [Cronograma](#cronograma)
-- [Entregáveis](#entregáveis)
+- [Decisões em aberto](#decisões-em-aberto)
 - [Equipe](#equipe)
 
 ---
 
 ## O problema
 
-- Cerca de **50% dos idosos** não seguem corretamente suas prescrições.
+Cerca de metade dos idosos não segue corretamente as prescrições médicas, e ninguém percebe a tempo.
+
 - A **polifarmácia** (vários remédios ao mesmo tempo) aumenta o risco de confusão e erro.
-- O declínio cognitivo dificulta lembrar horários e doses.
-- Os apps de lembrete existentes **não se conectam ao médico**: ninguém sabe se o paciente realmente tomou o remédio.
-- Em doenças crônicas (diabetes, hipertensão, anticoagulantes), esquecer uma dose pode ser grave.
+- O declínio cognitivo dificulta a gestão da medicação.
+- Os apps de lembrete existentes não se conectam ao médico nem à família: ninguém sabe se o paciente realmente tomou o remédio.
+- O médico, com dezenas de pacientes, não consegue acompanhar a adesão de cada um entre as consultas.
+- Em doenças crônicas (diabetes, hipertensão, anticoagulantes), esquecer doses pode ter consequências graves.
 
 ## A solução
 
-| Ator | Interface | O que faz |
+Idosos e cuidadores usam o mesmo aplicativo (Flutter), cada um com seu perfil. O médico usa um painel web. Todos compartilham o mesmo backend e o mesmo histórico de adesão.
+
+| Perfil | Onde | O que faz |
 |---|---|---|
-| **Médico** | Painel web | Cadastra pacientes e medicamentos, vê relatórios de adesão e recebe alertas de não adesão |
-| **Paciente (idoso)** | WhatsApp (app opcional) | Recebe lembretes e confirma que tomou com um toque |
-| **Cuidador / familiar** | Painel web + WhatsApp | Acompanha a adesão e recebe alertas quando algo está errado |
+| **Idoso** | App | Chat de lembretes com **Tomei** e **Me lembra em 15 min**; lista do dia em letras grandes; cadastro de medicamentos |
+| **Cuidador** | App | Lista dos idosos com o status do dia; alerta quando o idoso adia 2 vezes ou não responde; cadastro e edição de medicamentos; vínculo por código, com consentimento do idoso |
+| **Médico** | Painel web | Pacientes por exceção (vermelho, amarelo, verde); relatório de adesão com mapa por período do dia; cadastro e edição de medicamentos; **sem notificações** |
 
-**Diferencial:** o Cuidar+ inclui o cuidador no ecossistema. Soluções como o AMPA conectam médico e paciente; o Cuidar+ conecta **médico, paciente e cuidador**.
+**Idoso sem o aplicativo:** no cadastro, o cuidador marca se o idoso usa o app.
+- **Com app:** cuidador e idoso se vinculam por um código, aceito dos dois lados.
+- **Sem app:** o cuidador recebe, na aba daquele idoso, a mesma tela de lembretes e confirma as doses por ele. Enquanto a dose não for confirmada, recebe um aviso a cada 15 minutos. A confirmação fica registrada como feita pelo cuidador.
 
-**Diferenciais extras (depois do MVP):**
-- Leitura de receita por foto (OCR + IA) para preencher o cadastro automaticamente.
-- Análise de padrões de esquecimento (ex.: "sempre esquece o remédio da tarde").
+**Quem pode fazer o quê**
 
-## Fluxo do MVP
+| Ação | Idoso | Cuidador | Médico |
+|---|---|---|---|
+| Receber lembrete e confirmar a dose | Sim | Só do idoso sem app, confirmando por ele | Não |
+| Ver medicamentos e histórico | Os próprios | Dos idosos vinculados | Dos seus pacientes |
+| Ver atrasos e qual medicamento | Os próprios | Sim, com alerta | Sim, no painel |
+| Cadastrar e editar medicamentos | Sim | Sim | Sim |
+| Relatório de adesão | Não | Histórico de 7 dias | Completo, com padrões |
+
+## Fluxo e regras de escalada
 
 ```mermaid
 flowchart LR
-    A[1. Médico cadastra<br/>paciente e remédios] --> B[2. Lembrete chega<br/>no WhatsApp]
-    B --> C{3. Paciente<br/>confirma?}
-    C -- "Tomei" --> D[Dose registrada]
-    C -- "sem resposta em X min" --> E[4. Alerta para<br/>cuidador e médico]
-    D --> F[5. Relatório de adesão<br/>no painel do médico]
+    A[Horário da dose<br/>app avisa o idoso] --> B{Idoso responde<br/>no prazo?}
+    B -- "Me lembra em 15 min<br/>(até 2 vezes)" --> A
+    B -- Tomei --> C[Confirmação gravada<br/>no histórico]
+    B -- "sem resposta<br/>ou 2 adiamentos" --> D[Cuidador recebe o alerta<br/>com o nome do remédio]
+    D --> E[Caso em destaque<br/>no painel do médico]
+    C --> F[Relatório de adesão]
     E --> F
 ```
 
-## Mockup
+- **Adiamento:** "Me lembra em 15 min" pode ser usado até 2 vezes. Depois do segundo, o cuidador é alertado.
+- **Sem resposta:** se o idoso não toca em nada, o cuidador também recebe o aviso. O prazo ainda será definido.
+- **Idoso sem app:** o cuidador recebe o lembrete na aba do idoso e é avisado a cada 15 minutos até confirmar.
+- **Médico:** não é avisado em nenhum caso; acompanha tudo pelo painel.
 
-Protótipo navegável com as telas dos três atores e a simulação do fluxo completo:
-[`mockup/index.html`](mockup/index.html). Baixe o arquivo e abra no navegador.
+## Cadastro de medicamentos
 
-Cada tela do mockup mostra a user story correspondente e as primeiras tasks de implementação.
+Idoso, cuidador e médico podem cadastrar medicamentos, e cada registro guarda quem o criou.
 
-## Stack
-
-Tudo escolhido para funcionar **sem custo** durante o desenvolvimento e a demo.
-
-| Componente | Tecnologia | Por quê |
+| Quem cadastra | Como aparece | O que acontece |
 |---|---|---|
-| Painéis do médico e do cuidador | **Next.js** (React + TypeScript) | Sugerido no documento do projeto; um só projeto web para os dois painéis |
-| Login | **Supabase Auth** | Login pronto, plano gratuito sem cartão de crédito |
-| Banco de dados | **Supabase (PostgreSQL)** | Citado no documento; tempo real no painel (o alerta aparece sem recarregar) |
-| Agendador e webhook | **pg_cron + Supabase Edge Functions** | Tarefa a cada minuto para enviar lembretes e verificar atrasos; endpoint HTTP para receber as respostas do WhatsApp |
-| Mensagens | **WhatsApp Cloud API** (Meta) | Lembretes com botões "Tomei" e "Me lembra em 15 min" |
-| Hospedagem web | **Vercel** (plano gratuito) | Deploy automático do Next.js a cada push |
-| Leitura de receita (extra) | OCR + LLM | Diferencial, fica para depois do MVP |
+| Médico | Prescrição validada | Gera os lembretes e vale como versão de referência |
+| Cuidador | Cadastrado pela família | Gera os lembretes; entra na fila de revisão do médico (depois do MVP) |
+| Idoso | Cadastrado pelo paciente | Gera os lembretes; cuidador e médico são informados |
 
-Observações:
-- A WhatsApp Cloud API tem um **número de teste gratuito** da Meta que envia mensagens para até 5 números cadastrados, o que basta para a demo. Não é preciso comprar um número.
-- Em produção, a Meta cobra por mensagem entregue (lembretes custam frações de centavo de dólar) e é preciso um número próprio, que não esteja em uso no app do WhatsApp.
-- Mensagens iniciadas pelo sistema (o lembrete) precisam de um **modelo de mensagem aprovado pela Meta**. A aprovação pode levar alguns dias, então esse cadastro é feito logo na semana 1.
+Cada medicamento guarda nome, dose, horários, dias da semana, início, fim, prazo para o alerta e origem. Toda alteração fica no histórico, e a versão do médico prevalece quando houver divergência.
 
-## Arquitetura
+## Escopo do MVP
+
+O MVP precisa provar o ciclo completo: **cadastro, lembrete, confirmação, alerta e relatório**.
+
+| Funcionalidade | Fase |
+|---|---|
+| Chat de lembretes do idoso (Tomei, Me lembra em 15 min, até 2 vezes) | MVP |
+| Lembretes por push e agendamento local no aparelho | MVP |
+| Alerta ao cuidador depois do segundo adiamento ou sem resposta | MVP |
+| Cadastro do idoso com marcação de uso do app e vínculo por código | MVP |
+| Idoso sem app: cuidador recebe a tela do idoso e confirma por ele | MVP |
+| Painel do cuidador: status do dia, atrasos, medicamentos de cada idoso | MVP |
+| Cadastro de medicamentos por médico, cuidador e idoso, com origem registrada | MVP |
+| Painel do médico: lista de pacientes, painel por exceção, relatório de adesão | MVP |
+| Fila de revisão dos medicamentos cadastrados por família e idoso | Depois |
+| Cadastro por foto da receita (OCR + NLP) | Depois |
+| Detecção de padrões de esquecimento | Depois |
+| Checagem de alergias e controle de estoque | Depois |
+
+## Protótipo, MVP e landing page
+
+- **Protótipo:** [`prototipo/index.html`](prototipo/index.html). Desenho navegável das telas dos três perfis, em HTML, com a simulação do lembrete e do alerta. Baixe e abra no navegador.
+- **MVP:** [`MVP/`](MVP/). O app de verdade, em Flutter. Já tem todas as telas e regras funcionando com dados de demonstração; o banco, o login real e as notificações entram nas próximas semanas. Como rodar: [`MVP/README.md`](MVP/README.md).
+- **Landing page:** [`landing-page/index.html`](landing-page/index.html). Página de apresentação do Cuidar+.
+
+O backlog completo está em [`docs/BACKLOG.md`](docs/BACKLOG.md).
+
+## Stack e arquitetura
+
+| Componente | Tecnologia | Papel |
+|---|---|---|
+| App do idoso e do cuidador | **Flutter** | Chat de lembretes, painel do cuidador; agenda lembretes locais no aparelho |
+| Painel do médico | **Next.js** | Pacientes por exceção, relatórios, cadastro |
+| Backend (API) | **Python** (FastAPI) | Usuários, vínculos, medicamentos, confirmações e regras de escalada |
+| Banco de dados | **PostgreSQL** | Doses e histórico de adesão |
+| Agendador de tarefas | Tarefa periódica do backend | Dispara os lembretes e verifica quem não confirmou |
+| Push | **Firebase Cloud Messaging** | Notificações para idoso e cuidador, sem custo por mensagem |
 
 ```mermaid
 flowchart TB
-    subgraph Usuários
-        M[Médico<br/>navegador]
-        CU[Cuidador<br/>navegador + WhatsApp]
-        P[Paciente<br/>WhatsApp]
-    end
-    W[Next.js na Vercel<br/>painéis web]
-    subgraph Supabase
-        AU[Auth]
-        DB[(PostgreSQL<br/>pacientes, remédios,<br/>doses, alertas)]
-        F1[Tarefa a cada minuto<br/>envia lembretes]
-        F2[Tarefa a cada minuto<br/>verifica atrasos]
-        F3[Edge Function<br/>webhook do WhatsApp]
-    end
-    WA[WhatsApp Cloud API]
+    APP[App Flutter<br/>idoso e cuidador<br/>agenda lembretes locais]
+    WEB[Painel web do médico<br/>Next.js]
+    API[Backend Python<br/>usuários, vínculos, medicamentos,<br/>confirmações, regras de escalada]
+    JOB[Agendador de tarefas<br/>dispara lembretes e<br/>checa quem não confirmou]
+    DB[(PostgreSQL<br/>doses e histórico)]
+    FCM[Firebase Cloud Messaging]
 
-    M --> W
-    CU --> W
-    W --> AU
-    W <--> DB
-    F1 --> DB
-    F2 --> DB
-    F1 --> WA
-    F2 --> WA
-    WA --> P
-    WA --> CU
-    P -- "Tomei" --> WA --> F3 --> DB
+    APP <-- cadastro e confirmações --> API
+    WEB <-- cadastro e relatórios --> API
+    API --> JOB
+    API <--> DB
+    JOB <--> DB
+    JOB --> FCM --> APP
 ```
 
-**Estados de uma dose:** `agendada` → `enviada` → `tomada` (ou `atrasada` → `tomada_atrasada` / `perdida`).
+O app combina push e lembretes agendados no próprio aparelho, para que o lembrete toque mesmo sem internet.
+
+**Custo zero durante a jornada (proposta):**
+- Firebase Cloud Messaging é gratuito e não exige cartão.
+- PostgreSQL em um plano gratuito (por exemplo, Supabase ou Neon).
+- Backend Python em hospedagem gratuita; o agendador pode ser acionado a cada minuto por um serviço de cron gratuito.
+- App testado em **Android**. Publicar para iPhone exige conta de desenvolvedor da Apple (paga) e um Mac, então fica para depois.
+
+**Estados de uma dose:** `agendada` → `lembrada` → `adiada` (até 2 vezes) → `tomada`, ou `alertada` → `tomada_apos_alerta` / `perdida`. Toda confirmação registra o horário real e quem confirmou (idoso ou cuidador).
 
 ## Estrutura do repositório
 
-Estrutura planejada:
-
 ```
 .
-├── mockup/        # protótipo navegável (HTML)
-├── web/           # Next.js: painéis do médico e do cuidador
-├── supabase/      # tabelas, políticas de acesso, agendador e webhook do WhatsApp
-├── docs/          # backlog, modelo de dados e decisões
+├── prototipo/     # desenho navegável das telas (HTML)
+├── MVP/           # app em Flutter: idoso, cuidador e, por enquanto, o médico
+├── landing-page/  # página de apresentação do Cuidar+
+├── pesquisa/      # painel com as respostas do formulário e das entrevistas
+├── docs/          # etapas, backlog e documento do projeto
+│   └── antigo/    # versão anterior do documento (v1, com WhatsApp)
 └── README.md
 ```
 
@@ -142,30 +188,31 @@ Usamos o **GitHub Projects** com quatro colunas:
 
 Combinados:
 - Cada tarefa vira uma issue pequena (de meio dia a dois dias de trabalho).
-- Uma branch por issue: `tipo/numero-descricao`, por exemplo `feat/12-formulario-medicamento`.
-- Toda mudança entra por pull request com pelo menos uma revisão.
+- Uma branch por issue: `tipo/numero-descricao`, por exemplo `feat/12-chat-lembretes`.
+- Toda mudança entra por pull request, revisado pela outra pessoa.
 - Uma tarefa só vai para **Feito** quando cumpre o critério de pronto escrito na issue.
-
-O backlog inicial, com as tarefas separadas por épico, está em [`docs/BACKLOG.md`](docs/BACKLOG.md).
 
 ## Cronograma
 
-| Semana | Foco |
+| Semana | Atividade |
 |---|---|
-| 1 | Escopo, pesquisa com médicos e cuidadores, setup do projeto, cadastro na Meta |
-| 2 | Protótipo (mockup), modelo de dados, login e cadastro de pacientes |
-| 3 | Backend e banco: cadastro de remédios, geração de doses, envio de lembretes |
-| 4 | Painéis web do médico e do cuidador |
-| 5 | Integração completa com o WhatsApp (respostas e alertas) e testes |
-| 6 | Ajustes finais, dados de demonstração e vídeo-pitch |
+| 1 | Definição do escopo; pesquisa com médicos e cuidadores, incluindo quando querem ser avisados; setup do projeto |
+| 2 | Prototipação (app do idoso e do cuidador, painel do médico); modelo de dados; contas e vínculos |
+| 3 | Backend, banco de dados e regras de escalada |
+| 4 | App em Flutter (chat do idoso, painel do cuidador) e painel web do médico |
+| 5 | Notificações (push e agendamento local), alerta ao cuidador e testes com usuários reais |
+| 6 | Ajustes finais e gravação do vídeo-pitch |
 
-## Entregáveis
+A semana 4 é a mais apertada, porque app e painel web andam em paralelo. Por isso as frentes são divididas entre as duas pessoas desde a semana 1.
 
-| Entregável | Descrição | Prazo |
-|---|---|---|
-| Protótipo (MVP) | Fluxo completo: cadastro → lembrete → confirmação → alerta | Durante a jornada |
-| Business Model Canvas | Modelo de negócio preenchido | Durante a jornada |
-| Vídeo-pitch | Apresentação de 3 minutos | Final da jornada |
+**Entregáveis do SuperNova:** protótipo (MVP) com o fluxo completo, Business Model Canvas e vídeo-pitch de 3 minutos.
+
+## Decisões em aberto
+
+- [ ] Prazo para alertar o cuidador quando o idoso com app não toca em nada.
+- [ ] Conferir a fonte do dado de que cerca de 50% dos idosos não seguem as prescrições.
+- [ ] Validar as regras de alerta com 2 ou 3 médicos e cuidadores na semana 1.
+- [ ] Levar a um especialista, antes de operar, o consentimento de idoso que não decide por si e o enquadramento na Anvisa.
 
 ## Equipe
 
