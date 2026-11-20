@@ -7,3 +7,6 @@ __pycache__/
 
 # Arquivos de trava do LibreOffice/Excel ao abrir a planilha
 dados/.~lock.*
+
+# Planilha de respostas: tem nomes e contatos, fica só no computador de cada pessoa
+dados/*.xlsx

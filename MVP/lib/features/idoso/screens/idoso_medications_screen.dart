@@ -1,45 +1,71 @@
 import 'package:flutter/material.dart';
-import '../../../data/models/dose.dart';
+import '../../../data/models/medication.dart';
+import '../../../data/models/people.dart';
+import '../../../data/store/app_scope.dart';
+import '../../../shared/screens/medication_form_screen.dart';
+import '../../../shared/utils/format.dart';
+import '../../../shared/widgets/notice_box.dart';
+import '../../../shared/widgets/origin_chip.dart';
 import '../../../shared/widgets/section_heading.dart';
-import '../../../shared/widgets/status_chip.dart';
 
-/// Lista dos medicamentos do dia, em letras grandes (como pedido no
-/// documento do projeto). Tela só de leitura, sem ações.
+/// Todos os remédios em uso, com quem cadastrou cada um. O idoso também
+/// pode cadastrar (documento do projeto v2).
 class IdosoMedicationsScreen extends StatelessWidget {
-  final List<Dose> doses;
-  const IdosoMedicationsScreen({super.key, required this.doses});
+  final Elder elder;
+  const IdosoMedicationsScreen({super.key, required this.elder});
+
+  void _openForm(BuildContext context, {Medication? initial}) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => MedicationFormScreen(
+        elder: elder,
+        origin: MedicationOrigin.paciente,
+        authorName: elder.nickname,
+        showAlertDelay: false,
+        initial: initial,
+      ),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final meds = AppScope.of(context).medicationsOf(elder.id);
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        const SectionHeading(
-          title: 'Meus remédios de hoje',
-          subtitle: 'Cada cartão mostra o horário, o remédio e se já foi tomado.',
-        ),
+        const SectionHeading(title: 'Meus remédios', subtitle: 'Toque em um remédio para mudar o horário ou a dose.'),
         const SizedBox(height: 12),
-        ...doses.map(
-          (d) => Card(
+        if (meds.isEmpty) const NoticeBox(text: 'Você ainda não tem remédios cadastrados.'),
+        for (final m in meds)
+          Card(
             margin: const EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(16),
-              minVerticalPadding: 16,
-              leading: CircleAvatar(
-                radius: 28,
-                child: Text(
-                  '${d.scheduledAt.hour.toString().padLeft(2, '0')}h',
-                  style: const TextStyle(fontWeight: FontWeight.w700),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => _openForm(context, initial: m),
+              child: Semantics(
+                button: true,
+                hint: 'Toque para editar',
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(m.name, style: Theme.of(context).textTheme.titleLarge),
+                      const SizedBox(height: 4),
+                      Text('${m.dosage} · ${timesLabel(m.times)}', style: Theme.of(context).textTheme.bodyLarge),
+                      Text(daysLabel(m.weekdays), style: Theme.of(context).textTheme.bodyMedium),
+                      const SizedBox(height: 10),
+                      OriginChip(medication: m, viewer: UserRole.idoso),
+                    ],
+                  ),
                 ),
               ),
-              title: Text(d.medicationName, style: Theme.of(context).textTheme.titleLarge),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Text(d.dosageText, style: Theme.of(context).textTheme.bodyLarge),
-              ),
-              trailing: StatusChip(status: d.status),
             ),
           ),
+        const SizedBox(height: 8),
+        FilledButton.icon(
+          onPressed: () => _openForm(context),
+          icon: const Icon(Icons.add_rounded),
+          label: const Text('Cadastrar remédio'),
         ),
       ],
     );

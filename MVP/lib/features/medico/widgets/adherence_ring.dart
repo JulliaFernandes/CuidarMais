@@ -50,15 +50,25 @@ class AdherenceRing extends StatelessWidget {
               ),
               duration: const Duration(milliseconds: 400),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${percent.round()}%',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+            // O centro do anel tem tamanho fixo: com o texto aumentado, o
+            // número encolhe para caber em vez de vazar do anel. O valor
+            // completo continua no rótulo do leitor de tela.
+            SizedBox(
+              width: 76,
+              height: 76,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${percent.round()}%',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800),
+                    ),
+                    Text('adesão', style: Theme.of(context).textTheme.bodySmall),
+                  ],
                 ),
-                Text('adesão', style: Theme.of(context).textTheme.bodySmall),
-              ],
+              ),
             ),
           ],
         ),

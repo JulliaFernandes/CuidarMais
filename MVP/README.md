@@ -1,75 +1,106 @@
-# Cuidar+ — frontend (Flutter)
+# Cuidar+ — MVP (app em Flutter)
 
-Protótipo de frontend em **Flutter**, só pra validar a stack definida no documento do
-projeto. Sem backend: os dados são mockados em `lib/data/mock/mock_data.dart`.
+O app do Cuidar+ em **Flutter**. Todas as telas e regras já funcionam, com dados de demonstração.
+Para o MVP ficar completo, falta trocar esses dados pela API, com banco, login real e notificações
+(veja [`../docs/ETAPAS.md`](../docs/ETAPAS.md)).
 
-## Duas abas
+Segue o documento do projeto v2: app para
+**idoso** e **cuidador**, e o painel do **médico** (que no produto final será web, em Next.js, mas
+aqui roda no mesmo app para validar as telas).
 
-O app abre com um seletor fixo no topo com duas visões:
-
-- **Idoso** (verde) — protótipo do futuro app: lembrete atual (com "Tomei" / "Me
-  lembra em 15 min", até 2 adiamentos), a lista do dia em letras grandes e uma
-  **simulação fiel do WhatsApp** (é por lá que o lembrete chega hoje — ver README do
-  repositório).
-- **Médico** (violeta) — painel com os resultados: lista de pacientes por exceção
-  (vermelho/amarelo/verde), **régua do dia** (horários de todos os pacientes numa
-  linha do tempo), relatório individual com **anel de adesão** (donut, com a
-  proporção real de tomada/atraso/perda dos últimos 14 dias) e **heatmap de 14 dias
-  por período** (identifica padrão de esquecimento, ex. "sempre esquece a tarde") e
-  cadastro de medicamento.
-
-Cada aba tem sua cor de destaque (verde para o idoso, violeta para o médico) — ajuda
-a identificar de relance em qual visão você está. Trocar de aba é sempre uma ação
-explícita (toque nos botões "Idoso"/"Médico"), nunca automático. Números e títulos
-grandes usam uma fonte de destaque (Bricolage Grotesque via `google_fonts`) pra
-contrastar com o corpo do texto.
+Ainda **sem backend**: os dados ficam em memória (`lib/data/store/app_store.dart`) e começam a
+partir de `lib/data/mock/mock_data.dart`. Como tudo é compartilhado, o que acontece em um perfil
+aparece nos outros: se a Dona Maria adia o lembrete 2 vezes, a Carla recebe o alerta e o caso fica
+vermelho no painel da Dra. Helena.
 
 ## Como rodar
 
-Este diretório ainda não tem os projetos de plataforma (`android/`, `ios/`, `web/`
-etc.) gerados. Para rodar:
-
 ```bash
-cd src
-flutter create --platforms=android,ios,web .   # gera as pastas de plataforma, sem mexer em lib/ e pubspec.yaml
+cd MVP
 flutter pub get
-flutter run -d chrome                          # ou -d <dispositivo/emulador>
+flutter run -d chrome        # ou -d edge, ou um celular Android ligado no cabo
 ```
 
-Se o `flutter create` perguntar se quer sobrescrever `pubspec.yaml` ou arquivos em
-`lib/`, **responda não** — eles já estão prontos aqui.
+Testes:
+
+```bash
+flutter test
+```
+
+## Contas de demonstração
+
+Na tela de login há atalhos para entrar direto. Todas as contas usam a senha `123456`.
+
+| Conta | Perfil | O que mostra |
+|---|---|---|
+| `maria@cuidar.app` | Idosa, usa o app | Chat de lembretes com a Losartana das 08:00 esperando |
+| `carla@cuidar.app` | Cuidadora | Acompanha a Dona Maria (com app) e o Seu Antônio (sem app) |
+| `helena@cuidar.app` | Médica | Painel por exceção com 4 pacientes |
+
+**Controles da demonstração** (menu da conta, no canto superior direito):
+- **Passar 15 minutos:** avança o relógio, que começa às 08:05. Serve para ver o alerta "sem
+  resposta" (30 minutos) e os avisos a cada 15 minutos do idoso sem app.
+- **Recomeçar demonstração:** volta tudo ao início.
+
+**Roteiro sugerido:** entre como Dona Maria e toque 2 vezes em "Me lembra em 15 min". Saia, entre
+como Carla e veja o alerta. Saia, entre como Dra. Helena e veja a Dona Maria em "Precisam de atenção".
+
+## Telas
+
+**Entrada**
+- Boas-vindas, login, cadastro em 3 passos (perfil → dados → consentimento LGPD) e recuperar senha.
+
+**Idoso** (verde)
+- **Lembretes:** chat com uma mensagem por horário e o lembrete atual com **Tomei** e **Me lembra
+  em 15 min** (até 2 vezes; no segundo adiamento o cuidador é avisado).
+- **Hoje:** remédios do dia em letras grandes.
+- **Remédios:** todos os remédios, com quem cadastrou cada um; o idoso também pode cadastrar e editar.
+- **Família:** digitar o código de convite de um cuidador, aceitar ou recusar, tirar acesso.
+
+**Cuidador** (laranja)
+- **Início:** alertas abertos com o nome do remédio e cada pessoa acompanhada com o status do dia.
+- **Alertas:** histórico de alertas abertos e resolvidos.
+- **Ficha do idoso com app:** doses de hoje, últimos 7 dias, remédios (cadastrar e editar).
+- **Ficha do idoso sem app:** a mesma tela de lembretes do idoso, para o cuidador confirmar por ele,
+  com aviso a cada 15 minutos até confirmar.
+- **Adicionar idoso:** "a pessoa vai usar o app?" Sim → gera um código; não → cadastro direto.
+
+**Médico** (violeta)
+- **Pacientes:** "Precisam de atenção", régua do dia e todos os pacientes, sem notificações.
+- **Relatório:** anel de adesão, mapa de 14 dias por período, doses de hoje (com quem confirmou) e
+  remédios com a origem (prescrição validada, família ou paciente).
+- **Cadastrar:** escolhe o paciente e abre o formulário de remédio.
+- **Adicionar paciente:** pelo email da conta do paciente (proposta; a forma final está em aberto).
+
+O formulário de remédio é o mesmo para os três perfis (`lib/shared/screens/medication_form_screen.dart`),
+com etapa de revisão antes de salvar. Muda só a origem registrada.
 
 ## Estrutura de pastas
 
 ```
 lib/
-├── main.dart                     # ponto de entrada
-├── app.dart                      # MaterialApp, tema, controle de zoom de texto
+├── main.dart
+├── app.dart                         # MaterialApp, tema por perfil, português, tamanho do texto
 ├── core/
-│   ├── accessibility/
-│   │   └── text_scale_controller.dart   # controle de tamanho de texto (até 200%)
-│   └── theme/
-│       ├── app_colors.dart       # paleta com contraste verificado
-│       └── app_theme.dart        # ThemeData: fontes grandes, alvos de toque grandes
+│   ├── accessibility/text_scale_controller.dart
+│   └── theme/                       # cores com contraste verificado, ThemeData por perfil
 ├── data/
-│   ├── models/                   # Dose, PatientSummary (sem Flutter/UI aqui)
-│   └── mock/
-│       └── mock_data.dart        # dados fictícios (Dona Maria, Dra. Helena, Carla)
+│   ├── models/                      # Dose, Medication, Elder, AppUser, CareAlert, PatientSummary
+│   ├── mock/mock_data.dart          # personagens e dados iniciais
+│   └── store/                       # AppStore (faz o papel do backend) e AppScope
 ├── shared/
-│   └── widgets/                  # usados nas duas abas: RoleShell, StatusChip, etc.
+│   ├── screens/medication_form_screen.dart
+│   ├── utils/format.dart            # datas e horários em português
+│   └── widgets/                     # barra do topo, chat de lembretes, avisos, selos, semana etc.
 └── features/
-    ├── idoso/
-    │   ├── idoso_theme_scope.dart  # aplica o verde só dentro desta aba
-    │   ├── screens/                # Lembretes, Meus remédios, simulação de WhatsApp
-    │   └── widgets/                 # DoseReminderCard
-    └── medico/
-        ├── screens/                # Visão geral, Relatório do paciente, Cadastro
-        └── widgets/                 # PatientTile, AttentionList, AdherenceRing
-                                      # (donut, fl_chart), AdherenceHeatmap, DayTimeline
+    ├── auth/                        # boas-vindas, login, cadastro, recuperar senha
+    ├── idoso/                       # Lembretes, Hoje, Remédios, Família
+    ├── cuidador/                    # Início, Alertas, ficha do idoso, adicionar idoso
+    └── medico/                      # Pacientes, relatório, cadastrar, adicionar paciente
 ```
 
-Pacotes extras usados: `fl_chart` (anel de adesão) e `google_fonts` (fonte de
-destaque Bricolage Grotesque nos títulos/números).
+Pacotes usados: `fl_chart` (anel de adesão), `google_fonts` (fonte de destaque Bricolage Grotesque)
+e `flutter_localizations` (calendário e relógio em português).
 
 ## Acessibilidade aplicada (WAI — Developing for Older Users)
 
@@ -78,33 +109,30 @@ Seguindo as recomendações do W3C para usuários mais velhos
 
 | Área | O que foi aplicado | Onde |
 |---|---|---|
-| Visão (1.4.4, G178) | Controle de texto na própria tela (A-/A+), até 200%, sempre visível | `FontSizeToggle`, `app.dart` |
+| Visão (1.4.4, G178) | Controle de texto na própria tela (A-/A+), até 200%, visível em todas as telas, inclusive antes do login | `FontSizeToggle`, `AppTopBar` |
+| Visão (1.4.10) | Nada estoura a tela com o texto em 200%: linhas quebram em vez de cortar (testado em 360×740) | `test/widget_test.dart` |
 | Visão (1.4.3/1.4.6) | Contraste mínimo 4,5:1, fundo levemente fora do branco puro | `app_colors.dart` |
-| Visão (1.4.1, G14) | Status nunca só por cor: sempre ícone + texto junto | `StatusChip`, `PatientTile`, `AttentionList` |
+| Visão (1.4.1, G14) | Status nunca só por cor: sempre ícone + texto junto (inclusive a semana em círculos e a origem do remédio) | `StatusChip`, `NoticeBox`, `WeekStrip`, `OriginChip` |
 | Visão (1.4.8) | Texto nunca justificado, altura de linha generosa, fonte grande por padrão | `app_theme.dart` |
-| Destreza/motor | Botões com altura mínima 56–64px, ícones com alvo mínimo de 48×48 | `app_theme.dart`, `font_size_toggle.dart` |
-| Destreza/motor | Alternância de aba por toque (não por gesto de arrastar) | `role_shell.dart` |
-| Cognitivo (2.2.1) | Nenhum cronômetro que trava a tela sozinho: "Me lembra em 15 min" continua disponível até o 2º adiamento | `dose_reminder_card.dart` |
-| Cognitivo (3.2.1/3.2.5) | Troca de contexto só por ação explícita do usuário, nunca automática | `role_shell.dart` |
+| Destreza/motor | Botões com altura mínima 56–64px, ícones com alvo mínimo de 48×48 | `app_theme.dart` |
+| Destreza/motor | Troca de aba e de visão por toque (barra inferior e botões segmentados), nunca por gesto de arrastar | telas `*_home_screen.dart`, `cuidador_elder_screen.dart` |
+| Destreza/motor | Horário digitado em vez de arrastar o ponteiro do relógio | `medication_form_screen.dart` |
+| Cognitivo (2.2.1) | Nenhum cronômetro que trava a tela: "Me lembra em 15 min" continua disponível até o 2º adiamento | `dose_reminder_card.dart` |
+| Cognitivo (3.2.1/3.2.5) | Troca de contexto só por ação explícita (entrar, sair, tocar), nunca automática | `auth_gate.dart` |
+| Cognitivo (3.2.3/3.2.4) | Mesma estrutura de navegação (barra inferior) nos três perfis | telas `*_home_screen.dart` |
 | Cognitivo (2.4.6/2.4.10) | Hierarquia de headings marcada (`Semantics(header: true)`) em toda seção | `section_heading.dart` |
-| Cognitivo (3.2.3/3.2.4) | Mesma estrutura de navegação (barra inferior com 2 destinos) nas duas abas | `idoso_home_screen.dart`, `medico_overview_screen.dart` |
-| Cognitivo (3.3.1–3.3.4) | Formulário com instrução no início, erro descrito em texto, e etapa de revisão antes de salvar | `medico_new_medication_screen.dart` |
+| Cognitivo (3.3.1–3.3.4) | Formulários com instrução no início, erro descrito em texto, etapa de revisão antes de salvar | `medication_form_screen.dart`, `signup_screen.dart` |
+| Cognitivo | Cadastro dividido em 3 passos curtos, com "Passo X de 3" em texto | `signup_screen.dart` |
 | Cognitivo (linguagem simples) | Frases curtas, sem jargão técnico nos textos voltados ao idoso | telas de `features/idoso/` |
-| Leitor de tela (1.1.1/1.3.1) | `Semantics` com rótulos descritivos em cartões, chips e botões | em todos os widgets interativos |
-| Visão (1.4.1) | Anel e heatmap de adesão também viram texto (percentual, rótulo de status, insight do padrão) — nunca só a cor da fatia ou do quadrado | `adherence_ring.dart`, `adherence_heatmap.dart` |
+| Leitor de tela (1.1.1/1.3.1/4.1.3) | `Semantics` com rótulos descritivos; alertas e erros anunciados assim que aparecem (`liveRegion`) | `AlertBanner`, `NoticeBox`, `DoseReminderCard` |
 
 ## O que ainda falta (de propósito)
 
-- **Sem backend**: não há Supabase/API real — tudo é mock em memória.
-- **Sem persistência entre telas fora do que foi explicitamente compartilhado**: a
-  lista de doses da aba Idoso é compartilhada entre as duas telas da aba (Lembretes e
-  Meus remédios), mas não é sincronizada com a aba Médico — isso só faz sentido depois
-  que existir um backend de verdade.
-- **Sem cuidador**: por pedido, este protótipo só cobre as visões de idoso e médico.
-  O cuidador pode entrar depois como uma terceira aba ou dentro do painel do médico.
-- **A simulação do WhatsApp é independente**: tem seu próprio estado de conversa, não
-  compartilha dados com a tela "Lembretes" — é só uma demonstração visual do canal.
-- **`google_fonts` baixa a fonte em tempo de execução** (e guarda em cache). Se rodar
-  sem internet na primeira vez, cai pro fallback do sistema sem quebrar, só sem o
-  mesmo destaque visual.
-- **Sem testes automatizados além do smoke test** — é só para validar a interface e a stack.
+- **Sem backend:** tudo fica em memória e volta ao início ao recarregar a página.
+- **Sem notificações de verdade:** o lembrete aparece no chat; push (Firebase Cloud Messaging) e
+  agendamento local no aparelho entram com o backend.
+- **Relógio simulado:** começa às 08:05 e anda só pelo menu da demonstração.
+- **Painel do médico dentro do app:** no produto final ele é web (Next.js).
+- **Fila de revisão, foto da receita, alergias e estoque:** ficam para depois do MVP, como no documento.
+- **`google_fonts` baixa a fonte em tempo de execução** (e guarda em cache). Sem internet na primeira
+  vez, cai para a fonte do sistema sem quebrar.
