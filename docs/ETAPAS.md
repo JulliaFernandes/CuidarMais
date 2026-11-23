@@ -11,6 +11,7 @@ semanas e o que fica para depois. Quando bater a dúvida "isso precisa agora?", 
 | [`prototipo/`](../prototipo/) | **Protótipo:** desenho navegável das telas, em HTML. Mostra como o app vai ser, mas não é o app | ✅ pronto, fica guardado como referência |
 | [`MVP/`](../MVP/) | **MVP:** o app de verdade, em Flutter | 🔨 telas e regras prontas; falta banco, login real e notificações |
 | [`landing-page/`](../landing-page/) | Página de apresentação do CuidarMais | ✅ pronta, pode servir para o pitch |
+| [`validacao/`](../validacao/LEIA-ME.md) | Teste fumaça da landing e teste de uso do app, com os resultados | 🔨 configurar o Firebase e aplicar |
 | [`identidade-visual/`](../identidade-visual/LEIA-ME.md) | Logo, símbolo, ícone do app e cores da marca | ✅ use nos slides e no pitch |
 | [`docs/`](./) | Este guia, o [backlog](BACKLOG.md) e o [documento do projeto v2](Cuidar_Documento_do_Projeto_v2.pdf) | ✅ o documento v2 é a referência |
 | [`docs/antigo/`](antigo/) | Documento da v1, quando a ideia ainda usava WhatsApp | 📎 só histórico, não seguir |
