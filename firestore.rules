@@ -1,0 +1,27 @@
+rules_version = '2';
+
+// Banco do CuidarMais no Firebase (plano Spark, grátis).
+// Por enquanto só guarda os interessados da landing page (teste fumaça).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // A landing só pode CRIAR um registro, com estes campos e nada mais.
+    // Ninguém lê, edita ou apaga pela internet: a lista só aparece no console do Firebase.
+    match /interessados/{id} {
+      allow create: if request.resource.data.keys().hasOnly(['email', 'perfil', 'origem', 'criado_em'])
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 150
+        && request.resource.data.email.matches('[^@ ]+@[^@ ]+[.][^@ ]+')
+        && request.resource.data.perfil in ['cuidador', 'idoso', 'saude', 'outro']
+        && request.resource.data.origem is string
+        && request.resource.data.origem.size() <= 40
+        && request.resource.data.criado_em is timestamp;
+      allow read, update, delete: if false;
+    }
+
+    // Todo o resto fica fechado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

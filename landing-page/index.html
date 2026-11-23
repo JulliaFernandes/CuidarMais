@@ -1,15 +1,15 @@
 <!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cuidar+ — lembretes de remédio que conectam idoso, cuidador e médico</title>
-<meta name="description" content="O Cuidar+ lembra o idoso de cada remédio por notificação no próprio app, avisa o cuidador quando uma dose fica sem confirmação e dá ao médico uma visão real da adesão ao tratamento.">
+<title>CuidarMais — lembretes de remédio que conectam idoso, cuidador e médico</title>
+<meta name="description" content="O CuidarMais lembra o idoso de cada remédio por notificação no próprio app, avisa o cuidador quando uma dose fica sem confirmação e dá ao médico uma visão real da adesão ao tratamento.">
 <meta name="theme-color" content="#0E6B66">
 <link rel="icon" type="image/png" href="assets/icone-app.png">
 <link rel="apple-touch-icon" href="assets/icone-app.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Cuidar+ — cada dose no horário certo">
+<meta property="og:title" content="CuidarMais — cada dose no horário certo">
 <meta property="og:description" content="Lembretes de remédio por notificação no app para idosos, com alerta automático ao cuidador e ao médico quando uma dose fica sem confirmação.">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cuidar+ — cada dose no horário certo">
+<meta name="twitter:title" content="CuidarMais — cada dose no horário certo">
 <meta name="twitter:description" content="Lembretes de remédio por notificação no app para idosos, com alerta automático ao cuidador e ao médico.">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -534,6 +534,7 @@ button.panel-row.sev-ok.is-focused { border-left-color: var(--green); }
   display: grid; place-items: center; font-weight: 800; font-size: .8rem; flex: none;
   box-shadow: 0 2px 6px -1px rgba(0,0,0,.35);
 }
+.chat-head .av img { width: 26px; height: 26px; display: block; }
 .chat-head small { display: block; opacity: .85; font-size: .75rem; line-height: 1.3; }
 .msgs { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth; }
 .daychip { align-self: center; background: var(--bubble-in); color: var(--muted); font-size: .68rem; font-weight: 800; padding: 3px 10px; border-radius: 8px; letter-spacing: .05em; }
@@ -1118,6 +1119,11 @@ button.panel-row.sev-ok.is-focused { border-left-color: var(--green); }
   font: inherit; font-size: .96rem; background: rgba(255,255,255,.95); color: var(--ink);
   box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.4);
 }
+.lead-form select {
+  order: -1; flex: 1 1 100%; min-width: 0; border: 0; border-radius: 11px; padding: 13px 16px;
+  font: inherit; font-size: .96rem; background: rgba(255,255,255,.95); color: var(--ink);
+}
+.lead-form select:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .lead-form input:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
 .lead-form .btn.primary { flex: none; }
 .lead-note { font-size: .84rem; color: rgba(255,255,255,.75); margin-top: -4px; }
@@ -1183,7 +1189,7 @@ footer .logo b em { color: #F2A58F; }
 
 <header class="top">
   <div class="top-inner">
-    <a class="logo" href="#topo" aria-label="Cuidar+, início"><img class="logo-mark" src="assets/simbolo.png" alt="" aria-hidden="true"><b>Cuidar<em>+</em></b></a>
+    <a class="logo" href="#topo" aria-label="CuidarMais, início"><img class="logo-mark" src="assets/simbolo.png" alt="" aria-hidden="true"><b>Cuidar<em>Mais</em></b></a>
     <nav class="nav" aria-label="Seções">
       <a href="#sobre">Sobre</a><a href="#recursos">Recursos</a><a href="#painel-medico">Painel do médico</a><a href="#funciona">Como funciona</a><a href="#confianca">Segurança</a><a href="#duvidas">Dúvidas</a>
     </nav>
@@ -1201,7 +1207,7 @@ footer .logo b em { color: #F2A58F; }
       <div class="hero-copy">
         <span class="eyebrow">Gestão de medicação para idosos</span>
         <h1>Cada dose no horário <em>certo</em>. Toda a rede de cuidado informada.</h1>
-        <p class="lede">O Cuidar+ lembra o idoso de cada medicamento, avisa o cuidador quando uma dose fica sem confirmação e dá ao médico uma visão real de como o tratamento está sendo seguido.</p>
+        <p class="lede">O CuidarMais lembra o idoso de cada medicamento, avisa o cuidador quando uma dose fica sem confirmação e dá ao médico uma visão real de como o tratamento está sendo seguido.</p>
         <div class="cta">
           <a class="btn primary" href="#funciona">Ver como funciona<span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
           <a class="btn ghost" href="#usar">Como usar</a>
@@ -1228,7 +1234,7 @@ footer .logo b em { color: #F2A58F; }
           </div>
           <div class="phone">
           <div class="phone-in">
-            <div class="chat-head"><span class="av">C+</span><div><b>Cuidar+</b><small>notificações de hoje · exemplo</small></div></div>
+            <div class="chat-head"><span class="av"><img src="assets/simbolo.png" alt="" width="26" height="26"></span><div><b>CuidarMais</b><small>notificações de hoje · exemplo</small></div></div>
             <div class="msgs" id="msgs" aria-live="polite">
               <span class="daychip">HOJE</span>
               <div class="notif" data-tone="ok"><span class="notif-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="notif-body"><div class="notif-top"><b>Levotiroxina 50 mcg</b><span class="notif-time">07:03</span></div><p>1 comprimido em jejum · tomada no horário</p></div></div>
@@ -1246,7 +1252,7 @@ footer .logo b em { color: #F2A58F; }
       </div>
     </div>
 
-    <div class="stats-strip" aria-label="Números do Cuidar+">
+    <div class="stats-strip" aria-label="Números do CuidarMais">
       <button type="button" class="stats-pause" id="stats-pause" aria-pressed="false" aria-label="Pausar a rolagem automática dos números"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
       <div class="stats-track">
         <div class="stat"><b>3</b><span>perfis no mesmo sistema: idoso, cuidador e médico</span></div>
@@ -1262,13 +1268,13 @@ footer .logo b em { color: #F2A58F; }
 
     <section id="sobre" class="section-shell" data-section="SOBRE">
       <div class="sec-head">
-        <span class="eyebrow">Por que o Cuidar+</span>
+        <span class="eyebrow">Por que o CuidarMais</span>
         <h2>Tomar vários remédios por dia é fácil de errar e <span class="mark">difícil de acompanhar</span></h2>
         <p>A polifarmácia, o uso de vários medicamentos ao mesmo tempo, é comum entre idosos. Cada dose esquecida passa despercebida até a próxima consulta.</p>
       </div>
       <div class="compare">
         <div class="compare-col sem">
-          <span class="compare-label">Sem o Cuidar+</span>
+          <span class="compare-label">Sem o CuidarMais</span>
           <ul class="problems">
             <li><b>O lembrete avisa só quem toma</b><span>Aplicativos comuns tocam o alarme, mas a família e o médico não sabem se a dose foi tomada.</span></li>
             <li><b>A família descobre tarde</b><span>Quem mora longe ou trabalha fora só fica sabendo do esquecimento quando já passou.</span></li>
@@ -1276,7 +1282,7 @@ footer .logo b em { color: #F2A58F; }
           </ul>
         </div>
         <div class="compare-col com">
-          <span class="compare-label">Com o Cuidar+</span>
+          <span class="compare-label">Com o CuidarMais</span>
           <ul class="problems wins">
             <li><b>O cuidador e o médico também sabem</b><span>Cada confirmação (ou falta dela) entra no histórico compartilhado pelos três perfis.</span></li>
             <li><b>O alerta chega na hora</b><span>O cuidador recebe o aviso com o nome do remédio assim que a dose fica sem confirmação, não dias depois.</span></li>
@@ -1285,7 +1291,7 @@ footer .logo b em { color: #F2A58F; }
         </div>
       </div>
 
-      <p class="differentiator"><span class="chip vio">Diferencial</span> A maioria das soluções do mercado conecta só médico e paciente. O Cuidar+ conecta <strong>médico, paciente e cuidador</strong>, por isso ninguém no ecossistema fica de fora quando uma dose é perdida.</p>
+      <p class="differentiator"><span class="chip vio">Diferencial</span> A maioria das soluções do mercado conecta só médico e paciente. O CuidarMais conecta <strong>médico, paciente e cuidador</strong>, por isso ninguém no ecossistema fica de fora quando uma dose é perdida.</p>
 
       <div class="trio">
         <div class="trio-card idoso">
@@ -1294,7 +1300,7 @@ footer .logo b em { color: #F2A58F; }
           <h3>Recebe o lembrete e responde com um toque</h3>
           <p>Uma notificação no app mostra o remédio e a dose. Duas opções: Tomei ou Me lembra em 15 min.</p>
           <div class="panel-mock" aria-label="Exemplo do lembrete no app do idoso">
-            <div class="panel-bar"><i></i><i></i><i></i><span class="panel-url">Cuidar+ · notificações</span></div>
+            <div class="panel-bar"><i></i><i></i><i></i><span class="panel-url">CuidarMais · notificações</span></div>
             <div class="mini-chat">
               <div class="notif" data-tone="ok"><span class="notif-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="notif-body"><div class="notif-top"><b>Losartana 50 mg</b><span class="notif-time">08:03</span></div><p>1 comprimido · tomada no horário</p></div></div>
             </div>
@@ -1307,7 +1313,7 @@ footer .logo b em { color: #F2A58F; }
           <h3>Acompanha e é avisado quando algo atrasa</h3>
           <p>Vê o status do dia, recebe o alerta com o nome do remédio e cadastra medicamentos. Cobre o idoso que não usa o app.</p>
           <div class="panel-mock" aria-label="Exemplo do alerta recebido pelo cuidador">
-            <div class="panel-bar"><i></i><i></i><i></i><span class="panel-url">Cuidar+ · alertas</span></div>
+            <div class="panel-bar"><i></i><i></i><i></i><span class="panel-url">CuidarMais · alertas</span></div>
             <div class="alertcard" data-state="alert">
               <span class="chip cor">Cuidador</span>
               <div><b>Dona Maria não confirmou</b><p>Losartana 50 mg · 35 min sem resposta.</p></div>
@@ -1504,7 +1510,7 @@ footer .logo b em { color: #F2A58F; }
           <li><button type="button" class="step-btn"><b>Cadastre um remédio quando precisar</b><span>O formulário é o mesmo usado pelo cuidador e pelo médico.</span></button></li>
         </ol>
         <div class="sample">
-          <div class="panel-bar"><i class="red"></i><i class="sun"></i><i class="ok"></i><span class="panel-url">Cuidar+ · hoje</span></div>
+          <div class="panel-bar"><i class="red"></i><i class="sun"></i><i class="ok"></i><span class="panel-url">CuidarMais · hoje</span></div>
           <div class="sample-body">
             <div class="sample-head"><b>Hoje, Dona Maria</b><span class="chip mut">Exemplo</span></div>
             <ul class="daylist big">
@@ -1526,7 +1532,7 @@ footer .logo b em { color: #F2A58F; }
           <li><button type="button" class="step-btn"><b>Atenda os alertas</b><span>O alerta chega depois do 2º adiamento ou sem resposta. Para o idoso sem app, confirme a dose na aba dele.</span></button></li>
         </ol>
         <div class="sample">
-          <div class="panel-bar"><i class="red"></i><i class="sun"></i><i class="ok"></i><span class="panel-url">Cuidar+ · alertas</span></div>
+          <div class="panel-bar"><i class="red"></i><i class="sun"></i><i class="ok"></i><span class="panel-url">CuidarMais · alertas</span></div>
           <div class="sample-body">
             <div class="sample-head"><b>Dona Maria, hoje</b><span class="chip mut">Exemplo</span></div>
             <div class="alertline">Alerta: Dona Maria adiou a Losartana 50 mg duas vezes.</div>
@@ -1618,14 +1624,14 @@ footer .logo b em { color: #F2A58F; }
         <article id="d-privacidade">
           <span class="doc-badge" aria-hidden="true">04</span>
           <h3>Privacidade e segurança</h3>
-          <p class="lead">Dados de saúde são dados pessoais sensíveis pela LGPD. No Cuidar+:</p>
+          <p class="lead">Dados de saúde são dados pessoais sensíveis pela LGPD. No CuidarMais:</p>
           <ul class="list">
             <li>O consentimento é específico e destacado, dado no cadastro.</li>
             <li>O vínculo entre cuidador e idoso é feito por código e aprovado pelo idoso.</li>
             <li>Só quem está vinculado ao paciente tem acesso, e os dados são criptografados.</li>
             <li>Os dados de saúde não são compartilhados para vantagem econômica.</li>
           </ul>
-          <div class="note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1.1" fill="currentColor"/></svg><p>O Cuidar+ lembra, registra e mostra dados. Ele não indica doses nem condutas clínicas e não substitui a orientação do médico.</p></div>
+          <div class="note"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 11v5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="1.1" fill="currentColor"/></svg><p>O CuidarMais lembra, registra e mostra dados. Ele não indica doses nem condutas clínicas e não substitui a orientação do médico.</p></div>
         </article>
       </div>
     </section>
@@ -1660,7 +1666,7 @@ footer .logo b em { color: #F2A58F; }
         <div class="security-copy">
           <span class="eyebrow">Segurança e conformidade</span>
           <h2>Dado de saúde tratado como deveria</h2>
-          <p>Resumo rápido de como o Cuidar+ protege a informação. Os detalhes completos estão na <a href="#d-privacidade">documentação</a>.</p>
+          <p>Resumo rápido de como o CuidarMais protege a informação. Os detalhes completos estão na <a href="#d-privacidade">documentação</a>.</p>
         </div>
         <ul class="security-grid">
           <li>
@@ -1712,18 +1718,26 @@ footer .logo b em { color: #F2A58F; }
 
     <div class="cta-band">
       <div class="cta-band-inner">
-        <h2>Bora ver o Cuidar+ em ação?</h2>
+        <h2>Bora ver o CuidarMais em ação?</h2>
         <p>Monte o fluxo completo com a sua equipe — do lembrete no celular do idoso ao painel do médico.</p>
         <div class="cta">
-          <a class="btn primary" href="https://cuidarmais-app.web.app" target="_blank" rel="noopener">Testar o Cuidar+<span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+          <a class="btn primary" href="https://cuidarmais-app.web.app" target="_blank" rel="noopener">Testar o CuidarMais<span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
           <a class="btn ghost" href="#usar">Ver passo a passo</a>
         </div>
         <form class="lead-form" id="lead-form">
           <label for="lead-email" class="sr-only">Seu e-mail</label>
-          <input type="email" id="lead-email" name="email" placeholder="seu@email.com" required autocomplete="email">
+          <input type="email" id="lead-email" name="email" placeholder="seu@email.com" required autocomplete="email" maxlength="150">
+          <label for="lead-perfil" class="sr-only">Você é</label>
+          <select id="lead-perfil" name="perfil" required>
+            <option value="" disabled selected>Você é…</option>
+            <option value="cuidador">Cuido de alguém</option>
+            <option value="idoso">Tomo remédios todo dia</option>
+            <option value="saude">Profissional de saúde</option>
+            <option value="outro">Outro</option>
+          </select>
           <button type="submit" class="btn primary">Quero testar<span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
         </form>
-        <p class="lead-note" id="lead-note">Deixe seu e-mail e a equipe te avisa quando o Cuidar+ estiver pronto para teste.</p>
+        <p class="lead-note" id="lead-note">Deixe seu e-mail e a equipe te avisa quando o CuidarMais estiver pronto para teste. Usamos o e-mail só para isso e apagamos quando você pedir.</p>
       </div>
     </div>
   </main>
@@ -1732,16 +1746,42 @@ footer .logo b em { color: #F2A58F; }
 <footer>
   <div class="wrap foot-wrap">
     <div class="foot-brand">
-      <a class="logo" href="#topo" aria-label="Voltar ao topo"><img class="logo-mark" src="assets/simbolo.png" alt="" aria-hidden="true"><b>Cuidar<em>+</em></b></a>
+      <a class="logo" href="#topo" aria-label="Voltar ao topo"><img class="logo-mark" src="assets/simbolo.png" alt="" aria-hidden="true"><b>Cuidar<em>Mais</em></b></a>
       <p>Lembretes de medicação que conectam idosos, cuidadores e médicos.</p>
     </div>
     <div class="foot-col"><b>Produto</b><a href="#sobre">Sobre</a><a href="#recursos">Recursos</a><a href="#painel-medico">Painel do médico</a><a href="#funciona">Como funciona</a><a href="#usar">Como usar</a></div>
     <div class="foot-col"><b>Ajuda</b><a href="#confianca">Segurança</a><a href="#docs">Documentação</a><a href="#duvidas">Dúvidas</a></div>
     <div class="foot-col"><b>Contato</b><a href="mailto:cuidarsaudemais@gmail.com">cuidarsaudemais@gmail.com</a></div>
-    <p class="legal">O Cuidar+ não substitui a orientação médica. Nomes e dados de exemplo nesta página são fictícios. Projeto desenvolvido na jornada SuperNova.</p>
+    <p class="legal">O CuidarMais não substitui a orientação médica. Nomes e dados de exemplo nesta página são fictícios. Projeto desenvolvido na jornada SuperNova.</p>
   </div>
 </footer>
 
+<script>
+/* Configuração do teste fumaça. Veja validacao/LEIA-ME.md.
+   ANALYTICS_ID: o "ID da métrica" (G-XXXXXXXXXX) do Google Analytics ligado ao
+   projeto Firebase. Vazio = sem contador de visitas. */
+var CM = {
+  projeto: 'cuidarmais-eee0c',
+  ANALYTICS_ID: 'G-033HZP31VF',
+  origem: (function () {
+    var q = new URLSearchParams(location.search).get('utm_source');
+    if (q) return q.slice(0, 40);
+    try { return document.referrer ? new URL(document.referrer).hostname.slice(0, 40) : 'direto'; } catch (e) { return 'direto'; }
+  })(),
+  evento: function () {}
+};
+if (CM.ANALYTICS_ID) {
+  var ga = document.createElement('script');
+  ga.async = true;
+  ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + CM.ANALYTICS_ID;
+  document.head.appendChild(ga);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', CM.ANALYTICS_ID);
+  CM.evento = function (nome, dados) { gtag('event', nome, dados || {}); };
+}
+</script>
 <script>
 (function () {
   /* tabelas da documentação: rótulos das células para o celular */
@@ -2001,19 +2041,41 @@ footer .logo b em { color: #F2A58F; }
   window.addEventListener('scroll', updateProgress, { passive: true });
   window.addEventListener('resize', updateProgress);
 
-  /* formulário de lead: sem backend ainda, abre um e-mail pronto para a equipe */
+  /* formulário de lead: grava no Firestore do projeto Firebase (plano grátis).
+     As regras em firestore.rules só deixam criar, nunca ler, pela página. */
   var leadForm = document.getElementById('lead-form'), leadNote = document.getElementById('lead-note');
   if (leadForm) {
     leadForm.addEventListener('submit', function (e) {
       e.preventDefault();
       var email = document.getElementById('lead-email').value.trim();
-      if (!email) return;
-      var subject = encodeURIComponent('Quero testar o Cuidar+');
-      var body = encodeURIComponent('Oi! Quero ser avisado(a) quando o Cuidar+ estiver pronto para teste.\n\nMeu e-mail: ' + email);
-      window.location.href = 'mailto:cuidarsaudemais@gmail.com?subject=' + subject + '&body=' + body;
-      leadNote.textContent = 'Obrigado! Isso deve abrir seu app de e-mail com a mensagem pronta — é só enviar.';
+      var perfil = document.getElementById('lead-perfil').value;
+      if (!email || !perfil) return;
+      var btn = leadForm.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      leadNote.textContent = 'Enviando…';
+      var doc = { fields: {
+        email: { stringValue: email.toLowerCase() },
+        perfil: { stringValue: perfil },
+        origem: { stringValue: CM.origem },
+        criado_em: { timestampValue: new Date().toISOString() }
+      } };
+      fetch('https://firestore.googleapis.com/v1/projects/' + CM.projeto + '/databases/(default)/documents/interessados', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(doc)
+      }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        leadForm.reset();
+        leadNote.textContent = 'Pronto! Recebemos seu e-mail e vamos te avisar.';
+        CM.evento('generate_lead', { perfil: perfil });
+      }).catch(function () {
+        leadNote.innerHTML = 'Não conseguimos enviar agora. Escreva para <a href="mailto:cuidarsaudemais@gmail.com" style="color:#fff">cuidarsaudemais@gmail.com</a>.';
+      }).finally(function () { btn.disabled = false; });
     });
   }
+
+  /* cliques em "Testar o app" contam como interesse no teste fumaça */
+  document.querySelectorAll('a[href^="https://cuidarmais-app.web.app"]').forEach(function (a) {
+    a.addEventListener('click', function () { CM.evento('abrir_app', { local: a.classList.contains('top-cta') ? 'topo' : 'faixa' }); });
+  });
 
   /* dúvidas: acordeão */
   document.querySelectorAll('.faq-item').forEach(function (item) {
