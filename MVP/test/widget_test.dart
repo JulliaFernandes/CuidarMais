@@ -146,6 +146,19 @@ void main() {
       expect(dose.confirmedBy, 'cuidador');
     });
 
+    test('Depois de adiar, mostra quando vem o próximo lembrete', () {
+      final store = AppStore(); // relógio da demonstração: 08:05
+      final dose = store.currentDose('e-maria')!; // Losartana das 08:00
+      store.snooze(dose);
+      expect(store.nextReminderAt(dose), DateTime(dose.scheduledAt.year, dose.scheduledAt.month, dose.scheduledAt.day, 8, 15));
+      store.snooze(dose); // segunda vez: não chama mais, avisa o cuidador
+      expect(store.nextReminderAt(dose), isNull);
+
+      final semApp = store.currentDose('e-antonio')!;
+      expect(store.nextReminderAt(semApp)!.isAfter(store.now), isTrue);
+      expect(store.nextReminderAt(semApp)!.difference(store.now).inMinutes, lessThanOrEqualTo(15));
+    });
+
     test('Convite só vincula depois que o idoso aceita', () {
       final store = AppStore();
       final maria = store.elderById('e-maria');

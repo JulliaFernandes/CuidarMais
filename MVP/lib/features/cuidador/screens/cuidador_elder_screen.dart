@@ -148,6 +148,8 @@ class _FollowUp extends StatelessWidget {
                 if (d.isTaken && d.confirmedAt != null)
                   'Tomou às ${hhmm(d.confirmedAt!)}${d.confirmedBy == 'cuidador' ? ', confirmado por você' : ''}',
                 if (d.snoozeCount > 0 && !d.isTaken) 'Adiou ${d.snoozeCount} ${plural(d.snoozeCount, 'vez', 'vezes')}',
+                if (!d.isTaken && !store.now.isBefore(d.scheduledAt) && store.nextReminderAt(d) != null)
+                  'Próximo lembrete às ${hhmm(store.nextReminderAt(d)!)}',
               ].join('\n')),
               trailing: StatusChip(status: d.status),
             ),

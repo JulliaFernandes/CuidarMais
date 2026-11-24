@@ -303,6 +303,27 @@ class AppStore extends ChangeNotifier {
   Dose? currentDose(String elderId) =>
       dosesOf(elderId).where((d) => d.isOpen && !d.scheduledAt.isAfter(now)).firstOrNull;
 
+  /// Quando o próximo lembrete desta dose vai tocar, ou null se não haverá
+  /// outro (dose confirmada, ou o idoso já adiou 2 vezes e o cuidador foi
+  /// avisado). Mesmas regras do alarme e do agendador.
+  /// [snoozeCount] permite calcular logo depois de adiar, antes do banco
+  /// confirmar a mudança.
+  DateTime? nextReminderAt(Dose d, {int? snoozeCount}) {
+    if (!d.isOpen) return null;
+    final e = elderOrNull(d.elderId);
+    if (e == null) return null;
+    if (now.isBefore(d.scheduledAt)) return d.scheduledAt;
+    if (e.usesApp) {
+      final n = snoozeCount ?? d.snoozeCount;
+      if (n != 1) return null; // ainda não adiou, ou já adiou 2 vezes
+      final at = d.scheduledAt.add(const Duration(minutes: 15));
+      return at.isAfter(now) ? at : null;
+    }
+    // Sem app: um aviso ao cuidador a cada 15 minutos até confirmar.
+    final k = now.difference(d.scheduledAt).inMinutes ~/ 15 + 1;
+    return d.scheduledAt.add(Duration(minutes: 15 * k));
+  }
+
   Dose? nextDose(String elderId) => dosesOf(elderId).where((d) => d.isOpen && d.scheduledAt.isAfter(now)).firstOrNull;
 
   List<CareAlert> alertsFor(Iterable<String> elderIds) {

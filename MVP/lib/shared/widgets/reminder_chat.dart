@@ -85,10 +85,11 @@ class ReminderChat extends StatelessWidget {
         out.add(ChatBubble(
           text: i < 2
               ? 'Combinado! Chamo de novo às ${hhmm(next)}.'
-              : 'Combinado, chamo de novo às ${hhmm(next)}. Como foi a segunda vez, avisamos ${store.caregiverNames(elder)}.',
+              : 'Combinado. Como foi a segunda vez, avisamos ${store.caregiverNames(elder)}. '
+                  'Tome assim que puder e toque em "Tomei".',
           time: hhmm(at),
         ));
-        if (!store.now.isBefore(next)) {
+        if (i < 2 && !store.now.isBefore(next)) {
           out.add(ChatBubble(text: 'Lembrando de novo: ${d.medicationName}.', time: hhmm(next)));
         }
       }
@@ -130,12 +131,17 @@ class ReminderChat extends StatelessWidget {
         ..showSnackBar(SnackBar(content: Text(text), behavior: SnackBarBehavior.floating));
     }
 
+    final next = store.nextReminderAt(d);
+
     if (caregiverMode) {
       return DoseReminderCard(
         dose: d,
         takeLabel: 'Confirmar que tomou',
-        note: 'Avisamos você ${d.reminderCount} ${plural(d.reminderCount, 'vez', 'vezes')}. '
-            'Enquanto não confirmar, chega um aviso novo a cada 15 minutos.',
+        note: [
+          'Avisamos você ${d.reminderCount} ${plural(d.reminderCount, 'vez', 'vezes')}.',
+          if (next != null) 'Próximo aviso às ${hhmm(next)}.',
+          'Enquanto não confirmar, chega um aviso novo a cada 15 minutos.',
+        ].join(' '),
         onTake: () {
           if (store.confirmDose(d, byCaregiver: true)) {
             say('${d.medicationName} confirmado por você.');
@@ -143,7 +149,7 @@ class ReminderChat extends StatelessWidget {
         },
         onSnooze: () {
           store.remindCaregiverLater(d);
-          say('Combinado. Avisamos de novo em 15 minutos.');
+          say(next == null ? 'Combinado. Avisamos de novo em 15 minutos.' : 'Combinado. Avisamos de novo às ${hhmm(next)}.');
         },
       );
     }
@@ -151,7 +157,9 @@ class ReminderChat extends StatelessWidget {
     return DoseReminderCard(
       dose: d,
       lateMessage: '${store.caregiverNames(elder)} já recebeu um alerta. Toque em "Tomei" assim que puder.',
-      note: d.snoozeCount == 1 ? 'Você pode adiar mais 1 vez.' : null,
+      note: d.snoozeCount == 1
+          ? [if (next != null) 'Vou te lembrar de novo às ${hhmm(next)}.', 'Você pode adiar mais 1 vez.'].join(' ')
+          : null,
       onTake: () {
         if (store.confirmDose(d, byCaregiver: false)) {
           say('Anotado! ${d.medicationName} marcado como tomado às ${hhmm(store.now)}.');
@@ -160,10 +168,14 @@ class ReminderChat extends StatelessWidget {
       onSnooze: d.snoozeCount >= 2
           ? null
           : () {
+              final willBe = d.snoozeCount + 1;
+              final again = store.nextReminderAt(d, snoozeCount: willBe);
               store.snooze(d);
-              say(d.snoozeCount >= 2
+              say(willBe >= 2
                   ? 'Sem problema. ${store.caregiverNames(elder)} também recebeu um alerta desta vez.'
-                  : 'Combinado! Chamo de novo em 15 minutos.');
+                  : again == null
+                      ? 'Combinado! Chamo de novo em instantes.'
+                      : 'Combinado! Chamo de novo às ${hhmm(again)}.');
             },
     );
   }
