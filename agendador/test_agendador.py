@@ -85,6 +85,7 @@ class Messaging:
     WebpushConfig = staticmethod(lambda **kw: SimpleNamespace(**kw))
     WebpushNotification = staticmethod(lambda **kw: SimpleNamespace(**kw))
     WebpushFCMOptions = staticmethod(lambda **kw: SimpleNamespace(**kw))
+    AndroidNotification = staticmethod(lambda **kw: SimpleNamespace(**kw))
 
     def send_each_for_multicast(self, msg):
         for t in msg.tokens:

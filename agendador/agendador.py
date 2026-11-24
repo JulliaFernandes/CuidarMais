@@ -276,9 +276,29 @@ class Agendador:
         mensagem = m.MulticastMessage(
             tokens=tokens,
             notification=m.Notification(title=titulo, body=corpo),
-            android=m.AndroidConfig(priority="high"),
+            # Android: canal "lembretes" (prioridade alta, criado em MainActivity.kt) para aparecer
+            # por cima da tela, com som de alarme e vibração.
+            android=m.AndroidConfig(
+                priority="high",
+                ttl=3600,
+                notification=m.AndroidNotification(
+                    channel_id="lembretes",
+                    priority="max",
+                    visibility="public",
+                    default_vibrate_timings=True,
+                ),
+            ),
+            # Navegador: urgente (entrega na hora) e fica na tela até a pessoa tocar.
             webpush=m.WebpushConfig(
-                notification=m.WebpushNotification(icon=f"{APP_URL}/icons/Icon-192.png", require_interaction=True),
+                headers={"Urgency": "high", "TTL": "3600"},
+                notification=m.WebpushNotification(
+                    icon=f"{APP_URL}/icons/Icon-192.png",
+                    badge=f"{APP_URL}/icons/Icon-192.png",
+                    require_interaction=True,
+                    renotify=True,
+                    tag=titulo,
+                    vibrate=[800, 400, 800, 400, 800],
+                ),
                 fcm_options=m.WebpushFCMOptions(link=APP_URL),
             ),
         )
