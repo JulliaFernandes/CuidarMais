@@ -8,6 +8,7 @@ import '../models/dose.dart';
 import '../models/medication.dart';
 import '../models/patient.dart';
 import '../models/people.dart';
+import '../remote/local_alarms.dart';
 import '../remote/remote_sync.dart';
 
 /// Estado compartilhado do app: contas, idosos, remédios, doses e alertas.
@@ -85,6 +86,57 @@ class AppStore extends ChangeNotifier {
     now = DateTime.now();
     currentUser = remote.me;
     notifyListeners();
+    LocalAlarms.sync(_alarmPlans());
+  }
+
+  /// Alarmes para quem toma o remédio neste aparelho: o próprio idoso, ou o
+  /// cuidador quando o idoso não usa o app. Próximos 2 dias, sem as doses
+  /// já confirmadas. Mesmas regras do agendador.
+  List<AlarmPlan> _alarmPlans() {
+    final me = currentUser;
+    if (me == null) return const [];
+    final mine = switch (me.role) {
+      UserRole.idoso => [if (myElder != null) myElder!],
+      UserRole.cuidador => elders.where((e) => !e.usesApp).toList(),
+      UserRole.medico => <Elder>[],
+    };
+    final clock = DateTime.now();
+    final today = dateOnly(clock);
+    final plans = <AlarmPlan>[];
+    int idOf(String key) => key.hashCode & 0x7fffffff;
+
+    for (final e in mine) {
+      final byId = {for (final d in dosesOf(e.id)) d.id: d};
+      for (final m in medicationsOf(e.id)) {
+        for (var day = 0; day < 3; day++) {
+          final date = today.add(Duration(days: day));
+          if (!m.isActiveOn(date)) continue;
+          for (final t in m.times) {
+            final at = DateTime(date.year, date.month, date.day, t.hour, t.minute);
+            final dose = byId[RemoteSync.doseId(m.id, at)];
+            if (dose != null && !dose.isOpen) continue; // já tomou
+            final when = e.usesApp
+                // Idoso: na hora e, depois de 1 "Me lembra em 15 min", de novo.
+                ? [at, if ((dose?.snoozeCount ?? 0) == 1) at.add(const Duration(minutes: 15))]
+                // Sem app: avisa o cuidador a cada 15 minutos, por 2 horas.
+                : [for (var k = 0; k < 8; k++) at.add(Duration(minutes: 15 * k))];
+            for (final w in when) {
+              if (!w.isAfter(clock)) continue;
+              plans.add(AlarmPlan(
+                id: idOf('${m.id}|${w.toIso8601String()}'),
+                at: w,
+                title: e.usesApp ? 'Hora do remédio: ${m.name}' : 'Hora do remédio de ${e.nickname}',
+                body: e.usesApp
+                    ? '${m.dosage} · ${hhmm(at)}. Toque para abrir e confirmar.'
+                    : '${m.name} das ${hhmm(at)}. Confirme no app quando ${e.nickname} tomar.',
+              ));
+            }
+          }
+        }
+      }
+    }
+    plans.sort((a, b) => a.at.compareTo(b.at));
+    return plans;
   }
 
   Future<void> _restore() async {
@@ -184,6 +236,7 @@ class AppStore extends ChangeNotifier {
   void logout() {
     if (isRealMode) {
       _remote!.stop();
+      LocalAlarms.clear(); // quem sair não recebe mais os alarmes desta conta
       _load(); // a demonstração volta ao início
     }
     currentUser = null;

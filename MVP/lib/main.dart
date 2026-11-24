@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'app.dart';
+import 'data/remote/local_alarms.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -14,5 +15,7 @@ Future<void> main() async {
   } catch (e) {
     debugPrint('Firebase indisponível: $e');
   }
+  // Alarmes de lembrete no próprio aparelho (só Android).
+  await LocalAlarms.init();
   runApp(CuidarMaisApp(useFirebase: firebaseReady));
 }
