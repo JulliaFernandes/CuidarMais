@@ -1,1 +1,8 @@
 .firebase/
+__pycache__/
+*.pyc
+# Chave de serviço do Firebase: nunca no Git
+*firebase-adminsdk*.json
+chave-servico*.json
+# Cache do Kotlin gerado ao compilar o Android
+MVP/android/.kotlin/
