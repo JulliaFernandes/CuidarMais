@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _showPassword = false;
+  bool _busy = false;
   String? _error;
 
   @override
@@ -29,9 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _submit() {
-    if (!_formKey.currentState!.validate()) return;
-    final error = AppScope.read(context).login(_emailController.text, _passwordController.text);
+  Future<void> _submit() async {
+    if (_busy || !_formKey.currentState!.validate()) return;
+    setState(() => _busy = true);
+    final error = await AppScope.read(context).signIn(_emailController.text, _passwordController.text);
+    if (!mounted) return;
+    setState(() => _busy = false);
     if (error != null) {
       setState(() => _error = error);
       return;
@@ -107,9 +111,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 8),
                       FilledButton(
-                        onPressed: _submit,
+                        onPressed: _busy ? null : _submit,
                         style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(60)),
-                        child: const Text('Entrar', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                        child: Text(_busy ? 'Entrando…' : 'Entrar',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                       ),
                       const SizedBox(height: 8),
                       TextButton(

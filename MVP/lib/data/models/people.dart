@@ -102,12 +102,29 @@ class Invite {
   final String caregiverIs;
   final String elderIs;
 
+  /// Nome de quem convidou. Com o Firebase, o idoso ainda não tem acesso à
+  /// conta do cuidador, então o nome vem junto com o convite.
+  final String? caregiverName;
+
   const Invite({
     required this.code,
     required this.caregiverId,
     required this.caregiverIs,
     required this.elderIs,
+    this.caregiverName,
   });
 
   String get formattedCode => '${code.substring(0, 3)}-${code.substring(3)}';
+}
+
+/// Pedido de um médico para acompanhar o idoso. Só vira vínculo quando o
+/// idoso aceita (consentimento, LGPD).
+class DoctorRequest {
+  final String doctorId;
+  final String name;
+  final String? detail;
+
+  const DoctorRequest({required this.doctorId, required this.name, this.detail});
+
+  String get initials => initialsOf(name);
 }

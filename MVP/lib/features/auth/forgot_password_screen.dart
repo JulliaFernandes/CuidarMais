@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../data/store/app_scope.dart';
 import '../../shared/widgets/app_top_bar.dart';
 import '../../shared/widgets/notice_box.dart';
 import '../../shared/widgets/section_heading.dart';
@@ -16,11 +17,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   bool _sent = false;
+  bool _busy = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
+  }
+
+  Future<void> _send() async {
+    if (_busy || !_formKey.currentState!.validate()) return;
+    setState(() => _busy = true);
+    await AppScope.read(context).sendPasswordReset(_emailController.text);
+    if (!mounted) return;
+    setState(() {
+      _busy = false;
+      _sent = true;
+    });
   }
 
   @override
@@ -41,7 +54,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           tone: NoticeTone.success,
                           title: 'Confira seu email',
                           text: 'Se existir uma conta com ${_emailController.text.trim()}, enviamos um link para criar uma senha nova. '
-                              'Ele vale por 1 hora.',
+                              'Se não chegar em alguns minutos, olhe também a caixa de spam.',
                         ),
                         const SizedBox(height: 24),
                         FilledButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Voltar para o login')),
@@ -66,10 +79,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                           const SizedBox(height: 24),
                           FilledButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) setState(() => _sent = true);
-                            },
-                            child: const Text('Enviar link'),
+                            onPressed: _busy ? null : _send,
+                            child: Text(_busy ? 'Enviando…' : 'Enviar link'),
                           ),
                         ],
                       ),

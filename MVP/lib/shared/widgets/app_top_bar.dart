@@ -45,10 +45,11 @@ AppBar subPageBar(BuildContext context, String title) {
   );
 }
 
-enum _MenuAction { advance, reset, logout }
+enum _MenuAction { notifications, advance, reset, logout }
 
-/// Menu da conta. Também guarda os controles da demonstração (passar o
-/// tempo e recomeçar), já que o protótipo ainda não tem relógio real.
+/// Menu da conta. Nas contas de demonstração, também guarda os controles
+/// da demonstração (passar o tempo e recomeçar). Nas contas reais, liga as
+/// notificações neste aparelho.
 class AccountMenu extends StatelessWidget {
   const AccountMenu({super.key});
 
@@ -57,13 +58,19 @@ class AccountMenu extends StatelessWidget {
     final store = AppScope.of(context);
     final user = store.currentUser;
     if (user == null) return const SizedBox.shrink();
+    final real = store.isRealMode;
 
     return PopupMenuButton<_MenuAction>(
-      tooltip: 'Sua conta e a demonstração',
+      tooltip: real ? 'Sua conta' : 'Sua conta e a demonstração',
       icon: CircleAvatar(radius: 18, child: Text(user.initials, style: const TextStyle(fontWeight: FontWeight.w700))),
-      onSelected: (action) {
+      onSelected: (action) async {
         final messenger = ScaffoldMessenger.of(context);
         switch (action) {
+          case _MenuAction.notifications:
+            final error = await store.enableNotifications();
+            messenger.showSnackBar(SnackBar(
+              content: Text(error ?? 'Pronto! Este aparelho vai receber os lembretes e alertas.'),
+            ));
           case _MenuAction.advance:
             store.advanceClock();
             messenger.showSnackBar(SnackBar(content: Text('Demonstração: agora são ${hhmm(store.now)}.')));
@@ -86,23 +93,35 @@ class AccountMenu extends StatelessWidget {
           ),
         ),
         const PopupMenuDivider(),
-        PopupMenuItem(
-          value: _MenuAction.advance,
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.fast_forward_rounded),
-            title: const Text('Demonstração: passar 15 minutos'),
-            subtitle: Text('Agora são ${hhmm(store.now)}'),
+        if (real)
+          PopupMenuItem(
+            value: _MenuAction.notifications,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(store.notificationsOn ? Icons.notifications_active_rounded : Icons.notifications_off_rounded),
+              title: Text(store.notificationsOn ? 'Notificações ligadas' : 'Ativar notificações'),
+              subtitle: Text(store.notificationsOn ? 'Toque para conferir de novo' : 'Lembretes e alertas neste aparelho'),
+            ),
+          )
+        else ...[
+          PopupMenuItem(
+            value: _MenuAction.advance,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.fast_forward_rounded),
+              title: const Text('Demonstração: passar 15 minutos'),
+              subtitle: Text('Agora são ${hhmm(store.now)}'),
+            ),
           ),
-        ),
-        const PopupMenuItem(
-          value: _MenuAction.reset,
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: Icon(Icons.restart_alt_rounded),
-            title: Text('Recomeçar demonstração'),
+          const PopupMenuItem(
+            value: _MenuAction.reset,
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.restart_alt_rounded),
+              title: Text('Recomeçar demonstração'),
+            ),
           ),
-        ),
+        ],
         const PopupMenuDivider(),
         const PopupMenuItem(
           value: _MenuAction.logout,

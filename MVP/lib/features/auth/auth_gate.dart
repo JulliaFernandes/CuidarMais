@@ -14,7 +14,13 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = AppScope.of(context).currentUser;
+    final store = AppScope.of(context);
+    if (store.restoring) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator(semanticsLabel: 'Carregando sua conta')),
+      );
+    }
+    final user = store.currentUser;
     final Widget child = switch (user?.role) {
       null => const WelcomeScreen(),
       UserRole.idoso => const IdosoHomeScreen(),

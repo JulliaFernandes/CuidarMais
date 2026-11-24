@@ -18,6 +18,7 @@ class _IdosoFamilyScreenState extends State<IdosoFamilyScreen> {
   final _codeController = TextEditingController();
   Invite? _found;
   String? _error;
+  bool _searching = false;
 
   @override
   void dispose() {
@@ -25,18 +26,36 @@ class _IdosoFamilyScreenState extends State<IdosoFamilyScreen> {
     super.dispose();
   }
 
-  void _search() {
-    final invite = AppScope.read(context).findInvite(_codeController.text);
+  Future<void> _search() async {
+    if (_searching) return;
+    setState(() => _searching = true);
+    final invite = await AppScope.read(context).lookupInvite(_codeController.text);
+    if (!mounted) return;
     setState(() {
+      _searching = false;
       _found = invite;
-      _error = invite == null ? 'Não encontramos esse código. Confira as letras com quem te enviou.' : null;
+      _error = invite == null
+          ? 'Não encontramos esse código, ou ele passou de 24 horas. Confira as letras com quem te enviou.'
+          : null;
     });
+  }
+
+  String _inviterName(Invite invite) =>
+      invite.caregiverName ?? AppScope.read(context).userById(invite.caregiverId)?.name ?? 'A pessoa';
+
+  void _answerDoctor(DoctorRequest request, bool accept) {
+    AppScope.read(context).answerDoctorRequest(widget.elder, request, accept: accept);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(accept
+          ? '${request.name} agora acompanha seu histórico.'
+          : 'Pedido recusado. ${request.name} não vê seus dados.'),
+    ));
   }
 
   void _answer(bool accept) {
     final store = AppScope.read(context);
     final invite = _found!;
-    final name = store.userById(invite.caregiverId)?.firstName ?? 'A pessoa';
+    final name = _inviterName(invite).split(RegExp(r'\s+')).first;
     if (accept) {
       store.acceptInvite(invite, widget.elder);
     } else {
@@ -71,13 +90,57 @@ class _IdosoFamilyScreenState extends State<IdosoFamilyScreen> {
     final caregivers = store.caregiversOf(widget.elder);
     final doctors = store.doctorsOf(widget.elder);
     final found = _found;
-    final foundUser = found == null ? null : store.userById(found.caregiverId);
+    final foundName = found == null ? null : _inviterName(found);
+    final requests = store.doctorRequestsFor(widget.elder.id);
 
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
         const SectionHeading(title: 'Quem me acompanha'),
         const SizedBox(height: 8),
+        for (final r in requests) ...[
+          Card(
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(radius: 26, child: Text(r.initials)),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          '${r.name}${r.detail == null ? '' : ' (${r.detail})'} quer acompanhar seus remédios.',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const NoticeBox(
+                    text: 'Se aceitar, o médico vê seus remédios e se você tomou cada dose. Ele não recebe '
+                        'notificações. Você pode tirar o acesso quando quiser.',
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(child: OutlinedButton(onPressed: () => _answerDoctor(r, false), child: const Text('Recusar'))),
+                      const SizedBox(width: 12),
+                      Expanded(child: FilledButton(onPressed: () => _answerDoctor(r, true), child: const Text('Aceitar'))),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
         Card(
           margin: EdgeInsets.zero,
           child: Padding(
@@ -97,12 +160,12 @@ class _IdosoFamilyScreenState extends State<IdosoFamilyScreen> {
                   onSubmitted: (_) => _search(),
                 ),
                 const SizedBox(height: 12),
-                FilledButton(onPressed: _search, child: const Text('Procurar')),
+                FilledButton(onPressed: _searching ? null : _search, child: Text(_searching ? 'Procurando…' : 'Procurar')),
               ],
             ),
           ),
         ),
-        if (found != null && foundUser != null) ...[
+        if (found != null && foundName != null) ...[
           const SizedBox(height: 16),
           Card(
             margin: EdgeInsets.zero,
@@ -117,11 +180,11 @@ class _IdosoFamilyScreenState extends State<IdosoFamilyScreen> {
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(radius: 26, child: Text(foundUser.initials)),
+                      CircleAvatar(radius: 26, child: Text(initialsOf(foundName))),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          '${foundUser.name} (${found.caregiverIs.toLowerCase()}) quer acompanhar seus remédios.',
+                          '$foundName (${found.caregiverIs.toLowerCase()}) quer acompanhar seus remédios.',
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                         ),
                       ),

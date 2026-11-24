@@ -17,6 +17,7 @@ class MedicoAddPatientScreen extends StatefulWidget {
 class _MedicoAddPatientScreenState extends State<MedicoAddPatientScreen> {
   final _emailController = TextEditingController();
   String? _error;
+  bool _busy = false;
 
   @override
   void dispose() {
@@ -24,19 +25,29 @@ class _MedicoAddPatientScreenState extends State<MedicoAddPatientScreen> {
     super.dispose();
   }
 
-  void _submit() {
-    final error = AppScope.read(context).linkPatientByEmail(_emailController.text);
+  Future<void> _submit() async {
+    if (_busy) return;
+    final store = AppScope.read(context);
+    setState(() => _busy = true);
+    final error = await store.addPatientByEmail(_emailController.text);
+    if (!mounted) return;
+    setState(() => _busy = false);
     if (error != null) {
       setState(() => _error = error);
       return;
     }
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
-    messenger.showSnackBar(const SnackBar(content: Text('Paciente adicionado à sua lista.')));
+    messenger.showSnackBar(SnackBar(
+      content: Text(store.isRealMode
+          ? 'Pedido enviado. O paciente precisa aceitar no app dele, na aba Família.'
+          : 'Paciente adicionado à sua lista.'),
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
+    final real = AppScope.of(context).isRealMode;
     return Scaffold(
       appBar: subPageBar(context, 'Adicionar paciente'),
       body: SafeArea(
@@ -59,12 +70,18 @@ class _MedicoAddPatientScreenState extends State<MedicoAddPatientScreen> {
               onSubmitted: (_) => _submit(),
             ),
             const SizedBox(height: 16),
-            const NoticeBox(
-              text: 'Proposta para o protótipo. Ainda vamos decidir se o vínculo será pelo email do paciente '
-                  'ou por um código do médico.',
+            NoticeBox(
+              text: real
+                  ? 'O paciente recebe o seu pedido no app, na aba Família. Você só vê os dados dele depois que '
+                      'ele aceitar.'
+                  : 'Proposta para o protótipo. Ainda vamos decidir se o vínculo será pelo email do paciente '
+                      'ou por um código do médico.',
             ),
             const SizedBox(height: 24),
-            FilledButton(onPressed: _submit, child: const Text('Adicionar')),
+            FilledButton(
+              onPressed: _busy ? null : _submit,
+              child: Text(_busy ? 'Enviando…' : (real ? 'Enviar pedido' : 'Adicionar')),
+            ),
           ],
         ),
       ),

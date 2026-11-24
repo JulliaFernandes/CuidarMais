@@ -32,6 +32,26 @@ extension DosePeriodLabel on DosePeriod {
   }
 }
 
+DosePeriod periodOfTime(DateTime t) => t.hour < 12
+    ? DosePeriod.manha
+    : t.hour < 18
+        ? DosePeriod.tarde
+        : DosePeriod.noite;
+
+/// Resume as doses de um período (manhã, tarde ou noite) de um dia em um só
+/// status, para o histórico do cuidador e o heatmap do médico.
+/// [alerted] são as doses que já geraram alerta ao cuidador.
+DoseStatus periodStatus(List<Dose> inPeriod, Set<String> alerted) {
+  if (inPeriod.isEmpty) return DoseStatus.pendente;
+  if (inPeriod.any((d) => d.status == DoseStatus.perdida)) return DoseStatus.perdida;
+  if (inPeriod.any((d) => d.isOpen && alerted.contains(d.id))) return DoseStatus.atrasada;
+  if (inPeriod.every((d) => d.isTaken)) {
+    final late = inPeriod.any((d) => alerted.contains(d.id) || d.snoozeCount > 0);
+    return late ? DoseStatus.atrasada : DoseStatus.tomada;
+  }
+  return DoseStatus.pendente;
+}
+
 class PatientSummary {
   final String id;
   final String name;

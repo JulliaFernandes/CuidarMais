@@ -8,17 +8,41 @@ import '../models/dose.dart';
 import '../models/medication.dart';
 import '../models/patient.dart';
 import '../models/people.dart';
+import '../remote/remote_sync.dart';
 
-/// Estado compartilhado do protótipo: contas, idosos, remédios, doses e
-/// alertas. Faz o papel do backend enquanto ele não existe, para que uma
-/// ação em um perfil apareça nos outros (o idoso adia 2 vezes → o cuidador
-/// recebe o alerta → o médico vê o caso em vermelho).
+/// Estado compartilhado do app: contas, idosos, remédios, doses e alertas.
 ///
-/// O relógio é simulado ([now]) para a demonstração poder "passar o tempo".
+/// Funciona de dois jeitos:
+/// - **Demonstração** (contas `@cuidar.app`): tudo fica na memória e o
+///   relógio é simulado ([now]), para a demonstração poder "passar o tempo";
+/// - **Real** (contas criadas no app): os dados vêm do Firebase em tempo
+///   real e o relógio é o de verdade ([isRealMode]).
+///
+/// Nos dois, uma ação em um perfil aparece nos outros (o idoso adia 2 vezes
+/// → o cuidador recebe o alerta → o médico vê o caso em vermelho).
 class AppStore extends ChangeNotifier {
-  AppStore() {
+  AppStore({bool useFirebase = false}) : _remote = useFirebase ? RemoteSync() : null {
     _load();
+    final remote = _remote;
+    if (remote != null) {
+      remote.onChange = _applyRemote;
+      remote.onMessage = (title, body) => onNotification?.call(title, body);
+      _restore();
+    }
   }
+
+  final RemoteSync? _remote;
+
+  /// Carregando a conta de quem já tinha entrado antes.
+  bool restoring = false;
+
+  /// Notificação que chegou com o app aberto (o app mostra na tela).
+  void Function(String title, String body)? onNotification;
+
+  /// Conta real, ligada ao Firebase (e não uma conta de demonstração).
+  bool get isRealMode => _remote?.active ?? false;
+
+  bool get notificationsOn => _remote?.notificationsOn ?? false;
 
   late List<AppUser> users;
   late List<Elder> elders;
@@ -45,6 +69,53 @@ class AppStore extends ChangeNotifier {
   }
 
   String _newId(String prefix) => '$prefix-${_seq++}-${_random.nextInt(1000000)}';
+
+  // ---------------------------------------------------------------------------
+  // Firebase
+
+  void _applyRemote() {
+    final remote = _remote;
+    if (remote == null || !remote.active) return;
+    users = remote.people;
+    elders = remote.elders;
+    medications = remote.medications;
+    doses = remote.todayDoses;
+    alerts = remote.alerts;
+    invites = [];
+    now = DateTime.now();
+    currentUser = remote.me;
+    notifyListeners();
+  }
+
+  Future<void> _restore() async {
+    restoring = true;
+    notifyListeners();
+    try {
+      final remote = _remote!;
+      final ok = await remote.restore();
+      if (ok) {
+        _applyRemote();
+        remote.enableNotifications();
+      }
+    } catch (e) {
+      debugPrint('Não deu para retomar a sessão: $e');
+    }
+    restoring = false;
+    notifyListeners();
+  }
+
+  /// Roda uma escrita no Firebase sem travar a tela; erros vão para o log.
+  void _write(Future<void> Function() action) {
+    action().catchError((Object e) => debugPrint('Erro ao salvar no Firebase: $e'));
+  }
+
+  /// Pede permissão e liga as notificações neste aparelho. Retorna uma
+  /// mensagem de erro, ou null se deu certo.
+  Future<String?> enableNotifications() async {
+    final remote = _remote;
+    if (remote == null || !remote.active) return 'Notificações só funcionam com uma conta real.';
+    return remote.enableNotifications();
+  }
 
   // ---------------------------------------------------------------------------
   // Demonstração
@@ -111,8 +182,46 @@ class AppStore extends ChangeNotifier {
   }
 
   void logout() {
+    if (isRealMode) {
+      _remote!.stop();
+      _load(); // a demonstração volta ao início
+    }
     currentUser = null;
     notifyListeners();
+  }
+
+  /// Entrar. Contas de demonstração ficam na memória; as outras usam o
+  /// Firebase.
+  Future<String?> signIn(String email, String password) async {
+    final remote = _remote;
+    if (remote == null || emailInUse(email)) return login(email, password);
+    final error = await remote.signIn(email, password);
+    if (error == null) {
+      _applyRemote();
+      remote.enableNotifications();
+    }
+    return error;
+  }
+
+  Future<String?> signUp({
+    required String name,
+    required String email,
+    required String password,
+    required UserRole role,
+  }) async {
+    final remote = _remote;
+    if (remote == null) return signup(name: name, email: email, password: password, role: role);
+    final error = await remote.signUp(name: name, email: email, password: password, role: role);
+    if (error == null) {
+      _applyRemote();
+      remote.enableNotifications();
+    }
+    return error;
+  }
+
+  /// "Esqueci minha senha": o Firebase manda o email com o link.
+  Future<void> sendPasswordReset(String email) async {
+    await _remote?.sendPasswordReset(email);
   }
 
   // ---------------------------------------------------------------------------
@@ -178,25 +287,14 @@ class AppStore extends ChangeNotifier {
     return '$what. ${caregiverNames(e)} recebeu o alerta.';
   }
 
-  static DosePeriod periodOf(DateTime t) => t.hour < 12
-      ? DosePeriod.manha
-      : t.hour < 18
-          ? DosePeriod.tarde
-          : DosePeriod.noite;
+  static DosePeriod periodOf(DateTime t) => periodOfTime(t);
 
   List<DoseStatus> _todayRow(Elder e) {
     final today = dosesOf(e.id);
-    return DosePeriod.values.map((p) {
-      final inPeriod = today.where((d) => periodOf(d.scheduledAt) == p).toList();
-      if (inPeriod.isEmpty) return DoseStatus.pendente;
-      if (inPeriod.any((d) => d.status == DoseStatus.perdida)) return DoseStatus.perdida;
-      if (inPeriod.any((d) => d.isOpen && alertedEver(d.id))) return DoseStatus.atrasada;
-      if (inPeriod.every((d) => d.isTaken)) {
-        final late = inPeriod.any((d) => alertedEver(d.id) || d.snoozeCount > 0);
-        return late ? DoseStatus.atrasada : DoseStatus.tomada;
-      }
-      return DoseStatus.pendente;
-    }).toList();
+    final alerted = {for (final a in alerts) a.doseId};
+    return DosePeriod.values
+        .map((p) => periodStatus(today.where((d) => periodOf(d.scheduledAt) == p).toList(), alerted))
+        .toList();
   }
 
   /// 14 dias (mais antigo → hoje), manhã/tarde/noite.
@@ -242,6 +340,10 @@ class AppStore extends ChangeNotifier {
   /// dose não pode ser confirmada duas vezes (risco de dose dobrada).
   bool confirmDose(Dose d, {required bool byCaregiver}) {
     if (d.isTaken) return false;
+    if (isRealMode) {
+      _write(() => _remote!.confirmDose(d, byCaregiver: byCaregiver));
+      return true;
+    }
     d
       ..status = DoseStatus.tomada
       ..confirmedAt = now
@@ -256,6 +358,10 @@ class AppStore extends ChangeNotifier {
   /// "Me lembra em 15 min", até 2 vezes. No segundo, o cuidador é avisado.
   void snooze(Dose d) {
     if (d.isTaken || d.snoozeCount >= 2) return;
+    if (isRealMode) {
+      _write(() => _remote!.snooze(d));
+      return;
+    }
     d.snoozeCount++;
     d.reminderCount++;
     if (d.snoozeCount >= 2) {
@@ -271,6 +377,10 @@ class AppStore extends ChangeNotifier {
   /// o aviso volta a cada 15 minutos até a confirmação.
   void remindCaregiverLater(Dose d) {
     if (d.isTaken) return;
+    if (isRealMode) {
+      _write(() => _remote!.remindCaregiverLater(d));
+      return;
+    }
     d.status = DoseStatus.adiada;
     notifyListeners();
   }
@@ -290,6 +400,7 @@ class AppStore extends ChangeNotifier {
   /// Regras de escalada, rodadas sempre que o relógio anda (no backend de
   /// verdade, é o agendador de tarefas a cada minuto).
   void _runChecks() {
+    if (isRealMode) return; // com o Firebase, quem faz isso é o agendador
     for (final d in doses) {
       if (!d.isOpen || d.scheduledAt.isAfter(now)) continue;
       final elder = elderOrNull(d.elderId);
@@ -326,6 +437,21 @@ class AppStore extends ChangeNotifier {
     required MedicationOrigin origin,
     required String authorName,
   }) {
+    if (isRealMode) {
+      _write(() => _remote!.addMedication(
+            elderId: elder.id,
+            name: name,
+            dosage: dosage,
+            times: times,
+            weekdays: weekdays,
+            start: start,
+            end: end,
+            alertMinutes: alertMinutes,
+            origin: origin,
+            historyLine: '${shortDate(now)} às ${hhmm(now)} · cadastrado por $authorName',
+          ));
+      return;
+    }
     final m = Medication(
       id: _newId('m'),
       elderId: elder.id,
@@ -356,6 +482,20 @@ class AppStore extends ChangeNotifier {
     required int alertMinutes,
     required String editorName,
   }) {
+    if (isRealMode) {
+      _write(() => _remote!.updateMedication(
+            m,
+            name: name,
+            dosage: dosage,
+            times: times,
+            weekdays: weekdays,
+            start: start,
+            end: end,
+            alertMinutes: alertMinutes,
+            historyLine: '${shortDate(now)} às ${hhmm(now)} · alterado por $editorName',
+          ));
+      return;
+    }
     m
       ..name = name.trim()
       ..dosage = dosage.trim()
@@ -397,29 +537,66 @@ class AppStore extends ChangeNotifier {
   /// O cuidador gera um código; o idoso digita e aceita no app dele.
   Invite createInvite({required AppUser caregiver, required String elderIs}) {
     final code = List.generate(6, (_) => _codeChars[_random.nextInt(_codeChars.length)]).join();
-    final invite = Invite(code: code, caregiverId: caregiver.id, caregiverIs: 'Cuidador(a)', elderIs: elderIs);
+    final invite = Invite(
+      code: code,
+      caregiverId: caregiver.id,
+      caregiverIs: 'Cuidador(a)',
+      elderIs: elderIs,
+      caregiverName: caregiver.name,
+    );
+    if (isRealMode) {
+      _write(() => _remote!.createInvite(invite));
+      return invite;
+    }
     invites.add(invite);
     notifyListeners();
     return invite;
   }
 
+  static String _cleanCode(String raw) => raw.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+
   Invite? findInvite(String raw) {
-    final code = raw.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
+    final code = _cleanCode(raw);
     return invites.where((i) => i.code == code).firstOrNull;
   }
 
+  /// Procura o convite no modo atual (memória ou Firebase).
+  Future<Invite?> lookupInvite(String raw) async {
+    if (!isRealMode) return findInvite(raw);
+    final code = _cleanCode(raw);
+    if (code.length != 6) return null;
+    try {
+      return await _remote!.findInvite(code);
+    } catch (e) {
+      debugPrint('Erro ao procurar o convite: $e');
+      return null;
+    }
+  }
+
   void acceptInvite(Invite invite, Elder elder) {
+    if (isRealMode) {
+      _write(() => _remote!.acceptInvite(invite, elder));
+      return;
+    }
     elder.links[invite.caregiverId] = CareLink(caregiverIs: invite.caregiverIs, elderIs: invite.elderIs);
     invites.remove(invite);
     notifyListeners();
   }
 
   void declineInvite(Invite invite) {
+    if (isRealMode) {
+      _write(() => _remote!.declineInvite(invite));
+      return;
+    }
     invites.remove(invite);
     notifyListeners();
   }
 
   void removeCaregiver(Elder elder, String caregiverId) {
+    if (isRealMode) {
+      _write(() => _remote!.removeCaregiver(elder, caregiverId));
+      return;
+    }
     elder.links.remove(caregiverId);
     notifyListeners();
   }
@@ -431,6 +608,13 @@ class AppStore extends ChangeNotifier {
     required String elderIs,
     String phone = '',
   }) {
+    if (isRealMode) {
+      final elder = _remote!.addElderWithoutApp(name: name, age: age, elderIs: elderIs, phone: phone);
+      // Aparece na hora; o Firebase confirma logo em seguida.
+      if (elderOrNull(elder.id) == null) elders = [...elders, elder];
+      notifyListeners();
+      return elder;
+    }
     final first = name.trim().split(RegExp(r'\s+')).first;
     final elder = Elder(
       id: _newId('e'),
@@ -465,5 +649,25 @@ class AppStore extends ChangeNotifier {
     elder.doctorIds.add(me.id);
     notifyListeners();
     return null;
+  }
+
+  /// Médico adiciona paciente pelo email. Com o Firebase, vira um pedido
+  /// que o paciente aceita no app dele.
+  Future<String?> addPatientByEmail(String email) async {
+    if (!isRealMode) return linkPatientByEmail(email);
+    try {
+      return await _remote!.requestPatient(email);
+    } catch (e) {
+      debugPrint('Erro ao pedir vínculo: $e');
+      return 'Não deu certo agora. Confira a internet e tente de novo.';
+    }
+  }
+
+  /// Pedidos de médicos esperando o idoso aceitar.
+  List<DoctorRequest> doctorRequestsFor(String elderId) => _remote?.requests[elderId] ?? const [];
+
+  void answerDoctorRequest(Elder elder, DoctorRequest request, {required bool accept}) {
+    if (!isRealMode) return;
+    _write(() => _remote!.answerDoctorRequest(elder.id, request, accept: accept));
   }
 }

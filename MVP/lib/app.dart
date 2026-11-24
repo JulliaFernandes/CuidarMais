@@ -9,7 +9,11 @@ import 'data/store/app_store.dart';
 import 'features/auth/auth_gate.dart';
 
 class CuidarMaisApp extends StatefulWidget {
-  const CuidarMaisApp({super.key});
+  /// Liga as contas reais ao Firebase. Nos testes fica desligado e só as
+  /// contas de demonstração funcionam.
+  final bool useFirebase;
+
+  const CuidarMaisApp({super.key, this.useFirebase = false});
 
   @override
   State<CuidarMaisApp> createState() => _CuidarMaisAppState();
@@ -17,7 +21,20 @@ class CuidarMaisApp extends StatefulWidget {
 
 class _CuidarMaisAppState extends State<CuidarMaisApp> {
   final TextScaleController _textScaleController = TextScaleController();
-  final AppStore _store = AppStore();
+  late final AppStore _store = AppStore(useFirebase: widget.useFirebase);
+  final _messengerKey = GlobalKey<ScaffoldMessengerState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Notificação que chega com o app aberto aparece no rodapé da tela.
+    _store.onNotification = (title, body) {
+      _messengerKey.currentState?.showSnackBar(SnackBar(
+        duration: const Duration(seconds: 10),
+        content: Text(body.isEmpty ? title : '$title\n$body'),
+      ));
+    };
+  }
 
   @override
   void dispose() {
@@ -51,6 +68,7 @@ class _CuidarMaisAppState extends State<CuidarMaisApp> {
             return MaterialApp(
               title: 'CuidarMais',
               debugShowCheckedModeBanner: false,
+              scaffoldMessengerKey: _messengerKey,
               theme: AppTheme.light(_accent),
               darkTheme: AppTheme.dark(_accent),
               themeMode: ThemeMode.system,

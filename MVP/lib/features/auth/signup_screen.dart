@@ -21,6 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   UserRole? _role;
   bool _consent = false;
   bool _showPassword = false;
+  bool _busy = false;
   String? _error;
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -39,7 +40,8 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
   }
 
-  void _next() {
+  Future<void> _next() async {
+    if (_busy) return;
     setState(() => _error = null);
     if (_step == 0) {
       if (_role == null) {
@@ -57,12 +59,15 @@ class _SignupScreenState extends State<SignupScreen> {
         setState(() => _error = 'Para criar a conta, marque que você concorda com o uso dos dados.');
         return;
       }
-      final error = AppScope.read(context).signup(
+      setState(() => _busy = true);
+      final error = await AppScope.read(context).signUp(
         name: _nameController.text,
         email: _emailController.text,
         password: _passwordController.text,
         role: _role!,
       );
+      if (!mounted) return;
+      setState(() => _busy = false);
       if (error != null) {
         setState(() => _error = error);
         return;
@@ -142,8 +147,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: FilledButton(
-                          onPressed: _next,
-                          child: Text(_step == 2 ? 'Criar conta' : 'Continuar'),
+                          onPressed: _busy ? null : _next,
+                          child: Text(_busy ? 'Criando…' : (_step == 2 ? 'Criar conta' : 'Continuar')),
                         ),
                       ),
                     ],

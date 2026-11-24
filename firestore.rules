@@ -1,9 +1,99 @@
 rules_version = '2';
 
 // Banco do CuidarMais no Firebase (plano Spark, grátis).
-// Por enquanto só guarda os interessados da landing page (teste fumaça).
+// Quem pode ver o quê (LGPD), explicado em docs/modelo-de-dados.md:
+// - idoso: só os próprios dados;
+// - cuidador: só os idosos que aceitaram o convite dele, ou que ele cadastrou (sem app);
+// - médico: só os pacientes que aceitaram o pedido dele.
+// O agendador (pasta agendador/) usa a chave de serviço e não passa por estas regras.
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function me() {
+      return request.auth.uid;
+    }
+
+    function elder(id) {
+      return get(/databases/$(database)/documents/idosos/$(id)).data;
+    }
+
+    // Pode ver e registrar doses e remédios: o idoso, seus cuidadores e seus médicos.
+    function canSee(e) {
+      return signedIn() && (e.usuarioId == me() || me() in e.cuidadoresIds || me() in e.medicosIds);
+    }
+
+    // Pode mudar quem acompanha (vínculos): só o idoso e os cuidadores. O médico não.
+    function canManage(e) {
+      return signedIn() && (e.usuarioId == me() || me() in e.cuidadoresIds);
+    }
+
+    // ---------------------------------------------------------------------
+    // Contas
+
+    match /usuarios/{uid} {
+      allow read, create, update: if signedIn() && me() == uid;
+      allow delete: if false;
+    }
+
+    // Para o médico achar o paciente pelo email. Só dá para buscar um email
+    // exato (get), nunca listar todos.
+    match /emails/{email} {
+      allow get: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.uid == me()
+        && email == request.auth.token.email.lower();
+      allow list, update, delete: if false;
+    }
+
+    // Código de convite do cuidador. Quem tem o código consegue ler.
+    match /convites/{code} {
+      allow get: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.cuidadorUid == me()
+        && code.matches('[A-Z0-9]{6}');
+      allow delete: if signedIn();
+      allow list, update: if false;
+    }
+
+    // ---------------------------------------------------------------------
+    // Idosos
+
+    match /idosos/{id} {
+      allow read: if canSee(resource.data);
+
+      // O idoso cria o próprio cadastro; o cuidador cria o de quem não usa o app.
+      allow create: if signedIn()
+        && request.resource.data.medicosIds == []
+        && (
+          (request.resource.data.usuarioId == me() && request.resource.data.cuidadoresIds == [])
+          || (request.resource.data.usuarioId == null && request.resource.data.cuidadoresIds == [me()])
+        );
+
+      // Ninguém troca o dono do cadastro.
+      allow update: if canManage(resource.data)
+        && request.resource.data.usuarioId == resource.data.usuarioId;
+
+      allow delete: if false;
+
+      // Remédios, doses e alertas.
+      match /{sub}/{doc} {
+        allow read, write: if sub != 'pedidosMedico' && canSee(elder(id));
+      }
+
+      // O médico pede para acompanhar; o idoso aceita ou recusa.
+      match /pedidosMedico/{doctorId} {
+        allow create: if signedIn() && doctorId == me() && request.resource.data.medicoUid == me();
+        allow read, delete: if canManage(elder(id)) || (signedIn() && doctorId == me());
+        allow update: if false;
+      }
+    }
+
+    // ---------------------------------------------------------------------
+    // Landing page (teste fumaça)
 
     // A landing só pode CRIAR um registro, com estes campos e nada mais.
     // Ninguém lê, edita ou apaga pela internet: a lista só aparece no console do Firebase.
@@ -17,11 +107,6 @@ service cloud.firestore {
         && request.resource.data.origem.size() <= 40
         && request.resource.data.criado_em is timestamp;
       allow read, update, delete: if false;
-    }
-
-    // Todo o resto fica fechado.
-    match /{document=**} {
-      allow read, write: if false;
     }
   }
 }
