@@ -204,9 +204,32 @@ class RemoteSync {
   }
 
   Future<void> stop() async {
-    // Este aparelho para de receber as notificações dessa conta.
+    // Desliga tudo NA HORA, antes de qualquer espera. Se não, uma atualização
+    // do banco que chegasse no meio do caminho colocaria a conta de volta na
+    // tela, e era preciso tocar em "Sair" duas vezes.
     final u = uid;
-    if (u != null && notificationsOn) {
+    final hadNotifications = notificationsOn;
+    uid = null;
+    me = null;
+    notificationsOn = false;
+    _clock?.cancel();
+    final subs = List.of(_subs);
+    _subs.clear();
+    for (final id in _elderDocs.keys.toList()) {
+      _unwatchElder(id);
+    }
+    people = [];
+    elders = [];
+    medications = [];
+    todayDoses = [];
+    alerts = [];
+    requests = {};
+    for (final s in subs) {
+      await s.cancel();
+    }
+
+    // Este aparelho para de receber as notificações dessa conta.
+    if (u != null && hadNotifications) {
       try {
         final token = await FirebaseMessaging.instance.getToken(vapidKey: kIsWeb ? kWebPushKey : null);
         if (token != null) {
@@ -214,23 +237,6 @@ class RemoteSync {
         }
       } catch (_) {}
     }
-    for (final s in _subs) {
-      await s.cancel();
-    }
-    _subs.clear();
-    for (final id in _elderDocs.keys.toList()) {
-      _unwatchElder(id);
-    }
-    _clock?.cancel();
-    uid = null;
-    me = null;
-    notificationsOn = false;
-    people = [];
-    elders = [];
-    medications = [];
-    todayDoses = [];
-    alerts = [];
-    requests = {};
     await _auth.signOut();
   }
 
@@ -353,6 +359,7 @@ class RemoteSync {
   void _logError(Object e) => debugPrint('Erro ao ler o Firestore: $e');
 
   void _rebuild() {
+    if (uid == null) return; // saiu da conta: ignora o que ainda chegar do banco
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final tomorrow = today.add(const Duration(days: 1));
