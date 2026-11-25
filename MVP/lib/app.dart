@@ -4,6 +4,7 @@ import 'core/accessibility/text_scale_controller.dart';
 import 'core/theme/app_colors.dart';
 import 'core/theme/app_theme.dart';
 import 'data/models/people.dart';
+import 'data/remote/local_alarms.dart';
 import 'data/store/app_scope.dart';
 import 'data/store/app_store.dart';
 import 'features/auth/auth_gate.dart';
@@ -34,6 +35,8 @@ class _CuidarMaisAppState extends State<CuidarMaisApp> {
         content: Text(body.isEmpty ? title : '$title\n$body'),
       ));
     };
+    // No navegador, o alarme da página aberta também aparece no rodapé.
+    LocalAlarms.onRing = _store.onNotification;
   }
 
   @override

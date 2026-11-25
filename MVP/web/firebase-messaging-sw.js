@@ -26,3 +26,13 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 // Your own code goes below this line. FlutterFire CLI does not touch it.
+
+// Tocar na notificação do alarme (mostrada pela própria página) abre o app.
+self.addEventListener('notificationclick', (event) => {
+  if (!event.notification.tag || !event.notification.tag.startsWith('cuidarmais-')) return;
+  event.notification.close();
+  event.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+    for (const c of list) { if ('focus' in c) return c.focus(); }
+    return clients.openWindow('/');
+  }));
+});

@@ -3,17 +3,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
-/// Um alarme a agendar no aparelho.
-class AlarmPlan {
-  final int id;
-  final DateTime at;
-  final String title;
-  final String body;
+import 'alarm_plan.dart';
+import 'web_alarms_stub.dart' if (dart.library.js_interop) 'web_alarms_web.dart';
 
-  const AlarmPlan({required this.id, required this.at, required this.title, required this.body});
-}
+export 'alarm_plan.dart';
 
-/// Alarmes de lembrete no próprio aparelho (só no app Android).
+/// Alarmes de lembrete no próprio aparelho. No app Android usam os alarmes
+/// do sistema; no navegador, tocam enquanto o site estiver aberto.
 ///
 /// Tocam na hora exata, sem internet e sem depender do agendador do GitHub,
 /// e repetem o som até a pessoa mexer no aparelho (como um despertador).
@@ -28,7 +24,11 @@ class LocalAlarms {
 
   static bool get supported => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
+  /// Chamado quando o alarme do navegador toca, para avisar na tela.
+  static set onRing(void Function(String title, String body)? f) => WebAlarms.onRing = f;
+
   static Future<void> init() async {
+    if (kIsWeb) WebAlarms.init();
     if (!supported || _ready) return;
     try {
       tzdata.initializeTimeZones();
@@ -66,6 +66,7 @@ class LocalAlarms {
   /// Troca todos os alarmes agendados por [plans]. Não faz nada se a agenda
   /// não mudou.
   static Future<void> sync(List<AlarmPlan> plans) async {
+    if (kIsWeb) WebAlarms.sync(plans);
     if (!_ready) return;
     final key = plans.map((p) => '${p.id}@${p.at.millisecondsSinceEpoch}').join(',');
     if (key == _lastPlan) return;
@@ -103,6 +104,7 @@ class LocalAlarms {
 
   static Future<void> clear() async {
     _lastPlan = '';
+    if (kIsWeb) WebAlarms.clear();
     if (_ready) await _plugin.cancelAllPendingNotifications();
   }
 }
